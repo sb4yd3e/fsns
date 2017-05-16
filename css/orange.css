@@ -1,0 +1,123 @@
+
+a:hover, 
+.section-title a.read-more:hover, 
+#nav li.current-menu-item a, #nav li:hover a, 
+.breadcrumbs li.active a, 
+.team-info .name-position span, 
+.portfolio-filter-container li.active a, 
+.post-body h3:hover, 
+.widget_recent_comments li:hover a, 
+#footer a:hover, 
+.footer-contact-info li.mail a:hover, 
+blockquote span.author,
+.pricing-table-col.selected-2 .head h1,
+.pricing-table-col.selected-2 .head h2,
+.pricing-table-col.selected-2 .head h3,
+.pricing-table-col.selected-2 .head h4,
+.pricing-table-col.selected-2 .head h5,
+.pricing-table-col.selected-2 .head h6{
+    color: #fb6148;
+}
+
+
+a.read-more:hover span, 
+.tabs li.active, 
+.social-links.presentation li:hover,
+span.dropcap-color, 
+.clients-navigation a:hover, 
+.service-box:hover, 
+.nivo-controlNav a.active,
+.nivo-controlNav a:hover, 
+.portfolio-default-description, 
+.post-category:hover, 
+.blog-post.sticky h3, 
+.widget_tag_cloud a:hover, 
+.footer-widget-container .widget .social-links li:hover{
+    background-color: #fb6148; 
+}
+
+.pricing-table-col.selected .head span.price{
+    color: #fbcbbf;
+}
+
+.text-color, 
+.footer-widget-container .widget li a:hover{
+    color: #fb6148 !important;
+}
+
+blockquote{
+    border-left: 1px solid #fb6148;
+}
+
+.tabs li.active{
+    border-bottom: 1px solid #fb6148;
+    border-right: 1px solid #fb6148;
+    border-left: 1px solid #fb6148;
+}
+
+
+.btn-color, 
+.comment-reply-link, 
+#respond #comment-reply, 
+.pagination li:hover, .pagination li.active, 
+.pricing-table-col.selected .head{
+    background: rgb(255,112,96); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(255,112,96,1) 0%, rgba(251,97,72,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,112,96,1)), color-stop(100%,rgba(251,97,72,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(255,112,96,1) 0%,rgba(251,97,72,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(255,112,96,1) 0%,rgba(251,97,72,1) 100%); /* Opera 11.10+ */
+    background: linear-gradient(to bottom,  rgba(255,112,96,1) 0%,rgba(251,97,72,1) 100%); /* W3C */
+
+    border: 1px solid #eb5443;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -o-border-radius: 2px;
+}
+
+.btn-color:hover, 
+.comment-reply-link:hover, 
+#respond #comment-reply:hover{
+    background: rgb(251,97,72); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(251,97,72,1) 0%, rgba(255,112,96,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(251,97,72,1)), color-stop(100%,rgba(255,112,96,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(251,97,72,1) 0%,rgba(255,112,96,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(251,97,72,1) 0%,rgba(255,112,96,1) 100%); /* Opera 11.10+ */
+    background: linear-gradient(to bottom,  rgba(251,97,72,1) 0%,rgba(255,112,96,1) 100%); /* W3C */
+}
+
+.expand{
+    background: rgb(253,139,121); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(253,139,121,1) 0%, rgba(251,97,72,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(253,139,121,1)), color-stop(100%,rgba(251,97,72,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(253,139,121,1) 0%,rgba(251,97,72,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(253,139,121,1) 0%,rgba(251,97,72,1) 100%); /* Opera 11.10+ */
+    background: linear-gradient(to bottom,  rgba(253,139,121,1) 0%,rgba(251,97,72,1) 100%); /* W3C */
+
+    box-shadow: inset 0 0 2px #f77765;
+    border: 1px solid #eb5443;
+}
+
+.accordion .title.active a{
+    background: url('../img/colors/orange/accordion-opened.png') no-repeat 0 center;
+}
+
+#nav li.has-sub:hover, #nav li.has-sub.current-menu-item, #nav li.current-menu-item.has-sub{
+    background: url('../img/colors/orange/menu-icon-hover.png') no-repeat right center;
+}
+
+.service-hex-icon:hover{
+    background: url('../img/colors/orange/service-hover-bkg.png') no-repeat 0 0; 
+}
+
+.portfolio-hover li:hover{
+    background: url('../img/colors/orange/portfolio-icon.png') no-repeat center center;
+}
+
+.contact-info li.address{
+    background: url('../img/colors/orange/address.png') no-repeat 0 0;
+}
+
+.widget li:hover{
+    background: url('../img/colors/orange/aside-hover.png') no-repeat 0 9px;
+}

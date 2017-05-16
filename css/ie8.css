@@ -1,0 +1,11 @@
+.portfolio-hover .mask{
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+}
+
+.portfolio:hover .portfolio-hover .mask{
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+}
+
+.portfolio.hexagons .mask{
+     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+}

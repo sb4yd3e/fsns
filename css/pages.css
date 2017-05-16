@@ -1,0 +1,65 @@
+/* INDEX */
+
+.intro {
+    padding-top:120px;
+    margin: 0 20px;
+}
+
+.logo-container {
+    margin-bottom: 30px;
+}
+
+
+/* ELEMENTS */
+.clear {
+    clear:both;
+}
+
+.left {
+    float:left;
+}
+
+.right {
+    float:right;
+}
+
+.pushtop {
+    margin-top:-110px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.w33 {
+    width:33%;
+}
+
+.w25 {
+    width:25%;
+}
+
+.w50 {
+    width:50%
+}
+
+.header-icon {
+    margin-top:4px;
+}
+
+.right10 {
+    float:right;
+    margin-right: 10px;
+}
+
+.icon-light {
+    opacity: 0.5;
+}
+
+a:hover .icon-light {
+    opacity: 1;
+}
+
+.hide {
+    display:none;
+}

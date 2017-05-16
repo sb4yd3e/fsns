@@ -1,0 +1,65 @@
+input.search-box {
+    background: none;
+    border: 0;
+    outline: 0;
+    font-size: 13px;
+    width:200px;
+    color:#333;
+}
+
+.distributorName {
+    margin-top: 20px;
+}
+
+#contactform {
+    width: 450px;
+    margin: 0 auto;
+    font-size: 14px;
+}
+
+#contactform table {
+    width: 450px;
+    margin-top: 30px;
+}
+
+#contactform table tr td {
+    height: 40px;
+    vertical-align: middle;
+}
+
+#contactform input[type=text],#contactform input[type=email] {
+width: 300px;
+background: #CCC;
+border: 0;
+outline: 0;
+padding: 8px 5px;
+border-radius: 3px;
+}
+
+#contactform textarea {
+margin: 0;
+padding: 0;
+width: 98%;
+height: 200px;
+resize: vertical;
+background: #CCC;
+border: 0;
+outline: 0;
+border-radius: 3px;
+}
+
+#contactform .submitBtn
+{
+    background:#424242;
+    color:white;
+    border:0;
+    border-radius: 3px;
+    padding:5px;
+    cursor: pointer;
+    width:100px;
+}
+
+.formControl {
+    margin: 10px;
+    float:right;
+}
