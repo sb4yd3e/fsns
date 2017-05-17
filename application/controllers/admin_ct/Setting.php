@@ -5,58 +5,65 @@
  */
 
 class Setting extends CI_Controller{
-   public $render_data = array();
+ public $render_data = array();
 
-    public function __construct() {
-        parent::__construct();
+ public function __construct() {
+  parent::__construct();
 
-        $this->template->set_template('admin');
-        $this->load->model('Setting_model','setting');
+  $this->template->set_template('admin');
+  $this->load->model('Setting_model','setting');
+}
+
+public function index()
+{   
+  if(!is_group('admin')){
+    redirect('admin');
+    exit();
+  }
+  $render_data['setting'] = $this->setting->get_setting();
+  $this->load->library('form_validation');
+  if(isset($render_data['setting']['sid']))
+  {
+    $this->form_validation->set_error_delimiters('<div class="alert alert-warning">', '</div>');
+    $this->form_validation->set_rules('site_title', 'Site title', 'required');
+    $this->form_validation->set_rules('site_keyword', 'Site keyword', 'required');
+    $this->form_validation->set_rules('site_description', 'Site description', 'required');
+    $this->form_validation->set_rules('register', 'Member register config', 'required');
+
+    if($this->form_validation->run())     
+    {    
+      $params = array(
+       'site_title' => $this->input->post('site_title'),
+       'site_keyword' => $this->input->post('site_keyword'),
+       'facebook' => $this->input->post('facebook'),
+       'google_plus' => $this->input->post('google'),
+       'instagram' => $this->input->post('instagram'),
+       'site_description' => $this->input->post('site_description'),
+       'allow_register' => $this->input->post('register')
+       );
+
+      $this->setting->update_setting($params);            
+      redirect('admin/setting?save=true');
     }
-
-
-    /*
-     * Editing a setting
-     */
-    public function index()
-    {   
-        if(!is_group('admin')){
-            redirect('admin');
-            exit();
-        }
-        // check if the setting exists before trying to edit it
-        $data['setting'] = $this->setting->get_setting();
-        
-        if(isset($data['setting']['sid']))
-        {
-            if(isset($_POST) && count($_POST) > 0)     
-            {   
-                $params = array(
-                   'site_title' => $this->input->post('site_title'),
-                   'site_keyword' => $this->input->post('site_keyword'),
-                   'facebook' => $this->input->post('facebook'),
-                   'google' => $this->input->post('google'),
-                   'instagram' => $this->input->post('instagram'),
-                   'site_description' => $this->input->post('site_description'),
-                   );
-
-                $this->setting->update_setting($params);            
-                redirect('setting');
-            }
-            else
-            {
+    else
+    {
+     if($this->input->get('save')=="true"){
+      $js = '$.notify("Save setting success.", "success");';
+      $this->template->write('js', $js);
+    }
                 //******* Defalut ********//
-        $render_data['user'] = $this->session->userdata('fnsn');
-        $this->template->write('title', 'News');
-        $this->template->write('user_id', $render_data['user']['aid']);
-        $this->template->write('user_name', $render_data['user']['name']);
-        $this->template->write('user_group', $render_data['user']['group']);
+    $render_data['user'] = $this->session->userdata('fnsn');
+    $this->template->write('title', 'News');
+    $this->template->write('user_id', $render_data['user']['aid']);
+    $this->template->write('user_name', $render_data['user']['name']);
+    $this->template->write('user_group', $render_data['user']['group']);
         //******* Defalut ********//
-             $this->template->write_view('content', 'admin/setting/edit', $render_data);
-             $this->template->render();
-         }
-     }
-     else
-        show_error('The setting you are trying to edit does not exist.');
+    $this->template->write_view('content', 'admin/setting/edit', $render_data);
+    $this->template->render();
+  }
+}
+else{
+  redirect('admin');
+}
 }
 }

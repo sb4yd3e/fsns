@@ -19,7 +19,11 @@ class Setting_model extends CI_Model
                 'contact_page_id' => NULL,
                 'profile_page_id' => NULL,
                 'distributor_page_id' => NULL
-            );
+                );
         }
+    }
+
+    public function update_setting($param){
+        return $this->db->update('setting',$param);
     }
 }
