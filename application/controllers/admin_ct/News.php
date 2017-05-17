@@ -120,18 +120,6 @@ class News extends CI_Controller {
                     //Get Cover DATA
 				$upload_data = $this->upload->data();
 				$data_create['cover'] = $upload_data['file_name'];
-
-                    // Upload PDF //
-				$config = array();
-				$config['upload_path'] = './' . PDF_PATH . '/';
-				$config['allowed_types'] = 'pdf';
-				$config['encrypt_name'] = true;
-				$this->upload->initialize($config);
-				if ($this->upload->do_upload('pdf')) {
-					$upload_data = $this->upload->data();
-					$data_create['pdf'] = $upload_data['file_name'];
-					
-				}
 				$this->news->add_news($data_create);
 				redirect('admin/news?add=true');
 			} else {
@@ -212,18 +200,6 @@ class News extends CI_Controller {
                     //Get Cover DATA
 					$upload_data = $this->upload->data();
 					$data_update['cover'] = $upload_data['file_name'];
-
-                    // Upload PDF //
-					$config = array();
-					$config['upload_path'] = './' . PDF_PATH . '/';
-					$config['allowed_types'] = 'pdf';
-					$config['encrypt_name'] = true;
-					$this->upload->initialize($config);
-					if ($this->upload->do_upload('pdf')) {
-						$upload_data = $this->upload->data();
-						$data_update['pdf'] = $upload_data['file_name'];
-
-					}
 					$this->news->update_news($id,$data_update);
 					redirect('admin/news/edit/'.$id.'?save=true');
 				} else {

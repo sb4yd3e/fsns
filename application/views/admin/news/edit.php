@@ -7,7 +7,6 @@
 			<form action="<?php echo base_url() ?>admin/news/edit/<?php echo $content['id']?>" method="post" class="ui-form" enctype="multipart/form-data">
 				<div class="box-body">
 					<?php echo validation_errors(); ?>
-					<?php echo isset($error_upload) ? $error_upload : '' ?>
 					<div class="row clearfix">
 						<div class="col-lg-8">
 							<div class="form-group">

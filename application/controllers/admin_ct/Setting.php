@@ -53,7 +53,7 @@ public function index()
     }
                 //******* Defalut ********//
     $render_data['user'] = $this->session->userdata('fnsn');
-    $this->template->write('title', 'News');
+    $this->template->write('title', 'Site setting');
     $this->template->write('user_id', $render_data['user']['aid']);
     $this->template->write('user_name', $render_data['user']['name']);
     $this->template->write('user_group', $render_data['user']['group']);
