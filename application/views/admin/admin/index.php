@@ -4,11 +4,11 @@
             <div class="box-header">
             <h3 class="box-title">Admins/Sale Listing</h3>
                 <div class="box-tools">
-                    <a href="<?php echo site_url('admin/admin/add'); ?>" class="btn btn-success btn-sm">Add new</a> 
+                    <a href="<?php echo site_url('admin/admin/add'); ?>" class="btn btn-success btn-sm"><i class="fa fa-plus"></i>  Add new</a> 
                 </div>
             </div>
             <div class="box-body">
-                <table class="table table-striped" id="table">
+                <table class="table table-striped table-bordered" id="table">
                     <thead>
                         <tr>
                             <th>Username</th>
