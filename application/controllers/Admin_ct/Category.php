@@ -55,9 +55,8 @@ class Category extends CI_Controller {
                         $('.edit_category').click(function(){
                             var edit_value = $(this).attr('rel').split(';');
                             $('#edit-category-title-en').val(edit_value[0]);
-                            $('#edit-category-title-th').val(edit_value[1]);
-                            $('#edit-category-caption').val(edit_value[2]);
-                            $('#edit-category-weight').val(edit_value[3]);
+                            $('#edit-category-caption').val(edit_value[1]);
+                            $('#edit-category-weight').val(edit_value[2]);
                             $('#edit-category-id').val($(this).attr('id').replace('edit_',''));
                             $('#edit-category-dialog #add-category_weight').val(0);
                             $('#edit-category-dialog').dialog({
@@ -81,8 +80,7 @@ class Category extends CI_Controller {
                                 buttons:{
                                     'Confirm':function(){
                                         $.post('".base_url('admin/category/delete')."',{term_id:term_id},function(){
-                                            
-                                            current_button.parent('li').slideUp();
+                                            current_button.parent().parent().parent().slideUp();
                                             dialog.dialog( \"close\" );
                                             /*window.location.reload();*/
                                         });
@@ -124,7 +122,6 @@ class Category extends CI_Controller {
         }
 
         $data_save['title'] = $this->input->post('title_en', TRUE);
-        $data_save['title_th'] = $this->input->post('title_th', TRUE);
         $data_save['body'] = $this->input->post('body', TRUE);
         $data_save['weight'] = floor($this->input->post('weight', TRUE));
 
@@ -163,7 +160,6 @@ class Category extends CI_Controller {
             $edit_save = array();
 
             $data_save['title'] = $this->input->post('title_en', TRUE);
-            $data_save['title_th'] = $this->input->post('title_th', TRUE);
             $data_save['body'] = $this->input->post('body', TRUE);
             $data_save['weight'] = floor($this->input->post('weight', TRUE));
 
@@ -198,6 +194,7 @@ class Category extends CI_Controller {
         $term_id = $this->input->post('term_id', TRUE);
         if ($term_id > 0) {
             $this->category->delete_taxonomy_term('product_category', $term_id);
+            echo 'success';
         }
     }
 

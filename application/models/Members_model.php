@@ -4,12 +4,12 @@
  * www.crudigniter.com
  */
 
-class News_model extends CI_Model
+class Members_model extends CI_Model
 {
-    var $table = 'contents';
-    var $column_order = array(null, 'cover','title',null);
-    var $column_search = array('title'); 
-    var $order = array('id' => 'desc'); 
+    var $table = 'users';
+    var $column_order = array('email', 'name','account_type','staff_id','is_active',null);
+    var $column_search = array('email', 'name','account_type','staff_id','is_active'); 
+    var $order = array('uid' => 'desc'); 
 
     function __construct()
     {
@@ -19,16 +19,16 @@ class News_model extends CI_Model
     
     private function _get_datatables_query()
     {
-         
+
         $this->db->from($this->table);
- 
+
         $i = 0;
-     
+
         foreach ($this->column_search as $item) // loop column 
         {
             if($_POST['search']['value']) // if datatable send POST for search
             {
-                 
+
                 if($i===0) // first loop
                 {
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
@@ -38,13 +38,35 @@ class News_model extends CI_Model
                 {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
- 
+
                 if(count($this->column_search) - 1 == $i) //last loop
                     $this->db->group_end(); //close bracket
+                }
+                $i++;
             }
-            $i++;
-        }
-         
+
+
+        // account type
+            if(isset($_POST['is_active']) && $_POST['is_active']!="") 
+            {
+                $this->db->where("is_active",$_POST['is_active']);
+            }
+
+
+        // seller staff
+            if(isset($_POST['account_type']) && $_POST['account_type']!="") 
+            {
+                $this->db->where("account_type",$_POST['account_type']);
+            }
+
+
+        // is active
+            if(isset($_POST['staff_id']) && $_POST['staff_id']!="" && $_POST['staff_id']!="0") 
+            {
+                $this->db->where("staff_id",$_POST['staff_id']);
+            }
+
+
         if(isset($_POST['order'])) // here order processing
         {
             $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
@@ -59,19 +81,19 @@ class News_model extends CI_Model
     /*
      * Get admin by aid
      */
-    function get_news($id)
+    function get_members($id)
     {
-        return $this->db->get_where('contents',array('id'=>$id))->row_array();
+        return $this->db->get_where('users',array('uid'=>$id))->row_array();
     }
     
     /*
      * Get all admins
      */
-    function get_all_news()
+    function get_all_members()
     {
         $this->_get_datatables_query();
         if($_POST['length'] != -1)
-        $this->db->limit($_POST['length'], $_POST['start']);
+            $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
         return $query->result();
     }
@@ -92,42 +114,31 @@ class News_model extends CI_Model
     /*
      * function to add new admin
      */
-    function add_news($params)
+    function add_members($params)
     {
-        $this->db->insert('contents',$params);
+        $this->db->insert('users',$params);
         return $this->db->insert_id();
     }
     
     /*
      * function to update admin
      */
-    function update_news($id,$params)
+    function update_members($id,$params)
     {
-        $this->db->where('id',$id);
-        $response = $this->db->update('contents',$params);
-        if($response)
-        {
-            return "admin updated successfully";
-        }
-        else
-        {
-            return "Error occuring while updating admin";
-        }
+        $this->db->where('uid',$id);
+        return $this->db->update('users',$params);
+
     }
     
     /*
      * function to delete admin
      */
-    function delete_news($id)
+    function delete_members($id)
     {
-        $response = $this->db->delete('contents',array('id'=>$id));
-        if($response)
-        {
-            return "admin deleted successfully";
-        }
-        else
-        {
-            return "Error occuring while deleting admin";
-        }
+        return $response = $this->db->delete('users',array('uid'=>$id));
+        
+    }
+    function get_all_admins(){
+        return $this->db->get('admins')->result_array();
     }
 }
