@@ -46,25 +46,35 @@ class Members_model extends CI_Model
             }
 
 
-        // account type
+
             if(isset($_POST['is_active']) && $_POST['is_active']!="") 
             {
                 $this->db->where("is_active",$_POST['is_active']);
             }
 
 
-        // seller staff
+
             if(isset($_POST['account_type']) && $_POST['account_type']!="") 
             {
                 $this->db->where("account_type",$_POST['account_type']);
             }
 
 
-        // is active
+            $user = $this->session->userdata('fnsn');
+
             if(isset($_POST['staff_id']) && $_POST['staff_id']!="" && $_POST['staff_id']!="0") 
             {
-                $this->db->where("staff_id",$_POST['staff_id']);
-            }
+                if(is_group('sale')){
+                    $this->db->where("staff_id",$user['aid']);
+                }else{
+                  $this->db->where("staff_id",$_POST['staff_id']);  
+              }
+
+          }else{
+           if(is_group('sale')){
+            $this->db->where("staff_id",$user['aid']);
+        }
+    }
 
 
         if(isset($_POST['order'])) // here order processing

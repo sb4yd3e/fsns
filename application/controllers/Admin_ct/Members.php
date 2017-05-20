@@ -17,7 +17,7 @@ class Members extends CI_Controller {
 
 
 	public function index() {
-		if(!is_group('admin')){
+		if(!is_group(array('admin','staff','sale'))){
 			redirect('admin');
 			exit();
 		}
