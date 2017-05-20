@@ -6,6 +6,7 @@
     <title><?php echo $title; ?> - FSNS Thailand</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="<?php echo site_url('css/smoothness/jquery-ui.min.css'); ?>" type="text/css" media="screen" title="default" />
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="<?php echo site_url('assets/admin/css/bootstrap.min.css');?>">
     <!-- Font Awesome -->
@@ -133,17 +134,10 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="<?php echo site_url('admin/category/index');?>">
                                 <i class="fa fa-cube"></i> <span>Product Categories</span>
                             </a>
-                            <ul class="treeview-menu">
-                                <li class="active">
-                                    <a href="<?php echo site_url('admin/product_category/add');?>"><i class="fa fa-circle-o"></i> Add</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo site_url('admin/product_category/index');?>"><i class="fa fa-circle-o"></i> Listing</a>
-                                </li>
-                            </ul>
+                            
                         </li>
 
                         <li>
@@ -166,10 +160,10 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li class="active">
-                                    <a href="<?php echo site_url('admin/users/add');?>"><i class="fa fa-circle-o"></i> Add new user</a>
+                                    <a href="<?php echo site_url('admin/members/add');?>"><i class="fa fa-circle-o"></i> Add new member</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo site_url('admin/users/index');?>"><i class="fa fa-circle-o"></i> Listing</a>
+                                    <a href="<?php echo site_url('admin/members/index');?>"><i class="fa fa-circle-o"></i>Members Listing</a>
                                 </li>
                             </ul>
                         </li>
@@ -247,6 +241,7 @@
         <script src="<?php echo site_url('assets/admin/datatables/jquery.dataTables.min.js');?>"></script>
         <script src="<?php echo site_url('assets/admin/datatables/dataTables.bootstrap.min.js');?>"></script>
         <script src="<?php echo site_url('assets/admin/js/notify.min.js');?>" type="text/javascript"></script>
+        <script src="<?php echo site_url('js/jquery-ui.min.js');?>" type="text/javascript"></script>
         <script type="text/javascript" src="<?php echo site_url('js/ckeditor/ckeditor.js');?>"></script>
         <script>
             <?php echo $js; ?>
