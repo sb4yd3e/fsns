@@ -162,6 +162,22 @@ function is_active($status){
         return '<label class="label label-danger">Inactive</label>';
     }
 }
+
+function is_online($status){
+    if($status==1){
+        return '<label class="label label-success">YES</label>';
+    }else{
+        return '<label class="label label-danger">NO</label>';
+    }
+}
+
+function in_stock($status){
+    if($status==1){
+        return '<label class="label label-success">In Stock</label>';
+    }else{
+        return '<label class="label label-danger">Out of stock</label>';
+    }
+}
 function add_log($user,$detail,$key=''){
     $ci = &get_instance();
     $ci->load->database();

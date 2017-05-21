@@ -97,136 +97,139 @@
                                 <i class="fa fa-shopping-basket"></i> <span>Orders</span>
                             </a>
                             <ul class="treeview-menu">
-                                <li class="active">
-                                    <a href="<?php echo site_url('admin/orders/index/?type=business');?>"><i class="fa fa-circle-o"></i> Business Orders</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo site_url('admin/orders/index/?type=personal');?>"><i class="fa fa-circle-o"></i> Personal Orders</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <?php  if(is_group(array('admin'))){ ?>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-user-md"></i> <span>Admin/Sale Management</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="active">
-                                    <a href="<?php echo site_url('admin/admin/add');?>"><i class="fa fa-circle-o"></i> Add new</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo site_url('admin/admin/index');?>"><i class="fa fa-circle-o"></i> Listing</a>
-                                </li>
-                            </ul>
-                        </li>
+                               <li class="active">
+                                <a href="<?php echo site_url('admin/orders/index/');?>"><i class="fa fa-circle-o"></i> All Orders</a>
+                            </li>
+                            <li class="active">
+                                <a href="<?php echo site_url('admin/orders/index/?type=business');?>"><i class="fa fa-circle-o"></i> Business Orders</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo site_url('admin/orders/index/?type=personal');?>"><i class="fa fa-circle-o"></i> Personal Orders</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <?php  if(is_group(array('admin'))){ ?>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-user-md"></i> <span>Admin/Sale Management</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active">
+                                <a href="<?php echo site_url('admin/admin/add');?>"><i class="fa fa-circle-o"></i> Add new</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo site_url('admin/admin/index');?>"><i class="fa fa-circle-o"></i> Listing</a>
+                            </li>
+                        </ul>
+                    </li>
 
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-newspaper-o"></i> <span>News Management</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="active">
-                                    <a href="<?php echo site_url('admin/news/add');?>"><i class="fa fa-circle-o"></i> Create new content</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo site_url('admin/news/index');?>"><i class="fa fa-circle-o"></i> Listing</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo site_url('admin/category/index');?>">
-                                <i class="fa fa-cube"></i> <span>Product Categories</span>
-                            </a>
-                            
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-cubes"></i> <span>Products</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="active">
-                                    <a href="<?php echo site_url('admin/products/add');?>"><i class="fa fa-circle-o"></i> Add</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo site_url('admin/products/index');?>"><i class="fa fa-circle-o"></i> Listing</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <?php } ?>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-users"></i> <span>Members</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="active">
-                                    <a href="<?php echo site_url('admin/members/add');?>"><i class="fa fa-circle-o"></i> Add new member</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo site_url('admin/members/index');?>"><i class="fa fa-circle-o"></i>Members Listing</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <?php  if(is_group(array('admin'))){ ?>
-                        <li>
-                            <a href="<?php echo site_url('admin/banner');?>">
-                                <i class="fa fa-picture-o"></i> <span>Popup Banner</span>
-                            </a>
-                            
-                        </li>
-                        <li>
-                            <a href="<?php echo site_url('admin/setting');?>">
-                                <i class="fa fa-cogs"></i> <span>Settings</span>
-                            </a>
-                        </li>
-
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-newspaper-o"></i> <span>News Management</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active">
+                                <a href="<?php echo site_url('admin/news/add');?>"><i class="fa fa-circle-o"></i> Create new content</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo site_url('admin/news/index');?>"><i class="fa fa-circle-o"></i> Contents Listing</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="<?php echo site_url('admin/category/index');?>">
+                            <i class="fa fa-cube"></i> <span>Product Categories</span>
+                        </a>
                         
-                        <li>
-                            <a href="<?php echo site_url('admin/log');?>">
-                                <i class="fa fa-bars"></i> <span>Logs</span>
-                            </a>
-                        </li>
-                        <?php } ?>
-                    </ul>
-                </section>
-                <!-- /.sidebar -->
-            </aside>
+                    </li>
 
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
-                <!-- Main content -->
-                <section class="content">
-                    <?php                    
-                    echo $content;
-                    ?>                    
-                </section>
-                <!-- /.content -->
-            </div>
-            <!-- /.content-wrapper -->
-            <footer class="main-footer">
-                <strong>Copyright © <?php echo date("Y"); ?> <a href="http://www.fsns-thailand.com">FSNS Thailand </a></strong>
-            </footer>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-cubes"></i> <span>Products</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active">
+                                <a href="<?php echo site_url('admin/products/add');?>"><i class="fa fa-circle-o"></i> Add new product</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo site_url('admin/products/index');?>"><i class="fa fa-circle-o"></i> Products Listing</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <?php } ?>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-users"></i> <span>Members</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active">
+                                <a href="<?php echo site_url('admin/members/add');?>"><i class="fa fa-circle-o"></i> Add new member</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo site_url('admin/members/index');?>"><i class="fa fa-circle-o"></i> Members Listing</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <?php  if(is_group(array('admin'))){ ?>
+                    <li>
+                        <a href="<?php echo site_url('admin/banner');?>">
+                            <i class="fa fa-picture-o"></i> <span>Popup Banner</span>
+                        </a>
+                        
+                    </li>
+                    <li>
+                        <a href="<?php echo site_url('admin/setting');?>">
+                            <i class="fa fa-cogs"></i> <span>Settings</span>
+                        </a>
+                    </li>
 
-            <!-- Control Sidebar -->
-            <aside class="control-sidebar control-sidebar-dark">
-                <!-- Create the tabs -->
-                <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-
-                </ul>
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <!-- Home tab content -->
-                    <div class="tab-pane" id="control-sidebar-home-tab">
-
-                    </div>
-                    <!-- /.tab-pane -->
-                    <!-- Stats tab content -->
-                    <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
-                    <!-- /.tab-pane -->
                     
+                    <li>
+                        <a href="<?php echo site_url('admin/log');?>">
+                            <i class="fa fa-bars"></i> <span>Logs</span>
+                        </a>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Main content -->
+            <section class="content">
+                <?php                    
+                echo $content;
+                ?>                    
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <strong>Copyright © <?php echo date("Y"); ?> <a href="http://www.fsns-thailand.com" target="_blank">FSNS Thailand </a></strong>
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Create the tabs -->
+            <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <!-- Home tab content -->
+                <div class="tab-pane" id="control-sidebar-home-tab">
+
                 </div>
-            </aside>
-            <!-- /.control-sidebar -->
+                <!-- /.tab-pane -->
+                <!-- Stats tab content -->
+                <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+                <!-- /.tab-pane -->
+                
+            </div>
+        </aside>
+        <!-- /.control-sidebar -->
             <!-- Add the sidebar's background. This div must be placed
             immediately after the control sidebar -->
             <div class="control-sidebar-bg"></div>
