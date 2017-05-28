@@ -88,7 +88,7 @@ class Taxonomy_model extends CI_Model {
 
         // Load Vocab id
         $vocab = $this->db
-                ->select('taxonomy_terms.id, taxonomy_terms.title,taxonomy_terms.title_th,taxonomy_terms.body,taxonomy_terms.header_img,taxonomy_terms.cover_img, parent_id, weight')
+                ->select('taxonomy_terms.id, taxonomy_terms.title,taxonomy_terms.body,taxonomy_terms.header_img,taxonomy_terms.cover_img, parent_id, weight')
                 ->from('taxonomy_vocabularies')
                 ->join('taxonomy_terms', 'taxonomy_terms.vocabulary_id = taxonomy_vocabularies.id')
                 ->where('internal_key', $internal_key)
@@ -104,7 +104,6 @@ class Taxonomy_model extends CI_Model {
                     $terms_array[$term['id']] = array(
                         'term_id' => $term['id'],
                         'title' => $term['title'],
-                        'title_th' => $term['title_th'],
                         'header_img' => $term['header_img'],
                         'cover_img' => $term['cover_img'],
                         'body' => $term['body'],
@@ -116,7 +115,6 @@ class Taxonomy_model extends CI_Model {
                         $terms_array[$term['parent_id']]['children'][$term['id']] = array(
                             'term_id' => $term['id'],
                             'title' => $term['title'],
-                            'title_th' => $term['title_th'],
                             'header_img' => $term['header_img'],
                             'cover_img' => $term['cover_img'],
                             'body' => $term['body'],
@@ -128,7 +126,6 @@ class Taxonomy_model extends CI_Model {
                                 $terms_array[$key]['children'][$term['parent_id']]['children'][$term['id']] = array(
                                     'term_id' => $term['id'],
                                     'title' => $term['title'],
-                                    'title_th' => $term['title_th'],
                                     'header_img' => $term['header_img'],
                                     'cover_img' => $term['cover_img'],
                                     'body' => $term['body'],

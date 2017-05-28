@@ -1,108 +1,217 @@
 <div class="row">
     <div class="col-md-12">
-      	<div class="box box-info">
+        <div class="box box-info">
             <div class="box-header with-border">
-              	<h3 class="box-title">Product Add</h3>
+                <h3 class="box-title">Add new product</h3>
             </div>
-            <?php echo form_open('product/add'); ?>
-          	<div class="box-body">
-          		<?php echo validation_errors(); ?>
-            	<div class="row clearfix">
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<label for="product_category" class="control-label">Product Category</label>
-						<div class="form-group">
-							<select name="product_category" class="form-control">
-								<option value="">select product_sub_category</option>
-								<?php 
-								foreach($all_product_sub_categories as $product_sub_category)
-								{
-									$selected = ($product_sub_category['sid'] == $this->input->post('product_category')) ? ' selected="selected"' : "";
+            <form action="<?php echo base_url() ?>admin/products/add" method="post" class="ui-form"
+                  enctype="multipart/form-data">
+                <div class="box-body">
+                    <?php echo validation_errors(); ?>
+                    <div class="row clearfix">
 
-									echo '<option value="'.$product_sub_category['sid'].'" '.$selected.'>'.$product_sub_category['sid'].'</option>';
-								} 
-								?>
-							</select>
-						</div>
-					</div>
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<label for="product_online" class="control-label">Product Online</label>
-						<div class="form-group">
-							<select name="product_online" class="form-control">
-								<option value="">select</option>
-								<?php 
-								$product_online_values = array(
-						'0'=>'ไม่ใช่',
-						'1'=>'ใช่',
-					);
+                        <div class="col-md-6">
 
-								foreach($product_online_values as $value => $display_text)
-								{
-									$selected = ($value == $this->input->post('product_online')) ? ' selected="selected"' : "";
 
-									echo '<option value="'.$value.'" '.$selected.'>'.$display_text.'</option>';
-								} 
-								?>
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="row clearfix">
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<label for="product_title" class="control-label">Product Title</label>
-						<div class="form-group">
-							<input type="text" name="product_title" value="<?php echo $this->input->post('product_title'); ?>" class="form-control" id="product_title" />
-						</div>
-					</div>
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<label for="product_photo" class="control-label">Product Photo</label>
-						<div class="form-group">
-							<input type="text" name="product_photo" value="<?php echo $this->input->post('product_photo'); ?>" class="form-control" id="product_photo" />
-						</div>
-					</div>
-				</div>
-				<div class="row clearfix">
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<label for="product_group" class="control-label">Product Group</label>
-						<div class="form-group">
-							<input type="text" name="product_group" value="<?php echo $this->input->post('product_group'); ?>" class="form-control" id="product_group" />
-						</div>
-					</div>
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<label for="product_pdf" class="control-label">Product Pdf</label>
-						<div class="form-group">
-							<input type="text" name="product_pdf" value="<?php echo $this->input->post('product_pdf'); ?>" class="form-control" id="product_pdf" />
-						</div>
-					</div>
-				</div>
-				<div class="row clearfix">
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<label for="product_price" class="control-label">Product Price</label>
-						<div class="form-group">
-							<input type="text" name="product_price" value="<?php echo $this->input->post('product_price'); ?>" class="form-control" id="product_price" />
-						</div>
-					</div>
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<label for="product_spacial_price" class="control-label">Product Spacial Price</label>
-						<div class="form-group">
-							<input type="text" name="product_spacial_price" value="<?php echo $this->input->post('product_spacial_price'); ?>" class="form-control" id="product_spacial_price" />
-						</div>
-					</div>
-				</div>
-				<div class="row clearfix">
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<label for="product_description" class="control-label">Product Description</label>
-						<div class="form-group">
-							<textarea name="product_description" class="form-control" id="product_description"><?php echo $this->input->post('product_description'); ?></textarea>
-						</div>
-					</div>
-				</div>
-			</div>
-          	<div class="box-footer">
-            	<button type="submit" class="btn btn-success">
-            		<i class="fa fa-check"></i> Save
-            	</button>
-          	</div>
-            <?php echo form_close(); ?>
-      	</div>
+                            <div class="form-group">
+                                <label>Product Cover (Size: 450x235px)*:</label>
+                                <input type="file" name="cover" size="20" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Product title*:</label>
+                                <input name="title" value="<?php echo set_value('title') ?>" class="form-control"
+                                       required/>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label for="product_spacial_price" class="control-label">Product Model
+                                            Code</label>
+                                        <input type="text" name="model_code"
+                                               value="<?php echo $this->input->post('model_code'); ?>"
+                                               class="form-control" id="product_model_code" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Specification PDF:</label><br>
+                                        <input type="file" name="pdf" size="20" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Product category*:</label>
+                                        <select name="taxonomy_term_id" id="taxonomy_term_id" class="form-control" required>
+                                            <?php
+                                            $options = array();
+                                            foreach ($product_category as $lv_one) {
+                                                ?>
+                                                <optgroup label="<?php echo $lv_one['title'] ?>">
+                                                    <?php
+                                                    if (isset($lv_one['children'])) {
+                                                        foreach ($lv_one['children'] as $lv_two) {
+                                                            if (isset($lv_two['children'])) {
+                                                                ?>
+                                                                <optgroup
+                                                                        label="<?php echo $lv_two['title'] ?>"></optgroup>
+                                                                <?php
+                                                            } else {
+                                                                ?>
+                                                                <option value="<?php echo $lv_two['term_id'] ?>"><?php echo $lv_two['title'] ?></option>
+                                                                <?php
+                                                            }
+                                                        }
+                                                    }
+                                                    ?>
+                                                </optgroup>
+                                                <?php
+                                            }
+                                            echo form_dropdown('taxonomy_term_id', $options);
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Product Group*:</label>
+                                        <input name="group" value="<?php echo set_value('group') ?>" required class="form-control"/>
+                                        <style>
+                                            .ui-autocomplete-loading {
+                                                background: white url("<?php echo base_url("img/slider-loading.gif"); ?>") right center no-repeat;
+                                            }
+                                        </style>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label>Product description*:</label>
+                                <textarea name="body" rows="5" id="body" class="form-control" required><?php echo set_value('body') ?></textarea>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+
+                                        <label for="product_online" class="control-label">Is online product</label><br>
+                                        <?php echo form_dropdown('product_online', array(
+                                            '' => 'Select',
+                                            '0' => 'NO',
+                                            '1' => 'YES',
+                                        ), '', 'class="form-control" required'); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+
+                                        <label for="product_instock" class="control-label">Product In Stock</label><br>
+
+                                        <?php echo form_dropdown('product_in_stock', array(
+                                            '' => 'Select',
+                                            '0' => 'NO',
+                                            '1' => 'YES',
+                                        ), '', 'class="form-control" required'); ?>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="product_price" class="control-label">Default Display
+                                        Price(Baht)</label>
+                                    <div class="form-group">
+                                        <input type="number" name="product_price"
+                                               value="<?php echo $this->input->post('product_price'); ?>"
+                                               class="form-control" id="product_price" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="product_spacial_price" class="control-label">Default Special Display
+                                        Price(Baht)</label>
+                                    <div class="form-group">
+                                        <input type="number" name="product_spacial_price"
+                                               value="<?php echo $this->input->post('product_spacial_price'); ?>"
+                                               class="form-control" id="product_spacial_price"  required/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Product Attribute</h4>
+                            <div class="clearfix row" style="padding-right: 20px;">
+                                <div class="thumbnail clearfix ">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Code</label>
+                                            <input type="text" name="code[]" class="form-control" required/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Price</label>
+                                            <input type="number" name="price[]" class="form-control" required/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Special Price</label>
+                                            <input type="number" name="sp_price[]" class="form-control" required/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Color</label>
+                                            <input type="hidden" name="color[]" value="#ffffff" id="color-selector-0" class="form-control color-input" required/>
+                                            <div class="color-box">
+                                                <div class="color-active"></div>
+                                                <div class="color-select color-1" data-hex="#ffffff"></div>
+                                                <div class="color-select color-2" data-hex="#1B88CB"></div>
+                                                <div class="color-select color-3" data-hex="#12A144"></div>
+                                                <div class="color-select color-4" data-hex="#FDDA1A"></div>
+                                                <div class="color-select color-5" data-hex="#0E1522"></div>
+                                                <div class="color-select color-6" data-hex="#CD2026"></div>
+                                                <div class="color-select color-7" data-hex="#7E2683"></div>
+                                                <div class="color-select color-8" data-hex="#F05C21"></div>
+                                                <div class="color-select-picker" id="color-picker-0"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Value (Text)</label>
+                                            <input type="text" name="value[]" class="form-control" required/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Product In Stock</label>
+                                            <?php echo form_dropdown('stock[]', array(
+                                                '' => 'Select',
+                                                '0' => 'NO',
+                                                '1' => 'YES',
+                                            ), '', 'class="form-control" required'); ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="more-att">
+
+
+                            </div>
+                            <button type="button" class="btn btn-success pull-right" id="add-at"><i
+                                        class="fa fa-plus"></i> Add more
+                            </button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-check"></i> Save
+                    </button>
+                    <a href="<?php echo base_url('admin/products'); ?>" class="btn btn-warning">
+                        <i class="fa fa-times-circle"></i> Back to list
+                    </a>
+                </div>
+                <?php echo form_close(); ?>
+        </div>
     </div>
 </div>

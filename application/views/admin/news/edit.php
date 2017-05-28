@@ -11,7 +11,7 @@
 						<div class="col-lg-8">
 							<div class="form-group">
 								<label class="control-label">Content Cover (Size: 450x235px)*:</label><br>
-								<img src="<?php echo base_url()?>timthumb.php?src=<?php echo base_url().NEWS_PATH.'/'.$content['cover']?>&w=100" style="border:2px solid #eee"/><br>
+								<img src="<?php echo base_url()?>timthumb.php?src=<?php echo base_url().NEWS_PATH.'/'.$content['cover']?>&w=100" style="border:2px solid #eee"  class="thumbnail"/>
 								<input type="file" name="cover" size="20" />
 							</div>
 							<div class="form-group">

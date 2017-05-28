@@ -142,6 +142,7 @@ function verify_recaptcha($res) {
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "secret=" . $ci->config->item('recaptcha_secret') . "&response=" . $res . "&remoteip=" . $ci->input->ip_address());
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $response = curl_exec($ch);
         curl_close($ch);
         $data = json_decode($response);
@@ -279,4 +280,11 @@ function list_province(){
         ,"อุทัยธานี"=>"อุทัยธานี"
         ,"อุบลราชธานี"=>"อุบลราชธานี"
         ,"อ่างทอง"=>"อ่างทอง");
+}
+
+
+function dateToTime($date){
+    $date = str_replace('/','-',$date);
+    $date = $date.":00";
+    return strtotime($date);
 }

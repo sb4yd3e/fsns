@@ -195,7 +195,7 @@ class News extends CI_Controller {
 				'body' => $this->input->post('body', FALSE),
 				'modified_at' => time()
 				);
-			if($_FILES['cover']){
+            if (!empty($_FILES['cover']['name'])) {
 				if ($this->upload->do_upload('cover')) {
                     //Get Cover DATA
 					$upload_data = $this->upload->data();
@@ -272,7 +272,7 @@ class News extends CI_Controller {
 			redirect('admin/news?delete=true');
 		}
 		else{
-			show_error('The admin you are trying to delete does not exist.');
+			show_error('The news you are trying to delete does not exist.');
 		}
 	}
 
