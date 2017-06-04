@@ -20,8 +20,11 @@
     folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="<?php echo site_url('assets/admin/css/_all-skins.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('assets/admin/datatables/dataTables.bootstrap.css'); ?>">
-    <link rel="stylesheet" media="screen" type="text/css" href="<?php echo site_url('assets/admin/colorpicker/css/colorpicker.css'); ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo site_url('assets/admin/datetimepicker/jquery.datetimepicker.css'); ?>"/ >
+    <link rel="stylesheet" media="screen" type="text/css"
+          href="<?php echo site_url('assets/admin/colorpicker/css/colorpicker.css'); ?>"/>
+    <link rel="stylesheet" type="text/css"
+          href="<?php echo site_url('assets/admin/datetimepicker/jquery.datetimepicker.css'); ?>"
+    / >
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -108,35 +111,17 @@
                 </li>
                 <?php if (is_group(array('admin'))) { ?>
                     <li>
-                        <a href="#">
+                        <a href="<?php echo site_url('admin/admin/index'); ?>">
                             <i class="fa fa-user-md"></i> <span>Admin/Sale Management</span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="active">
-                                <a href="<?php echo site_url('admin/admin/add'); ?>"><i class="fa fa-circle-o"></i> Add
-                                    new</a>
-                            </li>
-                            <li>
-                                <a href="<?php echo site_url('admin/admin/index'); ?>"><i class="fa fa-circle-o"></i>
-                                    Listing</a>
-                            </li>
-                        </ul>
+
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="<?php echo site_url('admin/news/index'); ?>">
                             <i class="fa fa-newspaper-o"></i> <span>News Management</span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="active">
-                                <a href="<?php echo site_url('admin/news/add'); ?>"><i class="fa fa-circle-o"></i>
-                                    Create new content</a>
-                            </li>
-                            <li>
-                                <a href="<?php echo site_url('admin/news/index'); ?>"><i class="fa fa-circle-o"></i>
-                                    Contents Listing</a>
-                            </li>
-                        </ul>
+
                     </li>
                     <li>
                         <a href="<?php echo site_url('admin/category/index'); ?>">
@@ -146,19 +131,10 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="<?php echo site_url('admin/products/index'); ?>">
                             <i class="fa fa-cubes"></i> <span>Products</span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="active">
-                                <a href="<?php echo site_url('admin/products/add'); ?>"><i class="fa fa-circle-o"></i>
-                                    Add new product</a>
-                            </li>
-                            <li>
-                                <a href="<?php echo site_url('admin/products/index'); ?>"><i class="fa fa-circle-o"></i>
-                                    Products Listing</a>
-                            </li>
-                        </ul>
+
                     </li>
                     <li>
                         <a href="<?php echo site_url('admin/coupons/index'); ?>">
@@ -168,19 +144,10 @@
                     </li>
                 <?php } ?>
                 <li>
-                    <a href="#">
+                    <a href="<?php echo site_url('admin/members/index'); ?>">
                         <i class="fa fa-users"></i> <span>Members</span>
                     </a>
-                    <ul class="treeview-menu">
-                        <li class="active">
-                            <a href="<?php echo site_url('admin/members/add'); ?>"><i class="fa fa-circle-o"></i> Add
-                                new member</a>
-                        </li>
-                        <li>
-                            <a href="<?php echo site_url('admin/members/index'); ?>"><i class="fa fa-circle-o"></i>
-                                Members Listing</a>
-                        </li>
-                    </ul>
+
                 </li>
                 <?php if (is_group(array('admin'))) { ?>
                     <li>
@@ -197,7 +164,7 @@
 
 
                     <!--<li>
-                        <a href="<?php /*echo site_url('admin/log'); */?>">
+                        <a href="<?php /*echo site_url('admin/log'); */ ?>">
                             <i class="fa fa-bars"></i> <span>Logs</span>
                         </a>
                     </li>-->
@@ -263,6 +230,7 @@
 <script type="text/javascript" src="<?php echo site_url('assets/admin/colorpicker/js/eye.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo site_url('assets/admin/colorpicker/js/utils.js'); ?>"></script>
 <script src="<?php echo site_url('assets/admin/datetimepicker/build/jquery.datetimepicker.full.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo site_url('assets/admin/js/order.js'); ?>"></script>
 <script>
     <?php echo $js; ?>
 </script>

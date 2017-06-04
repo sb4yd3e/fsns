@@ -288,3 +288,24 @@ function dateToTime($date){
     $date = $date.":00";
     return strtotime($date);
 }
+
+function order_status($status){
+    $s = array(
+        'pending' => 'รอตรวจสอบการสั่งซื้อ',
+        'confirmed' => 'ยืนยันการสั่งซื้อ',
+        'wait_payment' => 'ลูกค้าชำระเงิน/ส่งเอกสาร',
+        'confirm_payment' => 'ยืนยันการชำระ/ส่งเอกสาร',
+        'shping' => 'มีการจัดส่ง',
+        'success' => 'สำเร็จ',
+        'cancel' => 'ยกเลิก'
+    );
+    return $s[$status];
+}
+
+function order_type($type){
+    $s = array(
+        'bussiness'=>'นิติบุคคล',
+        'personal'=>'บุคคลทั่วไป'
+    );
+    return $s[$type];
+}
