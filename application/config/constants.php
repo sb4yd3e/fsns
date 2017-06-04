@@ -53,6 +53,7 @@ define('WEB_TITLE','FSNS Thailand');
 define('ADMIN_TITLE','FSNS Thailand - Administration Area');
 define('UPLOAD_PATH','uploads');
 define('PDF_PATH','uploads/pdf');
+define('ORDER_PATH','uploads/orders');
 define('BANNER_PATH','uploads/banner');
 define('PRODUCT_PATH','uploads/products');
 define('NEWS_PATH','uploads/news');

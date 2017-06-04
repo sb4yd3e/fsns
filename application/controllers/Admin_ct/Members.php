@@ -109,7 +109,8 @@ class Members extends CI_Controller {
 			$row[] = $member->account_type;
 			$row[] = get_staff_username($member->staff_id);
 			$row[] = is_active($member->is_active);
-			$row[] = '<a href="'.base_url('admin/members/edit/'.$member->uid).'" class="label label-warning"><i class="fa fa-pencil"></i> Edit</a> 
+			$row[] = '<a href="'.base_url('admin/orders/index/?uid='.$member->uid).'" class="label label-info"><i class="fa fa-shopping-basket"></i> Order List</a> 
+<a href="'.base_url('admin/members/edit/'.$member->uid).'" class="label label-warning"><i class="fa fa-pencil"></i> Edit</a> 
 			';
 			$data[] = $row;
 		}

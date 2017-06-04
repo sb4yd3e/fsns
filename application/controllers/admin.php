@@ -4,41 +4,43 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 
-class Admin extends CI_Controller {
+class Admin extends CI_Controller
+{
 
     public $render_data = array();
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->template->set_template('admin');
     }
 
 
-    public function index() {
+    public function index()
+    {
         $this->config->set_item('csrf_protection', true);
         $this->load->helper('security');
-        if(is_group(array('admin','staff','sale'))){
+        if (is_group(array('admin', 'staff', 'sale'))) {
             redirect('admin/dashboard');
             exit();
         }
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('username','Username','required|max_length[50]');
-        $this->form_validation->set_rules('password','Password','required|max_length[50]');
-        $this->form_validation->set_rules('g-recaptcha-response','Verify recaptcha','required|callback_captcha');
+        $this->form_validation->set_rules('username', 'Username', 'required|max_length[50]');
+        $this->form_validation->set_rules('password', 'Password', 'required|max_length[50]');
+        $this->form_validation->set_rules('g-recaptcha-response', 'Verify recaptcha', 'required|callback_captcha');
         $this->form_validation->set_error_delimiters('<div class="alert alert-warning">', '</div>');
         $this->load->helper('form');
         $this->load->model('auth_model', 'auth');
-        if($this->form_validation->run())     
-        {   
+        if ($this->form_validation->run()) {
             $params = array(
                 'password' => $this->input->post('password'),
                 'username' => $this->input->post('username')
-                );
+            );
 
-            if(!$userdata = $this->auth->admin_login($params)){
+            if (!$userdata = $this->auth->admin_login($params)) {
                 redirect('admin');
-            }else{
+            } else {
                 $session = array(
                     'aid' => $userdata['aid'],
                     'group' => $userdata['admin_group'],
@@ -46,56 +48,48 @@ class Admin extends CI_Controller {
                     'name' => $userdata['name'],
                     'phone' => $userdata['phone'],
                     'email' => $userdata['email']
-                    );
-                add_log($userdata['username'],"Login to system.");
-                $this->db->where('aid',$userdata['aid'])->update('admins',array('last_login'=>time()));
+                );
+//                add_log($userdata['username'],"Login to system.");
+                $this->db->where('aid', $userdata['aid'])->update('admins', array('last_login' => time()));
                 $this->session->set_userdata('fnsn', $session);
                 redirect('admin/dashboard');
             }
-        }else{
+        } else {
             $this->load->view('admin/login');
         }
 
     }
 
 
-    public function captcha($res){
-        if(verify_recaptcha($res)){
+    public function captcha($res)
+    {
+        if (verify_recaptcha($res)) {
             return TRUE;
-        }else{
+        } else {
             $this->form_validation->set_message('captcha', 'Please verify captcha.');
             return FALSE;
         }
     }
 
-    public function chk_online(){
-     if ($this->input->is_ajax_request() && is_group(array('admin','staff','sale'))) {
-        $userdata = $this->session->userdata('fnsn');
-        $this->db->where('aid',$userdata['aid'])->update('admins',array('last_login'=>time()));
+    public function chk_online()
+    {
+        if ($this->input->is_ajax_request() && is_group(array('admin', 'staff', 'sale'))) {
+            $userdata = $this->session->userdata('fnsn');
+            $this->db->where('aid', $userdata['aid'])->update('admins', array('last_login' => time()));
+        }
     }
-}
 
-public function logout(){
-    @session_destroy();
-    @$this->session->sess_destroy();
+    public function logout()
+    {
+        @session_destroy();
+        @$this->session->sess_destroy();
 
-    redirect('admin');
-}
-
-
+        redirect('admin');
+    }
 
 
-
-
-
-
-
-
-
-
-
-    
-    public function product_pdf_download($product_id) {
+    public function product_pdf_download($product_id)
+    {
         $query = $this->db->select('title,pdf')->where('id', $product_id)->get('products');
         if ($query->num_rows() > 0) {
             $product = $query->row_array();
@@ -106,7 +100,8 @@ public function logout(){
         }
     }
 
-    public function product_delete($product_id) {
+    public function product_delete($product_id)
+    {
         if ($this->session->userdata('role') == '' && floor($product_id) <= 0) {
             redirect('admin');
         }
@@ -117,7 +112,8 @@ public function logout(){
         redirect('admin/product_list?status=delete_complete');
     }
 
-    public function product_list() {
+    public function product_list()
+    {
 
         if ($this->session->userdata('role') == '') {
             redirect('admin');
@@ -141,7 +137,8 @@ public function logout(){
         $this->template->render();
     }
 
-    public function product_edit($product_id) {
+    public function product_edit($product_id)
+    {
         if ($this->session->userdata('role') == '' || floor($product_id) <= 0) {
             redirect('admin');
         }
@@ -162,7 +159,6 @@ public function logout(){
             $this->upload->initialize($config);
 
 
-
             $this->form_validation->set_rules('title', 'Product title', 'required|max_length[80]');
             $this->form_validation->set_rules('body', 'Product Description', 'required|min_length[10]');
 
@@ -174,8 +170,8 @@ public function logout(){
                     'title' => $this->input->post('title', TRUE),
                     'taxonomy_term_id' => $this->input->post('taxonomy_term_id', TRUE),
                     'body' => $this->input->post('body', FALSE),
-                    'group' => strtolower($this->input->post('group',TRUE)),
-                    );
+                    'group' => strtolower($this->input->post('group', TRUE)),
+                );
 
                 if ($this->upload->do_upload('cover')) {
                     //Get Cover DATA
@@ -213,24 +209,20 @@ public function logout(){
         }
 
 
-
         $this->template->write('title', 'Edit product');
         $this->load->model('taxonomy_model', 'taxonomy');
         $this->render_data['product_category'] = $this->taxonomy->get_taxonomy_term('product_category');
 
 
-
-
-
         $this->template->add_js('js/ckeditor/ckeditor.js');
-
 
 
         $this->template->write_view('content', 'admin/product_edit', $this->render_data);
         $this->template->render();
     }
 
-    public function product_add() {
+    public function product_add()
+    {
         if ($this->session->userdata('role') == '') {
             redirect('admin');
         }
@@ -258,8 +250,8 @@ public function logout(){
                     'title' => $this->input->post('title', TRUE),
                     'taxonomy_term_id' => $this->input->post('taxonomy_term_id', TRUE),
                     'body' => $this->input->post('body', FALSE),
-                    'group' => strtolower($this->input->post('group',TRUE)),
-                    );
+                    'group' => strtolower($this->input->post('group', TRUE)),
+                );
                 if ($this->upload->do_upload('cover')) {
                     //Get Cover DATA
                     $upload_data = $this->upload->data();
@@ -292,20 +284,16 @@ public function logout(){
         $this->render_data['product_category'] = $this->taxonomy->get_taxonomy_term('product_category');
 
 
-
-
         //$this->template->add_js('js/ckeditor/ckeditor.js');
-
 
 
         $this->template->write_view('content', 'admin/product_add', $this->render_data);
         $this->template->render();
     }
 
-    
 
-
-    public function slideshow_list() {
+    public function slideshow_list()
+    {
         $this->render_data['slideshows'] = array();
         $query = $this->db->order_by('weight', 'asc')->get('slideshows');
         if ($query->num_rows() > 0) {
@@ -319,7 +307,8 @@ public function logout(){
         $this->template->render();
     }
 
-    public function slideshow_edit($slideshow_id) {
+    public function slideshow_edit($slideshow_id)
+    {
         if ($_POST) {
 
             if ($this->input->post('delete') != '') {
@@ -328,7 +317,7 @@ public function logout(){
                     'slideshow_caption' => '',
                     'slideshow_url' => '',
                     'weight' => 0,
-                    );
+                );
                 $this->db->where('slideshow_id', $slideshow_id);
                 $this->db->update('slideshows', $update_data);
                 redirect('admin/slideshow_list?status=update_complete');
@@ -342,7 +331,7 @@ public function logout(){
                 'slideshow_caption' => trim(strip_tags($this->input->post('slideshow_caption', TRUE))),
                 'slideshow_url' => trim(strip_tags($this->input->post('slideshow_url', TRUE))),
                 'weight' => strip_tags($this->input->post('weight', TRUE)),
-                );
+            );
 
 
             $config['upload_path'] = './' . UPLOAD_PATH . '/slideshow';
@@ -363,27 +352,25 @@ public function logout(){
 
         redirect('admin/slideshow_list?status=update_complete');
     }
-    
+
     public function ajax_get_group()
     {
         $term_id = $this->input->post('term_id');
         $keyword = $this->input->post('keyword');
         $result = $this->db->distinct()->select('group')
-        ->where('taxonomy_term_id',$term_id)
-        ->like('group',$keyword)->order_by('group')->get('products');
-        
-        if ($result->num_rows() > 0)
-        {
+            ->where('taxonomy_term_id', $term_id)
+            ->like('group', $keyword)->order_by('group')->get('products');
+
+        if ($result->num_rows() > 0) {
             $return_list = $result->result_array();
             $return_array = array();
-            foreach($return_list as $row)
-            {
+            foreach ($return_list as $row) {
                 $return_array[] = $row['group'];
             }
             echo json_encode($return_array);
         }
     }
-    
+
     /*
     public function ajax_get_dropdown() {
 

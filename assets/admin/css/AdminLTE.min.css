@@ -5266,3 +5266,11 @@ table.text-center, table.text-center td, table.text-center th {
     border: 1px solid #ccc;
     background-color: #eee;
 }
+#submit-coupon{
+    cursor: pointer;
+}
+#product-color{
+    width: 30px;
+    height: 30px;
+    border: 1px solid #000;
+}

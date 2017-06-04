@@ -12,7 +12,7 @@
                     <thead>
                         <tr>
                             <th>Code</th>
-                            <th>Discount</th>
+                            <th>Discount(%)</th>
                             <th>Expire</th>
                             <th>Create</th>
                             <th>Modify</th>
