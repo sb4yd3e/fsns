@@ -3,7 +3,7 @@
         <div class="box box-info">
             <div class="box-header with-border">
                 <h3 class="box-title">Edit Order #<?php echo sprintf("%06d", $data['oid']); ?></h3>
-
+                <input type="hidden" id="oid" value="<?php echo $data['oid']; ?>">
             </div>
 
             <div class="box-body">
@@ -13,8 +13,11 @@
                         <a href="#info" aria-controls="home" role="tab" data-toggle="tab">Order info</a>
                     </li>
                     <li role="presentation">
-                        <a href="#shping" aria-controls="shping" role="tab" data-toggle="tab" id="tab-shping"
-                           class="disabled">Shiping</a>
+                        <a href="#status" aria-controls="status" role="tab" data-toggle="tab">Order Status</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#shipping" aria-controls="shipping" role="tab" data-toggle="tab" id="tab-shipping"
+                           class="disabled">Shipping</a>
                     </li>
                     <li role="presentation">
                         <a href="#document" aria-controls="document" role="tab" data-toggle="tab" id="tab-document"
@@ -27,36 +30,7 @@
                 </ul>
                 <div class="tab-content" style="margin-top: 20px;">
                     <div role="tabpanel" class="tab-pane fade in active" id="info">
-                        <label for="">Order Status</label>
-                        <div class="clearfix"></div>
-                        <form action="<?php echo base_url('admin/orders/save_status/' . $data['oid']); ?>"
-                              method="post">
-                            <div class="col-md-3">
-                                <div class="form-group">
 
-                                    <?php echo form_dropdown('status', array('pending' => 'รอตรวจสอบการสั่งซื้อ',
-                                        'confirmed' => 'ยืนยันการสั่งซื้อ',
-                                        'wait_payment' => 'ลูกค้าชำระเงิน/ส่งเอกสาร',
-                                        'confirm_payment' => 'ยืนยันการชำระ/ส่งเอกสาร',
-                                        'shping' => 'มีการจัดส่ง',
-                                        'success' => 'สำเร็จ',
-                                        'cancel' => 'ยกเลิก'), $data['order_status'], 'class="form-control"'); ?>
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <button class="btn btn-primary" type="submit" value="nomail" name="submit">Save without
-                                    send email.
-                                </button>
-                                <button class="btn btn-success" type="submit" value="save" name="submit">Save and send
-                                    email.
-                                </button>
-                                <button class="btn btn-info" type="submit" value="email" name="submit">Send email
-                                    again.
-                                </button>
-                            </div>
-                        </form>
-                        <div class="clearfix"></div>
-                        <hr>
                         <?php if ($data['order_status'] == "pending") { ?>
                             <a href="#" class="btn btn-success btn-sm pull-right" data-toggle="modal"
                                data-target="#addproductModal"><i
@@ -169,7 +143,7 @@
                             <tr>
                                 <td colspan="4"><strong>ค่าส่งสินค้า</strong></td>
                                 <td colspan="2"><strong>
-                                        <input type="text" id="shiping-amount" value="0" class="form-control digi"
+                                        <input type="text" id="shipping-amount" value="0" class="form-control digi"
                                                <?php if ($data['order_status'] != "pending"){ ?>readonly<?php } ?>>
                                     </strong></td>
                             </tr>
@@ -197,29 +171,246 @@
                             <div class="clearfix"></div>
                         <?php } ?>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade in" id="document">
+                    <div role="tabpanel" class="tab-pane fade" id="status">
+                        <div class="col-md-6">
+                            <form action="<?php echo base_url('admin/orders/save_status/' . $data['oid']); ?>"
+                                  method="post" id="ajax-status">
 
-
-                        <div class="box-footer">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fa fa-check"></i> Save
-                            </button>
-                            <a href="<?php echo base_url('admin/orders'); ?>" class="btn btn-warning">
-                                <i class="fa fa-times-circle"></i> Back to list
-                            </a>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <?php echo form_dropdown('status', array('pending' => 'รอตรวจสอบการสั่งซื้อ',
+                                        'confirmed' => 'ยืนยันการสั่งซื้อ',
+                                        'wait_payment' => 'ลูกค้าชำระเงิน/ส่งเอกสาร',
+                                        'confirm_payment' => 'ยืนยันการชำระ/ส่งเอกสาร',
+                                        'shipping' => 'มีการจัดส่ง',
+                                        'success' => 'สำเร็จ',
+                                        'cancel' => 'ยกเลิก'), $data['order_status'], 'class="form-control"'); ?>
+                                </div>
+                                <div class="form-group">
+                                    <label>Comment</label>
+                                    <textarea name="comment" id="comment" rows="5" class="form-control"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit" value="nomail" name="submit">Save
+                                        without
+                                        send email.
+                                    </button>
+                                    <button class="btn btn-success" type="submit" value="save" name="submit">Save and
+                                        send
+                                        email.
+                                    </button>
+                                    <button class="btn btn-info" type="submit" value="email" name="submit">Send email
+                                        again.
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="">
+                                <?php foreach ($status_list as $status_item) { ?>
+                                    <div class="status-detail">
+                                        <div class="date">
+                                            <?php if ($status_item['owner'] == 'Seller') {
+                                                echo '<label class="label label-info">' . $status_item['owner'] . '</label>';
+                                            } else {
+                                                echo '<label class="label label-warning">' . $status_item['owner'] . '</label>';
+                                            } ?>
+                                            <?php echo date("d/m/Y H:i:s", $status_item['at_date']); ?> น.
+                                        </div>
+                                        <div class="status">
+                                            Status : <?php echo order_status($status_item['status']); ?>
+                                        </div>
+                                        <div class="comment">
+                                            <?php echo $status_item['text']; ?>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade in" id="shping">
-
-
-                        <div class="box-footer">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fa fa-check"></i> Save
-                            </button>
-                            <a href="<?php echo base_url('admin/orders'); ?>" class="btn btn-warning">
-                                <i class="fa fa-times-circle"></i> Back to list
-                            </a>
+                    <div role="tabpanel" class="tab-pane fade in" id="document">
+                        <div class="col-md-6">
+                            <div class="panel  with-border">
+                                <div class="box-header with-border">เอกสารของลูกค้า</div>
+                                <div class="panel-body with-border">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Name</th>
+                                            <th>File Type</th>
+                                            <th>File Size</th>
+                                            <th>Download</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($custom_files as $cs_file) { ?>
+                                            <tr>
+                                                <td><?php echo $fiile['file_title']; ?></td>
+                                                <td><?php echo $fiile['file_type']; ?>'</td>
+                                                <td><?php echo number_format($fiile['file_size'] / 1024, 2); ?> MB</td>
+                                                <td><?php echo date("d/m/Y H:i:s", strtotime($fiile['file_date'])); ?></td>
+                                                <td>
+                                                    <a href="<?php echo base_url('admin/orders/download_file/' . $fiile['ufid']); ?>"
+                                                       target="_blank" class="label label-info">Download</a></td>
+                                            </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="panel  with-border">
+                                <div class="box-header with-border">จัดการเอกสารส่งให้ลูกค้า
+                                    <button class="btn btn-info btn-sm pull-right" id="add-file" data-toggle="modal"
+                                            data-target="#addFileModal"><i
+                                                class="fa fa-plus"></i></button>
+                                </div>
+                                <div class="panel-body with-border">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Name</th>
+                                            <th>File Type</th>
+                                            <th>File Size</th>
+                                            <th>Download</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="ajax-file-result">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade in" id="shipping">
+
+                        <div class="col-md-6">
+                            <label for=""></label>
+                            <label for="shipping_name" class="control-label">Name</label>
+                            <div class="form-group">
+                                <input type="text" name="shipping_name"
+                                       value="<?php echo($this->input->post('shipping_name') ? $this->input->post('shipping_name') : $data['shipping_name']); ?>"
+                                       class="form-control" id="shipping_name" required/>
+                            </div>
+                            <label for="shipping_address" class="control-label">Shipping Address</label>
+                            <div class="form-group">
+                                <textarea name="shipping_address" rows="4" class="form-control" id="shipping_address"
+                                          required><?php echo($this->input->post('shipping_address') ? $this->input->post('shipping_address') : $data['shipping_address']); ?></textarea>
+                            </div>
+                            <label for="shipping_province" class="control-label">Shipping Province</label>
+                            <div class="form-group">
+                                <?php echo form_dropdown('shipping_province', list_province(), $data['shipping_province'], 'class="form-control" id="shipping_province" required'); ?>
+                            </div>
+                            <label for="shipping_zip" class="control-label">Shipping Zip</label>
+                            <div class="form-group">
+                                <input type="text" name="shipping_zip" maxlength="5"
+                                       value="<?php echo($this->input->post('shipping_zip') ? $this->input->post('shipping_zip') : $data['shipping_zip']); ?>"
+                                       class="form-control" id="shipping_zip" required/>
+                            </div>
+                            <div class="box-footer">
+                                <button type="button" id="save-shipping" class="btn btn-success">
+                                    <i class="fa fa-check"></i> Save
+                                </button>
+                                <a href="<?php echo base_url('admin/orders'); ?>" class="btn btn-warning">
+                                    <i class="fa fa-times-circle"></i> Back to list
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel">
+                                <div class="box-header with-border">
+                                    จัดการการจัดส่งสินค้า
+                                </div>
+                                <div class="panel-body with-border">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Note</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        <?php
+
+                                        $color_arr = array('pending' => '', 'confirmed' => '', 'wait_payment' => '', 'confirm_payment' => '', 'shipping' => 'info', 'success' => 'success', 'cancel' => 'danger');
+                                        foreach ($products as $product) { ?>
+                                            <tr>
+                                                <td class="<?php echo $color_arr[$product['status']]; ?>">
+                                                    <?php echo $product['product_title']; ?>
+                                                    [<?php echo $product['product_code']; ?>]
+                                                    - <?php echo $product['product_value']; ?>
+                                                </td>
+                                                <td class="<?php echo $color_arr[$product['status']]; ?>">
+                                                    <?php echo $product['note']; ?>
+                                                </td>
+                                                <td class="<?php echo $color_arr[$product['status']]; ?>">
+                                                    <?php if (in_array($data['order_status'], array('confirm_payment', 'shipping')) && !in_array($product['status'], array('cancel', 'success', 'shipping'))) { ?>
+                                                        <label><input type="checkbox" class="select-product"
+                                                                      value="<?php echo $product['odid']; ?>">
+                                                            select</label>
+                                                    <?php } ?>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+
+
+                                        </tbody>
+                                    </table>
+                                    <div>
+                                        <form action="<?php echo base_url('admin/orders/change_shipping/' . $data['oid']); ?>"
+                                              method="post">
+                                            <input type="hidden" id="id-products" name="ids-product" value="">
+                                            <div class="form-group">
+                                                <label>Comment</label>
+                                                <textarea name="comment" id="shipping-comment" class="form-control"
+                                                          rows="3"></textarea>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <button type="submit" name="type" value="save" class="btn btn-info">
+                                                    Shipping
+                                                    product
+                                                </button>
+                                                <button type="submit" name="type" value="save_all"
+                                                        class="btn btn-success">Shipping all products
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <?php /*foreach ($status_list as $status_item) { ?>
+                                            <div class="status-detail">
+                                                <div class="date">
+                                                    <?php if ($status_item['owner'] == 'Seller') {
+                                                        echo '<label class="label label-info">' . $status_item['owner'] . '</label>';
+                                                    } else {
+                                                        echo '<label class="label label-warning">' . $status_item['owner'] . '</label>';
+                                                    } ?>
+                                                    <?php echo date("d/m/Y H:i:s", $status_item['at_date']); ?> น.
+                                                </div>
+                                                <div class="status">
+                                                    Status : <?php echo order_status($status_item['status']); ?>
+                                                </div>
+                                                <div class="comment">
+                                                    <?php echo $status_item['text']; ?>
+                                                </div>
+                                            </div>
+                                        <?php }*/ ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+
                     </div>
 
                     <div role="tabpanel" class="tab-pane fade" id="logs">
@@ -295,6 +486,34 @@
                 <button type="button" class="btn btn-success" id="add-product-btn">Add product</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addFileModal" tabindex="-1" role="dialog" aria-labelledby="addFileModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" action="<?php echo base_url('admin/orders/upload_document/' . $data['oid']); ?>"
+                  enctype="multipart/form-data" id="ajax-upload-document">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel"><i class="fa fa-plus"></i> Add Document file</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>File name : </label>
+                        <input type="text" name="title" maxlength="50" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>File : </label>
+                        <input type="file" name="file" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" id="add-file-btn">Upload</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

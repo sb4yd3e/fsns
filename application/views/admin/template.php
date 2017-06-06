@@ -230,6 +230,7 @@
 <script type="text/javascript" src="<?php echo site_url('assets/admin/colorpicker/js/eye.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo site_url('assets/admin/colorpicker/js/utils.js'); ?>"></script>
 <script src="<?php echo site_url('assets/admin/datetimepicker/build/jquery.datetimepicker.full.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo site_url('js/form.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo site_url('assets/admin/js/order.js'); ?>"></script>
 <script>
     <?php echo $js; ?>

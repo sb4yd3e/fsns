@@ -40,13 +40,13 @@ function init_order() {
         update_product("edit", "p" + $(this).data('id'), 'sp_price', _num);
     });
 
-    $(document).on("change", "#shiping-amount", function () {
+    $(document).on("change", "#shipping-amount", function () {
         var _num = parseInt($(this).val());
         if (_num < 0) {
             _num = 0;
             $(this).val(_num);
         }
-       shiping = _num;
+        shipping = _num;
         cal_order();
     });
 
@@ -142,7 +142,7 @@ function init_order() {
         var json = JSON.stringify(products);
         $.ajax({
             method: "POST",
-            data: {coupon: $('#coupon').val(),products:json,shiping:shiping},
+            data: {coupon: $('#coupon').val(), products: json, shipping: shipping},
             url: window.location.href,
         }).done(function (status) {
             var obj = jQuery.parseJSON(status);
@@ -155,6 +155,87 @@ function init_order() {
         });
 
     });
+
+    $(document).on("click", "#save-shipping", function () {
+        $(this).attr('disabled', 'disabled').html('Saving...');
+
+        $.ajax({
+            method: "POST",
+            data: {
+                name: $('#shipping_name').val(),
+                address: $('#shipping_address').val(),
+                province: $('#shipping_province').val(),
+                zip: $('#shipping_zip').val(),
+                oid: $('#oid').val()
+            },
+            url: '/admin/orders/save_shipping',
+        }).done(function (status) {
+            var obj = jQuery.parseJSON(status);
+            if (obj.status === "error") {
+                $.notify("Can't save shipping address.", "error");
+            } else {
+                $.notify("Save shipping address success.", "success");
+            }
+            $('#save-shipping').removeAttr('disabled').html('<i class="fa fa-check"></i> Save');
+        });
+
+    });
+
+
+    var options = {
+        beforeSubmit: showRequest,
+        success: showResponse
+    };
+
+    $('#ajax-upload-document').ajaxForm(options);
+
+
+    $(document).on('click', '.delete-file', function () {
+        if (confirm("Confirm delete file?")) {
+            var fid = $(this).data('fid');
+            $.ajax({
+                method: "POST",
+                data: {
+                    fid: fid
+                },
+                url: '/admin/orders/ajax_delete_file',
+            }).done(function (status) {
+                $.notify("Delete file success.", "success");
+                ajax_list_files();
+            });
+        }
+    });
+
+    $('.select-product').click(function () {
+        var ids = $('#id-products').val();
+        var a_ids = ids.split(',');
+        if ($(this).is(':checked')) {
+            a_ids.push($(this).val());
+        } else {
+            var index = a_ids.indexOf($(this).val());
+            console.log(index);
+            a_ids.splice(index, 1);
+        }
+        $('#id-products').val(a_ids.join(','));
+
+    })
+}
+
+function showRequest(formData, jqForm, options) {
+    $('#add-file-btn').html('Uploading...').attr('disabled', 'disabled');
+    return true;
+
+}
+function showResponse(responseText, statusText, xhr, $form) {
+    $('#add-file-btn').html('Upload').removeAttr('disabled');
+    var obj = jQuery.parseJSON(responseText);
+    if (obj.status == 'success') {
+        $('#addFileModal').modal('hide');
+        ajax_list_files();
+    } else {
+        alert(obj.message);
+    }
+
 }
 
 
@@ -242,7 +323,7 @@ function cal_order() {
 
     total_before_vat = total_amount - total_discount;
     total_vat = (total_before_vat / 100) * 7;
-    total = total_before_vat + total_vat + shiping;
+    total = total_before_vat + total_vat + shipping;
     update_order();
 }
 
@@ -267,7 +348,7 @@ function update_order() {
     $("#discount-100k").html(discount_10k);
     $("#before-vat").html(total_before_vat.toFixed(2));
     $("#vat").html(total_vat.toFixed(2));
-    $("#shiping-amount").val(shiping.toFixed(2));
+    $("#shipping-amount").val(shipping.toFixed(2));
     $("#total-price").html(total.toFixed(2));
 }
 

@@ -11,7 +11,7 @@
 					<div class="col-lg-8">
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Account info</a></li>
-							<li role="presentation"><a href="#shping" aria-controls="shping" role="tab" data-toggle="tab">Shiping Detail</a></li>
+							<li role="presentation"><a href="#shping" aria-controls="shping" role="tab" data-toggle="tab">Shipping Detail</a></li>
 							<li role="presentation"><a href="#bussiness" aria-controls="bussiness" role="tab" data-toggle="tab" id="tab-bussiness" class="disabled">Bussiness Info</a></li>
 							<li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Logs</a></li>
 						</ul>
@@ -75,21 +75,21 @@
 							</div>
 							<div role="tabpanel" class="tab-pane fade" id="shping">
 								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-									<label for="shiping_name" class="control-label">Name</label>
+									<label for="shipping_name" class="control-label">Name</label>
 									<div class="form-group">
-										<input type="text" name="shiping_name" value="<?php echo ($this->input->post('shiping_name') ? $this->input->post('shiping_name') : $content['shiping_name']); ?>" class="form-control" id="shiping_name"  required />
+										<input type="text" name="shipping_name" value="<?php echo ($this->input->post('shipping_name') ? $this->input->post('shipping_name') : $content['shipping_name']); ?>" class="form-control" id="shipping_name"  required />
 									</div>
-									<label for="shiping_address" class="control-label">Shiping Address</label>
+									<label for="shipping_address" class="control-label">Shipping Address</label>
 									<div class="form-group">
-										<textarea name="shiping_address" class="form-control" id="shiping_address"  required><?php echo ($this->input->post('shiping_address') ? $this->input->post('shiping_address') : $content['shiping_address']); ?></textarea>
+										<textarea name="shipping_address" class="form-control" id="shipping_address"  required><?php echo ($this->input->post('shipping_address') ? $this->input->post('shipping_address') : $content['shipping_address']); ?></textarea>
 									</div>
-									<label for="shiping_province" class="control-label">Shiping Province</label>
+									<label for="shipping_province" class="control-label">Shipping Province</label>
 									<div class="form-group">
-										<?php echo form_dropdown('shiping_province',list_province(),$content['shiping_province'],'class="form-control" required'); ?>
+										<?php echo form_dropdown('shipping_province',list_province(),$content['shipping_province'],'class="form-control" required'); ?>
 									</div>
-									<label for="shiping_zip" class="control-label">Shiping Zip</label>
+									<label for="shipping_zip" class="control-label">Shipping Zip</label>
 									<div class="form-group">
-										<input type="text" name="shiping_zip" value="<?php echo ($this->input->post('shiping_zip') ? $this->input->post('shiping_zip') : $content['shiping_zip']); ?>" class="form-control" id="shiping_zip"  required />
+										<input type="text" name="shipping_zip" value="<?php echo ($this->input->post('shipping_zip') ? $this->input->post('shipping_zip') : $content['shipping_zip']); ?>" class="form-control" id="shipping_zip"  required />
 									</div>
 								</div>
 							</div>

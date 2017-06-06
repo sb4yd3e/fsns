@@ -295,7 +295,7 @@ function order_status($status){
         'confirmed' => 'ยืนยันการสั่งซื้อ',
         'wait_payment' => 'ลูกค้าชำระเงิน/ส่งเอกสาร',
         'confirm_payment' => 'ยืนยันการชำระ/ส่งเอกสาร',
-        'shping' => 'มีการจัดส่ง',
+        'shipping' => 'มีการจัดส่ง',
         'success' => 'สำเร็จ',
         'cancel' => 'ยกเลิก'
     );
