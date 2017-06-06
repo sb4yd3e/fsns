@@ -5274,3 +5274,17 @@ table.text-center, table.text-center td, table.text-center th {
     height: 30px;
     border: 1px solid #000;
 }
+.status-detail{
+    padding: 20px;
+    border:1px solid #eee;
+    margin-bottom: 10px;
+}
+.status-detail .date{
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+.status-detail .status{
+    font-size: 18px;
+    font-weight: bold;
+}

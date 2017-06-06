@@ -138,10 +138,10 @@ class Members extends CI_Controller {
 		$this->form_validation->set_rules('email','Email','required|valid_email|is_unique[users.email]');
 		$this->form_validation->set_rules('name','Name','required|max_length[100]');
 		$this->form_validation->set_rules('phone','Phone','required|max_length[20]');
-		$this->form_validation->set_rules('shiping_name','Shiping Name','required|max_length[200]');
-		$this->form_validation->set_rules('shiping_province','Shiping Province','required');
-		$this->form_validation->set_rules('shiping_zip','Shiping Zip','required|numeric|min_length[5]|max_length[5]');
-		$this->form_validation->set_rules('shiping_address','Shiping Address','required');
+		$this->form_validation->set_rules('shipping_name','Shipping Name','required|max_length[200]');
+		$this->form_validation->set_rules('shipping_province','Shipping Province','required');
+		$this->form_validation->set_rules('shipping_zip','Shipping Zip','required|numeric|min_length[5]|max_length[5]');
+		$this->form_validation->set_rules('shippipng_address','Shipping Address','required');
 		$this->form_validation->set_rules('is_active','Active member','required');
 
 		if($this->input->post('account_type')=='bussiness'){
@@ -159,10 +159,10 @@ class Members extends CI_Controller {
 				'name' => $this->input->post('name'),
 				'is_active' => $this->input->post('is_active'),
 				'phone' => $this->input->post('phone'),
-				'shiping_name' => $this->input->post('shiping_name'),
-				'shiping_province' => $this->input->post('shiping_province'),
-				'shiping_zip' => $this->input->post('shiping_zip'),
-				'shiping_address' => $this->input->post('shiping_address'),
+				'shipping_name' => $this->input->post('shipping_name'),
+				'shipping_province' => $this->input->post('shipping_province'),
+				'shipping_zip' => $this->input->post('shipping_zip'),
+				'shipping_address' => $this->input->post('shipping_address'),
 				'bussiness_name' => $this->input->post('bussiness_name'),
 				'bussiness_address' => $this->input->post('bussiness_address'),
 				'bussiness_number' => $this->input->post('bussiness_number'),
@@ -171,7 +171,7 @@ class Members extends CI_Controller {
 				'token' => md5($this->input->post('email').time()),
 				);
 
-			//for saler
+			//for Seller
 			if(is_group('sale') && $this->input->post('staff_id')!="0"){
 				$data_create['staff_id'] = $render_data['user']['aid'];
 			}
@@ -239,10 +239,10 @@ class Members extends CI_Controller {
 		
 		$this->form_validation->set_rules('name','Name','required|max_length[100]');
 		$this->form_validation->set_rules('phone','Phone','required|max_length[20]');
-		$this->form_validation->set_rules('shiping_name','Shiping Name','required|max_length[200]');
-		$this->form_validation->set_rules('shiping_province','Shiping Province','required');
-		$this->form_validation->set_rules('shiping_zip','Shiping Zip','required|numeric|min_length[5]|max_length[5]');
-		$this->form_validation->set_rules('shiping_address','Shiping Address','required');
+		$this->form_validation->set_rules('shipping_name','Shipping Name','required|max_length[200]');
+		$this->form_validation->set_rules('shipping_province','Shipping Province','required');
+		$this->form_validation->set_rules('shipping_zip','Shipping Zip','required|numeric|min_length[5]|max_length[5]');
+		$this->form_validation->set_rules('shipping_address','Shipping Address','required');
 		$this->form_validation->set_rules('is_active','Active member','required');
 		if($this->input->post('account_type')=='bussiness'){
 			$this->form_validation->set_rules('bussiness_name','Bussiness Name','required|max_length[200]');
@@ -264,16 +264,16 @@ class Members extends CI_Controller {
 				'name' => $this->input->post('name'),
 				'is_active' => $this->input->post('is_active'),
 				'phone' => $this->input->post('phone'),
-				'shiping_name' => $this->input->post('shiping_name'),
-				'shiping_province' => $this->input->post('shiping_province'),
-				'shiping_zip' => $this->input->post('shiping_zip'),
+				'shipping_name' => $this->input->post('shipping_name'),
+				'shipping_province' => $this->input->post('shipping_province'),
+				'shipping_zip' => $this->input->post('shipping_zip'),
 				'bussiness_name' => $this->input->post('bussiness_name'),
 				'bussiness_address' => $this->input->post('bussiness_address'),
 				'bussiness_number' => $this->input->post('bussiness_number'),
-				'shiping_address' => $this->input->post('shiping_address')
+				'shipping_address' => $this->input->post('shipping_address')
 				);
 
-			//for saler
+			//for Seller
 			if(is_group('sale') && $this->input->post('staff_id')!="0"){
 				$data_update['staff_id'] = $render_data['user']['aid'];
 			}

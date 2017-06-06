@@ -8,8 +8,8 @@
 class Orders_model extends CI_Model
 {
     var $table = 'orders';
-    var $column_order = array('oid', 'shiping_name', 'order_type', 'total_product', 'order_status', 'total_amount', null);
-    var $column_search = array('oid', 'shiping_name', 'order_type', 'total_product', 'order_status', 'total_amount');
+    var $column_order = array('oid', 'shipping_name', 'order_type', 'total_product', 'order_status', 'total_amount', null);
+    var $column_search = array('oid', 'shipping_name', 'order_type', 'total_product', 'order_status', 'total_amount');
     var $order = array('oid' => 'desc');
 
     function __construct()
@@ -131,7 +131,7 @@ class Orders_model extends CI_Model
 
     function list_status($oid)
     {
-        return $this->db->where('oid', $oid)->get('order_status')->result_array();
+        return $this->db->where('oid', $oid)->order_by('osid', 'desc')->get('order_status')->result_array();
     }
 
     function list_files($oid, $type = '', $uid = '', $aid = '')
@@ -139,9 +139,11 @@ class Orders_model extends CI_Model
         if ($type == '') {
             return $this->db->where('oid', $oid)->get('order_files')->result_array();
         } elseif ($type == 'customer') {
-            return $this->db->where('oid', $oid)->where('uid', $uid)->get('order_files')->result_array();
-        } elseif ($type == 'saler') {
-            return $this->db->where('oid', $oid)->where('aid', $aid)->get('order_files')->result_array();
+            return $this->db->where('oid', $oid)->where('uid', $uid)->order_by('ufid', 'desc')->get('order_files')->result_array();
+        } else if ($type == 'customer_all') {
+            return $this->db->where('oid', $oid)->where('aid', 0)->order_by('ufid', 'desc')->get('order_files')->result_array();
+        } elseif ($type == 'seller') {
+            return $this->db->where('oid', $oid)->where('uid', 0)->order_by('ufid', 'desc')->get('order_files')->result_array();
         }
     }
 
@@ -152,18 +154,53 @@ class Orders_model extends CI_Model
 
     function get_order_product($id, $paid)
     {
-        return $this->db->where('oid',$id)->where('pa_id',$paid)->get('order_details')->row_array();
+        return $this->db->where('oid', $id)->where('pa_id', $paid)->get('order_details')->row_array();
     }
 
-    function save_order_product($id,$paid, $data)
+    function save_order_product($id, $paid, $data)
     {
-        return $this->db->where('oid',$id)->where('pa_id',$paid)->update('order_details',$data);
-    }
-    function add_order_product($id,$data){
-        return $this->db->insert('order_details',$data);
-    }
-    function delete_order_product($id,$paid){
-        return $this->db->where_not_in('pa_id',$paid)->delete('order_details');
+        return $this->db->where('oid', $id)->where('pa_id', $paid)->update('order_details', $data);
     }
 
+    function add_order_product($id, $data)
+    {
+        return $this->db->insert('order_details', $data);
+    }
+
+    function delete_order_product($id, $paid)
+    {
+        return $this->db->where_not_in('pa_id', $paid)->delete('order_details');
+    }
+
+    function add_document($params)
+    {
+        return $this->db->insert('order_files', $params);
+    }
+
+    function get_file($fid)
+    {
+        return $this->db->where('ufid', $fid)->get('order_files')->row_array();
+    }
+
+    function delete_file($fid)
+    {
+        $file = $this->db->where('ufid', $fid)->get('order_files')->row_array();
+        @unlink(ORDER_PATH . '/' . $file['file_paht']);
+        return $this->db->where('ufid', $fid)->delete('order_files');
+    }
+
+    function save_status($data)
+    {
+        $this->db->where('oid', $data['oid'])->update('orders', array('order_status' => $data['status']));
+        return $this->db->insert('order_status', $data);
+    }
+
+    function update_order_all_product_status($oid, $data)
+    {
+        $this->db->where('oid', $oid)->update('order_details', $data);
+    }
+    function update_order_product_status($odid, $data)
+    {
+        $this->db->where('odid', $odid)->update('order_details', $data);
+    }
 }
