@@ -31,7 +31,7 @@
                 <div class="tab-content" style="margin-top: 20px;">
                     <div role="tabpanel" class="tab-pane fade in active" id="info">
 
-                        <?php if ($data['order_status'] == "pending") { ?>
+                        <?php if ($data['order_status'] == "pending" && !is_group('sale')) { ?>
                             <a href="#" class="btn btn-success btn-sm pull-right" data-toggle="modal"
                                data-target="#addproductModal"><i
                                         class="fa fa-plus"></i> Add new product</a>
@@ -73,7 +73,7 @@
                                                <?php if ($data['order_status'] != "pending"){ ?>readonly<?php } ?>></td>
                                     <td id="total_amount_p<?php echo $product['pa_id']; ?>"><?php echo $product['total_amount']; ?></td>
                                     <td>
-                                        <?php if ($data['order_status'] == "pending") { ?>
+                                        <?php if ($data['order_status'] == "pending"&&!is_group('sale')) { ?>
                                             <button type="button" class="btn btn-sm btn-danger delete-product"
                                                     data-id="<?php echo $product['pa_id']; ?>"><i
                                                         class="fa fa-times-circle"></i></button>
@@ -105,9 +105,11 @@
                                     <div class="input-group" style="max-width: 250px;">
                                         <input type="text" class="form-control"
                                                aria-label="Coupon Code" maxlength="20" id="coupon"
-                                               <?php if ($data['order_status'] != "pending"){ ?>readonly<?php } ?>>
+                                               <?php if ($data['order_status'] != "pending"&&!is_group('sale')){ ?>readonly<?php } ?>>
+                                        <?php if(!is_group('sale')){ ?>
                                         <span class="input-group-addon" id="submit-coupon"
-                                              <?php if ($data['order_status'] != "pending"){ ?>readonly<?php } ?>>ตกลง</span>
+                                              <?php if ($data['order_status'] != "pending"&&!is_group('sale')){ ?>readonly<?php } ?>>ตกลง</span>
+                                        <?php } ?>
                                     </div>
 
                                     <strong>
@@ -159,7 +161,7 @@
 
 
                         <div class="clearfix"></div>
-                        <?php if ($data['order_status'] == "pending") { ?>
+                        <?php if ($data['order_status'] == "pending" && !is_group('sale')) { ?>
                             <div class="box-footer">
                                 <button type="button" id="save-order" class="btn btn-success">
                                     <i class="fa fa-check"></i> Save
@@ -172,7 +174,8 @@
                         <?php } ?>
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="status">
-                        <div class="col-md-6">
+
+                        <div class="col-md-6"><?php if(!is_group('sale')){ ?>
                             <form action="<?php echo base_url('admin/orders/save_status/' . $data['oid']); ?>"
                                   method="post" id="ajax-status">
 
@@ -204,6 +207,7 @@
                                     </button>
                                 </div>
                             </form>
+                            <?php } ?>
                             <div class="">
                                 <?php foreach ($status_list as $status_item) { ?>
                                     <div class="status-detail">
@@ -261,9 +265,11 @@
                         <div class="col-md-6">
                             <div class="panel  with-border">
                                 <div class="box-header with-border">จัดการเอกสารส่งให้ลูกค้า
+                                    <?php if(!is_group('sale')){ ?>
                                     <button class="btn btn-info btn-sm pull-right" id="add-file" data-toggle="modal"
                                             data-target="#addFileModal"><i
                                                 class="fa fa-plus"></i></button>
+                                    <?php } ?>
                                 </div>
                                 <div class="panel-body with-border">
                                     <table class="table table-bordered">
@@ -312,6 +318,7 @@
                                        value="<?php echo($this->input->post('shipping_zip') ? $this->input->post('shipping_zip') : $data['shipping_zip']); ?>"
                                        class="form-control" id="shipping_zip" required/>
                             </div>
+                            <?php if(!is_group('sale')){ ?>
                             <div class="box-footer">
                                 <button type="button" id="save-shipping" class="btn btn-success">
                                     <i class="fa fa-check"></i> Save
@@ -320,6 +327,7 @@
                                     <i class="fa fa-times-circle"></i> Back to list
                                 </a>
                             </div>
+                            <?php } ?>
                         </div>
                         <div class="col-md-6">
                             <div class="panel">
@@ -363,6 +371,7 @@
 
                                         </tbody>
                                     </table>
+                                    <?php if(!is_group('sale')){ ?>
                                     <div>
                                         <form action="<?php echo base_url('admin/orders/change_shipping/' . $data['oid']); ?>"
                                               method="post">
@@ -384,27 +393,8 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <hr>
-                                    <div>
-                                        <?php /*foreach ($status_list as $status_item) { ?>
-                                            <div class="status-detail">
-                                                <div class="date">
-                                                    <?php if ($status_item['owner'] == 'Seller') {
-                                                        echo '<label class="label label-info">' . $status_item['owner'] . '</label>';
-                                                    } else {
-                                                        echo '<label class="label label-warning">' . $status_item['owner'] . '</label>';
-                                                    } ?>
-                                                    <?php echo date("d/m/Y H:i:s", $status_item['at_date']); ?> น.
-                                                </div>
-                                                <div class="status">
-                                                    Status : <?php echo order_status($status_item['status']); ?>
-                                                </div>
-                                                <div class="comment">
-                                                    <?php echo $status_item['text']; ?>
-                                                </div>
-                                            </div>
-                                        <?php }*/ ?>
-                                    </div>
+                                    <?php } ?>
+
                                 </div>
                             </div>
                         </div>
@@ -444,7 +434,7 @@
         </div>
     </div>
 </div>
-
+<?php if(!is_group('sale')){ ?>
 <div class="modal fade" id="addproductModal" tabindex="-1" role="dialog" aria-labelledby="addproductModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -517,3 +507,4 @@
         </div>
     </div>
 </div>
+<?php } ?>

@@ -50,6 +50,10 @@ class Orders_model extends CI_Model
             $this->db->where("order_status", $_POST['status']);
         }
 
+        if (is_group('sale')) {
+            $user = $this->session->userdata('fnsn');
+            $this->db->where("sale_id", $user['aid']);
+        }
 
         if (isset($_POST['order'])) {
             $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
@@ -69,6 +73,10 @@ class Orders_model extends CI_Model
     function get_all_orders()
     {
         $this->_get_datatables_query();
+        if (is_group('sale')) {
+            $user = $this->session->userdata('fnsn');
+            $this->db->where("sale_id", $user['aid']);
+        }
         if ($_POST['length'] != -1)
             $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
@@ -78,6 +86,10 @@ class Orders_model extends CI_Model
     function count_filtered()
     {
         $this->_get_datatables_query();
+        if (is_group('sale')) {
+            $user = $this->session->userdata('fnsn');
+            $this->db->where("sale_id", $user['aid']);
+        }
         $query = $this->db->get();
         return $query->num_rows();
     }
@@ -85,6 +97,10 @@ class Orders_model extends CI_Model
     public function count_all()
     {
         $this->db->from($this->table);
+        if (is_group('sale')) {
+            $user = $this->session->userdata('fnsn');
+            $this->db->where("sale_id", $user['aid']);
+        }
         return $this->db->count_all_results();
     }
 
@@ -154,7 +170,12 @@ class Orders_model extends CI_Model
 
     function get_order_product($id, $paid)
     {
-        return $this->db->where('oid', $id)->where('pa_id', $paid)->get('order_details')->row_array();
+        $this->db->where('oid', $id);
+        if (is_group('sale')) {
+            $user = $this->session->userdata('fnsn');
+            $this->db->where("sale_id", $user['aid']);
+        }
+        return $this->where('pa_id', $paid)->get('order_details')->row_array();
     }
 
     function save_order_product($id, $paid, $data)
@@ -199,6 +220,7 @@ class Orders_model extends CI_Model
     {
         $this->db->where('oid', $oid)->update('order_details', $data);
     }
+
     function update_order_product_status($odid, $data)
     {
         $this->db->where('odid', $odid)->update('order_details', $data);

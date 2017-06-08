@@ -28,10 +28,10 @@
 						</div>
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<label for="site_description" class="control-label">Allow member register</label>
+						<label for="site_description" class="control-label">Email for contact</label>
 						<div class="form-group">
-							<?php echo form_dropdown('register',array('0'=>'Disable member Register','1'=>'Allow member register'),$setting['allow_register'],' class="form-control"'); ?>
-						</div>
+                            <input type="text" name="email_for_contact" value="<?php echo ($this->input->post('email_for_contact') ? $this->input->post('email_for_contact') : $setting['email_for_contact']); ?>" class="form-control" id="email_for_contact" required />
+                        </div>
 					</div>
 				</div>
 				<div class="row clearfix">
