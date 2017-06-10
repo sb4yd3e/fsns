@@ -9,17 +9,20 @@ if (!defined('BASEPATH'))
  * @property Content_model $content
  * @property Slideshow_model $slideshow
  */
-class Frontend extends CI_Controller {
+class Frontend extends CI_Controller
+{
 
     public $render_data = array();
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('taxonomy_model');
         $this->render_data['product_category'] = $this->taxonomy_model->get_taxonomy_term('product_category');
     }
 
-    public function index() {
+    public function index()
+    {
         /* Web title */
         $this->render_data['web_title'] = 'Home';
         /* Load Category */
@@ -33,9 +36,10 @@ class Frontend extends CI_Controller {
         $this->template->render();
     }
 
-    public function news($content_id = null) {
+    public function news($content_id = null)
+    {
 
-        if ($content_id) {
+        if ($content_id && $content_id != 'page') {
             $content_id = floor($content_id);
             $this->render_data['news'] = $this->db->where('id', $content_id)->get('contents')->row_array();
             $this->render_data['web_title'] = $this->render_data['news']['title'];
@@ -44,13 +48,57 @@ class Frontend extends CI_Controller {
             $this->load->helper('text');
             $this->render_data['web_title'] = 'News';
             $this->load->model('content_model');
-            $this->render_data['news_list'] = $this->content_model->get_content_list_by_created();
+
+            $this->load->library('pagination');
+            $config['base_url'] = base_url('news/page') . '/';
+            $config['total_rows'] = $this->content_model->count_news();
+            $config['full_tag_open'] = '<ul class="pagination">';
+            $config['full_tag_close'] = '</ul>';
+
+            //num
+            $config['cur_tag_open'] = '<li class="active"><a href="#">';
+            $config['cur_tag_close'] = '</a></li>';
+            $config['num_tag_open'] = '<li>';
+            $config['num_tag_close'] = '</li>';
+
+            //prev
+            $config['prev_tag_open'] = '<li class="arrow">';
+            $config['prev_tag_close'] = '</li>';
+            $config['prev_link'] = '«';
+
+            //next
+            $config['next_tag_open'] = '<li class="arrow">';
+            $config['next_tag_close'] = '</li>';
+            $config['next_link'] = '»';
+
+            // Go to first
+            $config['first_tag_open'] = '<li>';
+            $config['first_link'] = 'หน้าแรก';
+            $config['first_tag_close'] = '</li>';
+
+            // Go to last
+            $config['last_tag_open'] = '<li>';
+            $config['last_link'] = 'หน้าสุดท้าย';
+            $config['last_tag_close'] = '</li>';
+
+            $config['per_page'] = 9;
+            $config['uri_segment'] = 3;
+            $this->pagination->initialize($config);
+            $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+            $content = $this->content_model->list_news($config['per_page'], $page);
+            $links = $this->pagination->create_links();
+
+            $this->render_data['news_list'] = $content;
+            $this->render_data['links'] = $links;
             $this->template->write_view('content', 'frontend/news_list', $this->render_data);
+
+
         }
         $this->template->render();
     }
 
-    public function services($page) {
+    public function services($page)
+    {
         $this->render_data['active_menu'] = 'services';
 
         switch ($page) {
@@ -73,7 +121,8 @@ class Frontend extends CI_Controller {
         $this->template->render();
     }
 
-    public function contact() {
+    public function contact()
+    {
         $this->render_data['web_title'] = 'ติดต่อเรา (Contact)';
 
         if ($_POST) {
@@ -84,7 +133,6 @@ class Frontend extends CI_Controller {
             $email = $this->input->post('email');
             $phone = $this->input->post('phone');
             $message = $this->input->post('message');
-
 
 
             $config['charset'] = 'utf-8';
@@ -134,7 +182,8 @@ class Frontend extends CI_Controller {
         $this->template->render();
     }
 
-    public function catalog($category_id = null, $sub_category_id = null) {
+    public function catalog($category_id = null, $sub_category_id = null)
+    {
 
         /* Load Category */
         $this->load->model('taxonomy_model');
@@ -146,14 +195,14 @@ class Frontend extends CI_Controller {
         $this->render_data['term'] = $this->taxonomy_model->get_taxonomy_id($this->render_data['sub_category_id']);
 
         $main_cat = $this->taxonomy_model->get_taxonomy_id($this->render_data['category_id']);
-        $this->render_data['web_title'] = ucfirst(str_replace('<br/>',' ',$main_cat['title'])) . ' - ' . ucfirst($this->render_data['term']['title']);
+        $this->render_data['web_title'] = ucfirst(str_replace('<br/>', ' ', $main_cat['title'])) . ' - ' . ucfirst($this->render_data['term']['title']);
 
         if ($this->render_data['category_id'] == null || $this->render_data['sub_category_id'] == null || !$this->render_data['term'])
             redirect('/');
 
 
         // Get Product List //
-        $this->load->model('product_model', 'product');
+        $this->load->model('products_model', 'product');
         $this->render_data['products'] = $this->product->get_product_list($sub_category_id);
         if ($sub_category_id == 42) {
             $this->template->write_view('content', 'frontend/product_pdf', $this->render_data);
@@ -164,39 +213,42 @@ class Frontend extends CI_Controller {
         $this->template->render();
     }
 
-    public function product_get($product_id) {
+    public function product_get($product_id)
+    {
         $product_id = floor($product_id);
         if ($product_id <= 0) {
             redirect('frontend');
         }
-        $this->template->set_template('product');
+
 
         /* Load Category */
         $this->load->model('taxonomy_model', 'taxonomy');
         $this->render_data['product_category'] = $this->taxonomy->get_taxonomy_term('product_category');
         /* Load Product */
-        $this->load->model('product_model', 'product');
+        $this->load->model('products_model', 'product');
         $this->render_data['products'] = $this->product->get_product_list_nav();
 
 
         $this->render_data['product_data'] = $this->product->get_product($product_id);
-        $this->render_data['product_category'] = $this->taxonomy->get_taxonomy_term('product_category');
+        $this->render_data['product_attr'] = $this->product->get_attribute($product_id);
         $this->render_data['product_list'] = $this->product->get_other_product($product_id, 5);
+        $this->render_data['web_title'] = $this->render_data['product_data']['title'];
 
-        $this->template->write_view('header', 'frontend/header', $this->render_data);
-        $this->template->write_view('product_nav', 'frontend/product_nav', $this->render_data);
+        $this->template->write_view('content', 'frontend/product_view', $this->render_data);
         $this->template->render();
     }
 
-    public function product_search() {
+    public function product_search()
+    {
         $string = trim($this->input->post('search_txt'));
         /* Load Product */
-        $this->load->model('product_model', 'product');
+        $this->load->model('products_model', 'product');
         $this->render_data['products_search'] = $this->product->get_product_search($string);
         $this->load->view('frontend/product_search', $this->render_data);
     }
 
-    public function product_pdf_download($product_id, $hash, $title) {
+    public function product_pdf_download($product_id, $hash, $title)
+    {
         if (md5($product_id . 'suwichalala') != $hash) {
             die();
         }
@@ -212,5 +264,6 @@ class Frontend extends CI_Controller {
             //force_download($name, $data);
         }
     }
+
 
 }

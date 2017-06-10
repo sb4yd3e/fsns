@@ -38,10 +38,10 @@
                 <li class="grid_4">
                     <figure class="portfolio clearfix">
                         <div class="portfolio-image">
-                            <a href="javascript:void(0)">
+                            <a href="<?php echo base_url('product/'.$product['id'].'/'.url_title($product['title'])); ?>">
                                 <img src="./timthumb.php?src=./<?php echo PRODUCT_PATH?>/<?php echo $product['cover']?>&zc=1&w=449&235" alt="portfolio" width="300" alt="<?php echo $web_title.' - '.$product['title']?>"/>
                             </a>
-                            <?php if($product['pdf']):?>
+                            <?php if($product['pdf'] && $product['online']=='0'):?>
                             <div class="portfolio-hover">
                                 <div class="mask"></div>
                                 <ul>

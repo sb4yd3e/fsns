@@ -48,7 +48,9 @@
             <?php endforeach; ?>
 
 
-
+<div id="pagination">
+    <?php echo $links; ?>
+</div>
 
 
 

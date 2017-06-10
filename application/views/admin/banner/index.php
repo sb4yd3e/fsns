@@ -25,7 +25,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Delay to show next time.(Seconds)*</label>
-                           <input name="delay" value="<?php echo set_value('delay',($banner['delay'] / 1000)) ?>" type="number" class="form-control" required/>
+                           <input name="delay" value="<?php echo set_value('delay',$banner['delay']) ?>" type="number" class="form-control" required/>
                         </div>
                     </div>
                 </div>
