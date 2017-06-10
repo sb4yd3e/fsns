@@ -22,6 +22,11 @@
                                 <input name="title" value="<?php echo set_value('title', $product['title']) ?>"
                                        class="form-control" required/>
                             </div>
+                            <div class="form-group">
+                                <label>Technician info:</label>
+                                <input name="info" value="<?php echo set_value('info', $product['info']) ?>" class="form-control"
+                                />
+                            </div>
                             <div class="row clearfix">
                                 <div class="col-md-6">
 

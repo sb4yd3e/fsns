@@ -69,10 +69,16 @@ $route['pdf/(:num)-(:any)'] = 'frontend/product_pdf_download/$1';
 
 // catalog //
 $route['catalog/(:num)/(:any)/(:num)/(:any)'] = 'frontend/catalog/$1/$3';
+$route['catalog/(:num)/(:any)/(:num)/(:any)/(:num)'] = 'frontend/catalog/$1/$3/$4';
 $route['contact'] = 'frontend/contact';
+
+//product
+$route['product/(:num)/(:any)'] = 'frontend/product_get/$1';
 
 // News //
 $route['news'] = 'frontend/news';
+$route['news/page'] = 'frontend/news/page/0';
+$route['news/page/(:num)'] = 'frontend/news/page/$1';
 $route['news/(:num)/(:any)'] = 'frontend/news/$1';
 
 // Services //

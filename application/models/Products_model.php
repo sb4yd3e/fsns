@@ -90,6 +90,10 @@ class Products_model extends CI_Model
         return $this->db->insert_id();
     }
 
+    function get_attribute($pid)
+    {
+        return $this->db->where('pid', $pid)->get('product_attribute')->result_array();
+    }
 
     public function group_all()
     {
@@ -124,9 +128,9 @@ class Products_model extends CI_Model
     {
 
         if ($taxonomy_term_id == 0) {
-            $query = $this->db->select('products.id,products.title,products.group,products.body,cover,pdf,taxonomy_terms.title as term_title')->order_by('id')->from('products')->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->get();
+            $query = $this->db->select('products.id,products.title,products.group,products.body,products.online,cover,pdf,taxonomy_terms.title as term_title')->order_by('id')->from('products')->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->get();
         } else {
-            $query = $this->db->select('products.id,products.title,products.group,products.body,cover,pdf,taxonomy_terms.title as term_title')
+            $query = $this->db->select('products.id,products.title,products.group,products.body,products.online,cover,pdf,taxonomy_terms.title as term_title')
                 ->where('taxonomy_term_id', $taxonomy_term_id)
                 ->order_by('products.group')
                 ->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')
@@ -164,7 +168,7 @@ class Products_model extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->row_array();
         }
-        return array();
+        return null;
     }
 
     public function get_product_alt($id)

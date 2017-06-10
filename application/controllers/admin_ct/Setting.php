@@ -25,7 +25,7 @@ public function index()
     $this->form_validation->set_rules('site_title', 'Site title', 'required');
     $this->form_validation->set_rules('site_keyword', 'Site keyword', 'required');
     $this->form_validation->set_rules('site_description', 'Site description', 'required');
-    $this->form_validation->set_rules('register', 'Member register config', 'required');
+    $this->form_validation->set_rules('email_for_contact', 'Email for contact', 'required');
 
     if($this->form_validation->run())     
     {    
@@ -36,7 +36,7 @@ public function index()
        'google_plus' => $this->input->post('google'),
        'instagram' => $this->input->post('instagram'),
        'site_description' => $this->input->post('site_description'),
-       'allow_register' => $this->input->post('register')
+       'email_for_contact' => $this->input->post('email_for_contact')
        );
 
       $this->setting->update_setting($params);            

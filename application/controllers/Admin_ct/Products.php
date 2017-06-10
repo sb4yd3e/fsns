@@ -152,6 +152,7 @@ class Products extends CI_Controller
         if ($this->form_validation->run()) {
             $params = array(
                 'title' => $this->input->post('title'),
+                'info' => $this->input->post('info'),
                 'body' => $this->input->post('body'),
                 'group' => strtolower($this->input->post('group', TRUE)),
                 'normal_price' => $this->input->post('product_price'),
@@ -353,6 +354,7 @@ $(document).on(\'click\', \'.color-select\', function () {
         if ($this->form_validation->run()) {
             $params = array(
                 'title' => $this->input->post('title'),
+                'info' => $this->input->post('info'),
                 'body' => $this->input->post('body'),
                 'group' => strtolower($this->input->post('group', TRUE)),
                 'normal_price' => $this->input->post('product_price'),
@@ -550,7 +552,7 @@ return false;
                 $js .= '$.notify("Can\'n upload PDF file!.", "warning");';
             }
             if ($this->input->get('save') == "success") {
-                $js .= '$.notify("Save product success.", "warning");';
+                $js .= '$.notify("Save product success.", "success");';
             }
             if ($this->input->get('save') == "error") {
                 $js .= '$.notify("Can\'n save product!.", "warning");';
