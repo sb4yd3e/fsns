@@ -144,10 +144,10 @@ class Members extends CI_Controller {
 		$this->form_validation->set_rules('shippipng_address','Shipping Address','required');
 		$this->form_validation->set_rules('is_active','Active member','required');
 
-		if($this->input->post('account_type')=='bussiness'){
-			$this->form_validation->set_rules('bussiness_name','Bussiness Name','required|max_length[200]');
-			$this->form_validation->set_rules('bussiness_address','Bussiness Address','required');
-			$this->form_validation->set_rules('bussiness_number','Federal tax identification number','required|max_length[30]');
+		if($this->input->post('account_type')=='business'){
+			$this->form_validation->set_rules('business_name','Business Name','required|max_length[200]');
+			$this->form_validation->set_rules('business_address','Business Address','required');
+			$this->form_validation->set_rules('business_number','Federal tax identification number','required|max_length[30]');
 		}
 		if($this->form_validation->run())     
 		{   
@@ -163,9 +163,9 @@ class Members extends CI_Controller {
 				'shipping_province' => $this->input->post('shipping_province'),
 				'shipping_zip' => $this->input->post('shipping_zip'),
 				'shipping_address' => $this->input->post('shipping_address'),
-				'bussiness_name' => $this->input->post('bussiness_name'),
-				'bussiness_address' => $this->input->post('bussiness_address'),
-				'bussiness_number' => $this->input->post('bussiness_number'),
+				'business_name' => $this->input->post('business_name'),
+				'business_address' => $this->input->post('business_address'),
+				'business_number' => $this->input->post('business_number'),
 				'register_ip' => $this->input->ip_address(),
 				'register_date' => time(),
 				'token' => md5($this->input->post('email').time()),
@@ -190,21 +190,21 @@ class Members extends CI_Controller {
 			$this->template->write('user_group', $render_data['user']['group']);
         //******* Defalut ********//
 			$js = '
-			if($("#account_type").val()=="bussiness"){
-				$("#tab-bussiness").removeClass("disabled");
+			if($("#account_type").val()=="business"){
+				$("#tab-business").removeClass("disabled");
 			}
 			$("#account_type").change(function(){
-				if($(this).val()!="bussiness"){
-					$("#tab-bussiness").addClass("disabled");
-					$("#bussiness_name").val("");
-					$("#bussiness_address").val("");
-					$("#bussiness_number").val("");
+				if($(this).val()!="business"){
+					$("#tab-business").addClass("disabled");
+					$("#business_name").val("");
+					$("#business_address").val("");
+					$("#business_number").val("");
 				}else{
-					$("#tab-bussiness").removeClass("disabled");
+					$("#tab-business").removeClass("disabled");
 				}
 			});
 
-			$("#tab-bussiness").click(function (e) {
+			$("#tab-business").click(function (e) {
 				if($(this).hasClass("disabled")){
 					e.preventDefault();
 					return false;
@@ -244,10 +244,10 @@ class Members extends CI_Controller {
 		$this->form_validation->set_rules('shipping_zip','Shipping Zip','required|numeric|min_length[5]|max_length[5]');
 		$this->form_validation->set_rules('shipping_address','Shipping Address','required');
 		$this->form_validation->set_rules('is_active','Active member','required');
-		if($this->input->post('account_type')=='bussiness'){
-			$this->form_validation->set_rules('bussiness_name','Bussiness Name','required|max_length[200]');
-			$this->form_validation->set_rules('bussiness_address','Bussiness Address','required');
-			$this->form_validation->set_rules('bussiness_number','Federal tax identification number','required|max_length[30]');
+		if($this->input->post('account_type')=='business'){
+			$this->form_validation->set_rules('business_name','Business Name','required|max_length[200]');
+			$this->form_validation->set_rules('business_address','Business Address','required');
+			$this->form_validation->set_rules('business_number','Federal tax identification number','required|max_length[30]');
 		}
 		if($this->input->post('password')){
 			$this->form_validation->set_rules('password','Password','required|min_length[6]|max_length[50]');
@@ -267,9 +267,9 @@ class Members extends CI_Controller {
 				'shipping_name' => $this->input->post('shipping_name'),
 				'shipping_province' => $this->input->post('shipping_province'),
 				'shipping_zip' => $this->input->post('shipping_zip'),
-				'bussiness_name' => $this->input->post('bussiness_name'),
-				'bussiness_address' => $this->input->post('bussiness_address'),
-				'bussiness_number' => $this->input->post('bussiness_number'),
+				'business_name' => $this->input->post('business_name'),
+				'business_address' => $this->input->post('business_address'),
+				'business_number' => $this->input->post('business_number'),
 				'shipping_address' => $this->input->post('shipping_address')
 				);
 
@@ -295,21 +295,21 @@ class Members extends CI_Controller {
 			$this->template->write('user_name', $render_data['user']['name']);
 			$this->template->write('user_group', $render_data['user']['group']);
         //******* Defalut ********//
-			$js = 'if($("#account_type").val()=="bussiness"){
-				$("#tab-bussiness").removeClass("disabled");
+			$js = 'if($("#account_type").val()=="business"){
+				$("#tab-business").removeClass("disabled");
 			}
 			$("#account_type").change(function(){
-				if($(this).val()!="bussiness"){
-					$("#tab-bussiness").addClass("disabled");
-					$("#bussiness_name").val("");
-					$("#bussiness_address").val("");
-					$("#bussiness_number").val("");
+				if($(this).val()!="business"){
+					$("#tab-business").addClass("disabled");
+					$("#business_name").val("");
+					$("#business_address").val("");
+					$("#business_number").val("");
 				}else{
-					$("#tab-bussiness").removeClass("disabled");
+					$("#tab-business").removeClass("disabled");
 				}
 			});
 
-			$("#tab-bussiness").click(function (e) {
+			$("#tab-business").click(function (e) {
 				if($(this).hasClass("disabled")){
 					e.preventDefault();
 					return false;

@@ -144,4 +144,40 @@ class Members_model extends CI_Model
     {
         return $this->db->get('users')->result_array();
     }
+
+    function get_user_by_token($token)
+    {
+        if ($this->db->select('uid')->where('token', $token)->get('users')->row_array()) {
+            return $this->db->where('token', $token)->update('users', array('token' => time(), 'is_active' => 1));
+        } else {
+            return false;
+        }
+    }
+
+    function get_user_by_token_forgot($token)
+    {
+        if ($d = $this->db->select('uid')->where('token', $token)->get('users')->row_array()) {
+            return $d['uid'];
+        } else {
+            return false;
+        }
+    }
+
+    function forgot_password($email)
+    {
+        if ($this->db->select('uid')->where('email', $email)->get('users')->row_array()) {
+            $t = md5(time());
+            $this->db->where('email', $email)->update('users', array('token' => $t));
+            return $t;
+        } else {
+            return false;
+        }
+    }
+
+    function reset_password($uid)
+    {
+        $pass = rand(100000, 10000000);
+        $this->db->where('uid', $uid)->update('users', array('password' => md5($pass), 'token' => time()));
+        return $pass;
+    }
 }

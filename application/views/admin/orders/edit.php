@@ -25,7 +25,7 @@
                     </li>
 
                     <li role="presentation">
-                        <a href="#logs" aria-controls="bussiness" role="tab" data-toggle="tab" id="tab-logs">Logs</a>
+                        <a href="#logs" aria-controls="business" role="tab" data-toggle="tab" id="tab-logs">Logs</a>
                     </li>
                 </ul>
                 <div class="tab-content" style="margin-top: 20px;">

@@ -24,7 +24,7 @@
                                     class="form-control input-sm">
                                 <option value="">Show All</option>
                                 <option value="personal">บุคคลทั่วไป</option>
-                                <option value="bussiness">นิติบุคคล</option>
+                                <option value="business">นิติบุคคล</option>
                             </select>
                         </div>
                     </div>

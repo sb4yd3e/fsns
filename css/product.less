@@ -144,6 +144,16 @@
     width: 100%;
     float: none;
   }
+  #membber-form {
+    .col-6 {
+      width: 100% !important;
+      float: none  !important;
+      &#div-login,&#div-forgot{
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+      }
+    }
+  }
 }
 
 /*================ POPUP ===============*/
@@ -186,9 +196,84 @@
     border-radius: 50%;
     -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-    img{
+    img {
       width: 16px;
       height: 16px;
     }
   }
 }
+
+/*========= member ============*/
+#div-forgot{
+  display: none;
+}
+#membber-form {
+  .col-6{
+    width: 50%;
+    float: left;
+    &#div-login,&#div-forgot {
+      float: none;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 400px;
+    }
+  }
+  padding: 20px;
+  label{
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 20px;
+    margin-left: 20px;
+  }
+  .input {
+    width: calc(~"100%" - 60px);
+    margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    -webkit-border-radius: 3px;
+    border-radius: 5px;
+    font-size: 14px;
+    padding: 7px 10px;
+    display: block;
+  }
+  .biz{
+    display: none;
+  }
+  .btn{
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    background: green;
+    -webkit-border-radius: 3px;
+    border-radius: 5px;
+    font-size: 14px;
+    padding: 10px 10px;
+    display: block;
+    color: #fff;
+    cursor: pointer;
+  }
+  .g-recaptcha{
+    max-width: 300px;
+    margin: 20px auto;
+  }
+}
+#verify-email{
+  padding: 20px;
+  text-align: center;
+  font-size: 30px;
+  margin: 50px auto;
+  min-height: 200px;
+  a{
+    font-size: 30px;
+  }
+}
+
+
+
+
+
+

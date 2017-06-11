@@ -51,7 +51,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = "frontend";
 $route['404_override'] = '';
-
+//member
+$route['register'] = 'member/register';
+$route['login'] = 'member/login';
+$route['profile'] = 'member';
+$route['logout'] = 'member/logout';
+$route['verify-email/(:any)'] = 'member/verify_email/$1';
+$route['forgot-password'] = 'member/forgot_password';
+$route['reset-password/(:any)'] = 'member/reset_password/$1';
+//orders
+$route['my-carts'] = 'order/carts';
+$route['checkout'] = 'order/checkout';
+$route['orders'] = 'order';
+$route['orders/view/(:num)'] = 'admin/index';
 
 //admin
 $route['admin'] = 'admin/index';

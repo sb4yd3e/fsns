@@ -33,7 +33,7 @@ class Banner extends CI_Controller{
                 $data_update = array(
                     'visible'=>$this->input->post('visible'),
                     'link'=>$this->input->post('link'),
-                    'delay'=>$this->input->post('delay') * 1000
+                    'delay'=>$this->input->post('delay')
                     );
                 $this->upload->initialize($config);
                 if($_FILES['image']['name']){

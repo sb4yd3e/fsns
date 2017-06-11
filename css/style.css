@@ -171,7 +171,9 @@ body{
     line-height: 20px;
     color: #888;
 }
-
+html,body{
+    overflow-x: hidden;
+}
 /* =============================================================================
     3. TYPOGRAPHY
 ============================================================================= */
@@ -1167,10 +1169,13 @@ li.pricing-footer{
 
 #logo{
     float: left;
-    width: 201px;
+    width: 150px;
     height: 39px;
-    margin-right: 100px;
 	margin-top:-15px;
+}
+#logo img{
+    width: 100%;
+    height: auto;
 }
 
 .top-shadow{
@@ -3052,7 +3057,7 @@ h5#reply-title{
 @media only screen and (min-width: 768px) and (max-width: 959px){
     #content-wrapper,
     #header{
-        width: 728px;
+        width: 100%;
     }
 
     #logo{

@@ -12,7 +12,7 @@
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Account info</a></li>
 							<li role="presentation"><a href="#shping" aria-controls="shping" role="tab" data-toggle="tab">Shipping Detail</a></li>
-							<li role="presentation"><a href="#bussiness" aria-controls="bussiness" role="tab" data-toggle="tab" id="tab-bussiness" class="disabled">Bussiness Info</a></li>
+							<li role="presentation"><a href="#business" aria-controls="business" role="tab" data-toggle="tab" id="tab-business" class="disabled">Business Info</a></li>
 							<li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Logs</a></li>
 						</ul>
 						<div class="tab-content" style="margin-top: 20px;">
@@ -24,7 +24,7 @@
 											<option value="">==== select ====</option>
 											<?php 
 											$account_type_values = array(
-												'bussiness'=>'Bussiness',
+												'business'=>'Business',
 												'personal'=>'Personal',
 												);
 
@@ -93,18 +93,18 @@
 									</div>
 								</div>
 							</div>
-							<div role="tabpanel" class="tab-pane fade" id="bussiness">
-								<label for="bussiness_name" class="control-label">Bussiness Name</label>
+							<div role="tabpanel" class="tab-pane fade" id="business">
+								<label for="business_name" class="control-label">Business Name</label>
 								<div class="form-group">
-									<input type="text" name="bussiness_name" value="<?php echo ($this->input->post('bussiness_name') ? $this->input->post('bussiness_name') : $content['bussiness_name']); ?>" class="form-control" autocomplete="off" id="bussiness_name" />
+									<input type="text" name="business_name" value="<?php echo ($this->input->post('business_name') ? $this->input->post('business_name') : $content['business_name']); ?>" class="form-control" autocomplete="off" id="business_name" />
 								</div>
-								<label for="bussiness_address" class="control-label">Bussiness  Address</label>
+								<label for="business_address" class="control-label">Business  Address</label>
 								<div class="form-group">
-									<textarea name="bussiness_address" class="form-control" id="bussiness_address" autocomplete="off"><?php echo ($this->input->post('bussiness_address') ? $this->input->post('bussiness_address') : $content['bussiness_address']); ?></textarea>
+									<textarea name="business_address" class="form-control" id="business_address" autocomplete="off"><?php echo ($this->input->post('business_address') ? $this->input->post('business_address') : $content['business_address']); ?></textarea>
 								</div>
-								<label for="bussiness_number" class="control-label">Federal tax identification number</label>
+								<label for="business_number" class="control-label">Federal tax identification number</label>
 								<div class="form-group">
-									<input type="text" name="bussiness_number" value="<?php echo ($this->input->post('bussiness_number') ? $this->input->post('bussiness_number') : $content['bussiness_number']); ?>" class="form-control" id="bussiness_number" autocomplete="off" />
+									<input type="text" name="business_number" value="<?php echo ($this->input->post('business_number') ? $this->input->post('business_number') : $content['business_number']); ?>" class="form-control" id="business_number" autocomplete="off" />
 								</div>
 							</div>
 							<div role="tabpanel" class="tab-pane fade" id="logs">

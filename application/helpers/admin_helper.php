@@ -71,7 +71,7 @@ function delete_cache($key) {
 }
 function error_json($array) {
     $html = '';
-    foreach ($str as $value) {
+    foreach ($array as $value) {
         $html .= $value . '<br>';
     }
     return $html;
@@ -304,7 +304,7 @@ function order_status($status){
 
 function order_type($type){
     $s = array(
-        'bussiness'=>'นิติบุคคล',
+        'business'=>'นิติบุคคล',
         'personal'=>'บุคคลทั่วไป'
     );
     return $s[$type];
