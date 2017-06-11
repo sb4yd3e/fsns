@@ -38,7 +38,7 @@ class Frontend extends CI_Controller
 
     public function news($content_id = null)
     {
-
+        $this->render_data['active_menu'] = 'news';
         if ($content_id && $content_id != 'page') {
             $content_id = floor($content_id);
             $this->render_data['news'] = $this->db->where('id', $content_id)->get('contents')->row_array();
@@ -124,7 +124,7 @@ class Frontend extends CI_Controller
     public function contact()
     {
         $this->render_data['web_title'] = 'ติดต่อเรา (Contact)';
-
+        $this->render_data['active_menu'] = 'contact';
         if ($_POST) {
             $this->load->model('Setting_model', 'setting');
             $setting = $this->setting->get_setting();

@@ -1,646 +1,305 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Orders extends CI_Controller
+class Member extends CI_Controller
 {
+
     public $render_data = array();
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
-        $this->template->set_template('admin');
-        $this->load->model('Orders_model', 'orders');
+        $this->load->model('taxonomy_model');
+        $this->render_data['product_category'] = $this->taxonomy_model->get_taxonomy_term('product_category');
+        $this->render_data['active_menu'] = 'member';
+        $this->load->model('members_model', 'members');
     }
+
 
     public function index()
     {
-        if (!is_group(array('admin', 'staff', 'sale'))) {
-            redirect('admin');
-            exit();
+        if (!is_login()) {
+            redirect('login');
         }
 
-        //******* Defalut ********//
-        $render_data['user'] = $this->session->userdata('fnsn');
-        $this->template->write('title', 'Order management');
-        $this->template->write('user_id', $render_data['user']['aid']);
-        $this->template->write('user_name', $render_data['user']['name']);
-        $this->template->write('user_group', $render_data['user']['group']);
-        //******* Defalut ********//
+
+        $user = $this->session->userdata('fnsn');
+        $this->render_data['user'] = $this->members->get_members($user['uid']);
+
+        $this->load->library('form_validation');
+        $this->config->set_item('csrf_protection', true);
+        $this->load->helper('security');
+        if ($this->input->post('password')) {
+            $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|max_length[50]');
+            $this->form_validation->set_rules('re-password', 'Confirm Password', 'required|min_length[6]|max_length[50]|matches[password]');
+        }
+
+        $this->form_validation->set_rules('name', 'Name', 'required|max_length[100]');
+        $this->form_validation->set_rules('phone', 'Phone', 'required|max_length[20]');
+        $this->form_validation->set_rules('shipping_name', 'Shipping Name', 'required|max_length[200]');
+        $this->form_validation->set_rules('shipping_province', 'Shipping Province', 'required');
+        $this->form_validation->set_rules('shipping_zip', 'Shipping Zip', 'required|numeric|min_length[5]|max_length[5]');
+        $this->form_validation->set_rules('shipping_address', 'Shipping Address', 'required');
 
 
-        // ====== Java script Data tabale ======= //
-        $js = 'var table;
-        $(document).ready(function() {
-            table = $("#table").DataTable({ 
-                "processing": true,
-                "serverSide": true,
-                "order": [],
-                "ajax": {
-                    "url": "' . base_url('admin/orders/ajax') . '",
-                    "type": "POST",
-                    data:function(data){
-                        data.status = $("#status").val();
-                        data.order_type = $("#order_type").val();
-                        data.uid = $("#uid").val();
-                    }
-                },
-				"columnDefs": [
-				{ 
-					"targets": [6], 
-					"orderable": false,
-				},
-				],
-            });
-            
-            $("#show").change(function () {
-                $("#table_length select").val($(this).val());
-                $("#table_length select").trigger("change");
-            });
-            $("#search").on("keyup", function () {
-                $("#table_filter input[type=\"search\"]").val($(this).val());
-                $("#table_filter input[type=\"search\"]").trigger("keyup");
-            });
-            $("#status").change(function(){
-                var table = $("#table").DataTable();
-                table.ajax.reload();
-            });$("#ordet_type").change(function(){
-                var table = $("#table").DataTable();
-                table.ajax.reload();
-            });$("#uid").change(function(){
-                var table = $("#table").DataTable();
-                table.ajax.reload();
-            });
-            
-            
-            $(document).on("click",".ajax-user",function(){
-            var uid = $(this).data("uid");
-            var oid = $(this).data("oid");
-            $("#ajax-result").html("Loading...");
-            $.ajax({
-              method: "POST",
-              url: "' . base_url('admin/orders/ajax_user') . '",
-              data: { uid: uid,oid:oid}
-            })
-              .done(function( msg ) {
-                $("#ajax-result").html(msg);
-              });
-            });
-            
-            $(document).on("click",".ajax-product",function(){
-            var oid = $(this).data("oid");
-            $("#ajax-result").html("Loading...");
-            $.ajax({
-              method: "POST",
-              url: "' . base_url('admin/orders/ajax_product') . '",
-              data: { oid: oid}
-            })
-              .done(function( msg ) {
-                $("#ajax-result").html(msg);
-              });
-            });
-            
-            $(document).on("click",".ajax-status",function(){
-            var oid = $(this).data("oid");
-            $("#ajax-result").html("Loading...");
-            $.ajax({
-              method: "POST",
-              url: "' . base_url('admin/orders/ajax_status') . '",
-              data: { oid: oid}
-            })
-              .done(function( msg ) {
-                $("#ajax-result").html(msg);
-              });
-            });
-            
-            
-             $(document).on("click",".ajax-file",function(){
-            var oid = $(this).data("oid");
-            $("#ajax-result").html("Loading...");
-            $.ajax({
-              method: "POST",
-              url: "' . base_url('admin/orders/ajax_file') . '",
-              data: { oid: oid,uid:$(this).data("uid")}
-            })
-              .done(function( msg ) {
-                $("#ajax-result").html(msg);
-              });
-            });
-            
-        });';
+        if ($this->render_data['user']['account_type'] == 'business') {
+            $this->form_validation->set_rules('business_name', 'Business Name', 'required|max_length[200]');
+            $this->form_validation->set_rules('business_address', 'Business Address', 'required');
+            $this->form_validation->set_rules('business_number', 'Federal tax identification number', 'required|max_length[30]');
+        }
+        if ($this->form_validation->run()) {
+            $data_create = array(
+                'name' => $this->input->post('name'),
+                'phone' => $this->input->post('phone'),
+                'shipping_name' => $this->input->post('shipping_name'),
+                'shipping_province' => $this->input->post('shipping_province'),
+                'shipping_zip' => $this->input->post('shipping_zip'),
+                'shipping_address' => $this->input->post('shipping_address'),
+                'business_name' => $this->input->post('business_name'),
+                'business_address' => $this->input->post('business_address'),
+                'business_number' => $this->input->post('business_number')
+            );
+            if ($this->input->post('password')) {
+                $data_create['password'] = md5($this->input->post('password'));
+            }
 
+            $this->members->update_members($user['uid'], $data_create);
+            echo json_encode(array('status' => 'success'));
+        } else {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(array('status' => 'error', 'message' => validation_errors()));
+                exit();
+            }
+            $this->render_data['web_title'] = 'My Profile';
 
+            $this->template->write_view('content', 'frontend/profile', $this->render_data);
+            $this->template->render();
+        }
+    }
 
-        if ($this->input->get('uid')) {
-            $js .= '$("#uid").val("' . $this->input->get('uid') . '").trigger("change");';
+    function forgot_password()
+    {
+        $this->config->set_item('csrf_protection', true);
+        $this->load->helper('security');
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('g-recaptcha-response', 'Verify recaptcha', 'required|callback_captcha');
+        if ($this->form_validation->run() && $this->input->is_ajax_request()) {
+
+            if ($d = $this->members->forgot_password($this->input->post('email'))) {
+
+                $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h4 style="margin:0px; font-size: 20px;">Action required:</h4>
+	<h3 style="margin:0px; font-size: 30px;">Please confirm to reset password.</h3>
+</div>
+
+<div style="margin-top:20px;">
+Dear FSNS Thailand Customer,<br><br><br>
+You request reset password link from system.<br>
+You can click link to confirm reset password and get new password.
+</div>
+<div>
+<a href="' . base_url('reset-password/' . $d) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">Reset Password</a><br>
+If you can\'t click the button,Please copy link to open in your browser address.<br>
+<a href="' . base_url('reset-password/' . $d) . '" target="_blank">
+' . base_url('reset-password/' . $d) . '
+</a>
+</div>
+<div style="margin-top:50px;">
+Thanks for beging a FSNS Thailand customer.
+</div>';
+
+                $this->__sendmail($this->input->post('email'), 'Please reset your password.', $html);
+
+                echo json_encode(array('status' => 'success'));
+            } else {
+                echo json_encode(array('status' => 'error', 'message' => 'Thie email is not found.'));
+            }
+
+        } else {
+            echo json_encode(array('status' => 'error', 'message' => validation_errors()));
         }
-        if ($this->input->get('add') == "true") {
-            $js .= '$.notify("Add new order success.", "success");';
+    }
+
+    function reset_password($token = '')
+    {
+        if ($token == '' || !$dt = $this->members->get_user_by_token_forgot($token)) {
+            $html = 'Your link is invalid or expired.';
+        } else {
+            $newpass = $this->members->reset_password($dt);
+            $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 30px;">Your new password.</h3>
+</div>
+
+<div style="margin-top:20px;">
+Dear FSNS Thailand Customer,<br><br><br>
+Your new password has generated by system.<br>
+You can use new password to sign in on FSNS Thailand.
+</div>
+<div>
+<a href="' . base_url('login') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">Password : ' . $newpass . '</a><br>
+
+</div>
+<div style="margin-top:50px;">
+Thanks for beging a FSNS Thailand customer.
+</div>';
+
+            $this->__sendmail($this->input->post('email'), 'Your new password.', $html);
+            $html = 'Your new password has send to your email success.';
         }
-        if ($this->input->get('delete') == "true") {
-            $js .= '$.notify("Delete order success", "success");';
-        }
-        if ($this->input->get('save') == "true") {
-            $js .= '$.notify("Save order success.", "success");';
-        }
-        $this->load->model("Members_model", "members");
-        $members = $this->members->get_list_members();
-        $arr_member = array('' => 'Show All');
-        foreach ($members as $member) {
-            $arr_member[$member['uid']] = $member['name'];
-        }
-        $render_data['members'] = $arr_member;
-        $this->template->write('js', $js);
-        $this->template->write_view('content', 'admin/orders/index', $render_data);
+        $this->render_data['html'] = $html;
+        $this->render_data['web_title'] = 'Reset password.';
+        $this->template->write_view('content', 'frontend/reset_password', $this->render_data);
         $this->template->render();
     }
 
-    public function ajax()
+
+    public function login()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
-            exit('No direct script access allowed');
+        if (is_login()) {
+            redirect('profile');
         }
-
-        $list = $this->orders->get_all_orders();
-        $data = array();
-        $no = $this->input->post('start');
-        foreach ($list as $order) {
-            $no++;
-            $row = array();
-
-            $row[] = '#' . sprintf("%06d", $order->oid);
-            $row[] = '<a href="#" class="ajax-user" data-uid="' . $order->uid . '" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . $order->shipping_name . '</a>';
-            $row[] = order_type($order->order_type);
-            $row[] = '<a href="#" class="ajax-product" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . number_format($order->total_product) . '</a>';
-            $row[] = '<a href="#" class="ajax-status" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . order_status($order->order_status) . '</a>';
-            $row[] = number_format($order->total_amount, 2);
-            if(is_group(array('admin', 'staff'))) {
-                $row[] = '<a href="#" class="label label-info ajax-file" data-uid="' . $order->uid . '" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal"><i class="fa fa-download"></i> ดาวน์โหลดเอกสารลูกค้า</a> 
-            <a href="' . base_url('admin/orders/edit/' . $order->oid) . '" class="label label-warning"><i class="fa fa-pencil"></i> แก้ไขคำสั่งซื้อ</a> 
-            ';
-            }else{
-                $row[] = '<a href="' . base_url('admin/orders/edit/' . $order->oid) . '" class="label label-warning"><i class="fa fa-eye"></i> View</a> ';
-            }
-            $data[] = $row;
-        }
-
-        $output = array(
-            "draw" => $this->input->post('draw'),
-            "recordsTotal" => $this->orders->count_all(),
-            "recordsFiltered" => $this->orders->count_filtered(),
-            "data" => $data,
-        );
-        echo json_encode($output);
-    }
-
-
-    function edit($id = '')
-    {
+        $this->config->set_item('csrf_protection', true);
+        $this->load->helper('security');
         $this->load->library('form_validation');
-        if (!is_group(array('admin', 'staff', 'sale'))) {
-            redirect('admin');
-            exit();
-        }
-
-        if ($id == "" || !$data = $this->orders->get_order($id)) {
-            redirect('admin/orders');
-            exit();
-        }
-        $render_data['data'] = $data;
-        $this->form_validation->set_rules('products', 'Products', 'required');
-        $this->form_validation->set_rules('shipping', 'shipping', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|max_length[50]');
+        $this->form_validation->set_rules('g-recaptcha-response', 'Verify recaptcha', 'required|callback_captcha');
         if ($this->form_validation->run()) {
-            if(is_group('sale')){
-                die('Access denie');
-                exit();
-            }
+            $this->load->model('auth_model', 'auth');
+            $param = array('email' => $this->input->post('email'), 'password' => $this->input->post('password'));
+            if ($userdata = $this->auth->member_login($param)) {
 
-            $products = json_decode($this->input->post('products'));
-            $coupon = $this->input->post('coupon');
-            $shipping = $this->input->post('shipping');
-
-            $total_normal = 0;
-            $total_sp_discount = 0;
-            $total_amount = 0;
-            $discount_10k = 0;
-            $discount_code_value = 0;
-            $discount_code_amount = 0;
-            $total_discount = 0;
-            $total_before_vat = 0;
-            $total_vat = 0;
-            $total = 0;
-            $total_product = 0;
-            $total_qty = 0;
-            $att = array();
-
-
-            if ($shipping < 0) {
-                $shipping = 0;
-            }
-            if ($coupon_data = $this->orders->get_coupon($coupon)) {
-                $discount_code_value = $coupon_data['discount'];
+                $session = array(
+                    'uid' => $userdata['uid'],
+                    'type' => $userdata['account_type'],
+                    'group' => 'user',
+                    'name' => $userdata['name'],
+                    'phone' => $userdata['phone'],
+                    'email' => $userdata['email']
+                );
+                $this->db->where('uid', $userdata['uid'])->update('users', array('last_login' => time()));
+                $this->session->set_userdata('fnsn', $session);
+                echo json_encode(array('status' => 'success'));
             } else {
-                $coupon = '';
+                echo json_encode(array('status' => 'error', 'message' => 'เข้าสู่ระบบผิดพลาด'));
             }
 
-            //cal order
-            foreach ($products as $key => $product) {
-                $paid = str_replace('p', '', $key);
-                $att[] = $paid;
-                $product_data = $this->orders->get_attribute($paid);
-                $total_normal = $total_normal + ($product->price * $product->qty);
-                if ($product->sp_price > 0) {
-                    $total_sp_discount = $total_sp_discount + ($product->price - $product->sp_price) * $product->qty;
-                }
-                $total_qty = $total_qty + $product->qty;
-                $total_product++;
-
-                if ($this->orders->get_order_product($id, $paid)) {
-                    //save product order
-                    $this->orders->save_order_product($id, $paid, array(
-                        'product_value' => $product_data['p_value'],
-                        'product_amount' => $product->price,
-                        'product_spacial_amount' => $product->sp_price,
-                        'product_qty' => $product->qty,
-                        'total_amount' => $product->price * $product->qty
-                    ));
-                } else {
-                    //add product order
-                    $this->orders->add_order_product($id, array(
-                        'pid' => $product_data['pid'],
-                        'pa_id' => $paid,
-                        'oid' => $id,
-                        'product_title' => $product->title,
-                        'product_code' => $product_data['code'],
-                        'product_value' => $product_data['p_value'],
-                        'product_amount' => $product->price,
-                        'product_spacial_amount' => $product->sp_price,
-                        'product_qty' => $product->qty,
-                        'total_amount' => $product->price * $product->qty,
-                        'status' => 'pending'));
-
-                }
-
-            }
-            $tmp_10k = 0;
-            $tmp_discount = 0;
-            $total_amount = $total_normal - $total_sp_discount;
-            if ($total_amount >= 100000) {
-                $tmp_10k = ($total_amount / 100) * 5;
-            }
-            if ($discount_code_value > 0) {
-                $tmp_discount = ($total_amount / 100) * $discount_code_value;
-            }
-
-            if ($tmp_10k > $tmp_discount) {
-                $discount_10k = $tmp_10k;
-                $discount_code_amount = 0;
-                $total_discount = $tmp_10k;
-            } else if ($tmp_10k < $tmp_discount) {
-                $discount_10k = 0;
-                $discount_code_amount = $tmp_discount;
-                $total_discount = $tmp_discount;
-
-            } else if ($tmp_10k == $tmp_discount) {
-                $discount_10k = 0;
-                $discount_code_amount = $tmp_discount;
-                $total_discount = $tmp_discount;
-            } else {
-                $discount_10k = 0;
-                $discount_code_amount = 0;
-                $total_discount = 0;
-            }
-
-            $total_before_vat = $total_amount - $total_discount;
-            $total_vat = ($total_before_vat / 100) * 7;
-            $total = $total_before_vat + $total_vat + $shipping;
-
-            //delete product not in $att
-            $this->orders->delete_order_product($id, $att);
-
-            //save order detail
-            $this->orders->save_order($id, array(
-                    'total_product' => $total_product,
-                    'total_qty' => $total_qty,
-                    'amount' => $total_normal,
-                    'spacial_amount' => $total_sp_discount,
-                    'coupon_code' => $coupon,
-                    'discount' => $discount_code_value,
-                    'discount_100k' => $discount_10k,
-                    'shipping_amount' => $shipping,
-                    'total_amount' => $total,
-                    'vat_amount' => $total_vat)
-            );
-            $user = $this->session->userdata('fnsn');
-            add_log($user['name'], 'Update order.', 'order_' . $id);
-            echo json_encode(array('status' => 'success', 'debug' => $total_sp_discount));
         } else {
             if ($this->input->is_ajax_request()) {
-                echo json_encode(array('status' => 'error'));
+                echo json_encode(array('status' => 'error', 'message' => validation_errors()));
                 exit();
             }
-            $js = 'jQuery(\'#datetimepicker\').datetimepicker();';
-
-            if ($this->input->get('save') == "true") {
-                $js .= '$.notify("Save coupon success.", "success");';
-            }
-
-            $render_data['logs'] = list_logs("order_" . $id);
-
-            $render_data['products'] = $this->orders->list_products($id);
-
-            $tmp_js = 'var products = {';
-            foreach ($render_data['products'] as $apid) {
-                $tmp_js .= 'p' . $apid['pa_id'] . ': {
-                    pid: ' . $apid['pid'] . ',
-                    title: "' . $apid['product_title'] . '",
-                    price: ' . $apid['product_amount'] . ',
-                    sp_price: ' . $apid['product_spacial_amount'] . ',
-                    qty: ' . $apid['product_qty'] . '
-                },';
-            }
-            $tmp_js .= '};';
-
-            $render_data['product_list'] = $this->orders->list_all_products();
-            $js .= $tmp_js;
-            $js .= '
-            var discount_code = "' . $data['coupon_code'] . '";
-            var discount_code_value = ' . $data['discount'] . ';
-            var shipping = ' . $data['shipping_amount'] . ';
-            init_order(); 
-            
-            function ajax_list_files(){
-            $("#ajax-file-result").html("Loading...");
-            $.ajax({
-            method: "POST",
-            data: {
-            oid: "' . $id . '"
-            },
-            url: "' . base_url('/admin/orders/ajax_file_list') . '",
-            }).done(function (status) {
-            $("#ajax-file-result").html(status);
-            });
-            }
-            ajax_list_files();';
-            if(is_group('sale')){
-                $js .= '$("input,select,textarea,button").attr("disabled","disabled");';
-            }
-            $this->template->write('js', $js);
-
-            $render_data['status_list'] = $this->orders->list_status($id);
-            $render_data['custom_files'] = $this->orders->list_files($id, 'customer_all');
-            //******* Defalut ********//
-            $render_data['user'] = $this->session->userdata('fnsn');
-            $this->template->write('title', 'Edit Order #' . sprintf("%06d", $data['oid']));
-            $this->template->write('user_id', $render_data['user']['aid']);
-            $this->template->write('user_name', $render_data['user']['name']);
-            $this->template->write('user_group', $render_data['user']['group']);
-            //******* Defalut ********//
-            $this->template->write_view('content', 'admin/orders/edit', $render_data);
+            $this->render_data['web_title'] = 'Login';
+            $this->template->write_view('content', 'frontend/login', $this->render_data);
             $this->template->render();
         }
-
     }
 
-
-    /// Ajax result
-
-
-    public function ajax_user()
+    public function register()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
-            exit('No direct script access allowed');
+        if (is_login()) {
+            redirect('profile');
         }
-        $this->load->model("Members_model", "members");
-        $member = $this->members->get_members($this->input->post('uid'));
-        $order = $this->orders->get_order($this->input->post('oid'));
-        $html = '<table class="table table-bordered"><tr><td><strong>Name : </strong></td><td>' . $member['name'] . '</td></tr>';
-        $html .= '<tr><td><strong>Account type : </strong></td><td>' . order_type($member['account_type']) . '</td></tr>';
-        $html .= '<tr><td><strong>Email ; </strong></td><td><a href="mailto:' . $member['email'] . '">' . $member['email'] . '</a></td></tr>';
-        $html .= '<tr><td><strong>Phone : </strong></td><td><a href="tel:' . $member['phone'] . '">' . $member['phone'] . '</a></td></tr>';
-        if ($member['account_type'] == 'business') {
-            $html .= '<tr><td><strong>Business ACC : </strong></td><td>' . $member['business_number'] . '</td></tr>';
-            $html .= '<tr><td><strong>Business Name : </strong></td><td>' . $member['business_name'] . '</td></tr>';
-            $html .= '<tr><td><strong>Business Address : </strong></td><td>' . $member['business_address'] . '</td></tr>';
+        $this->load->library('form_validation');
+        $this->config->set_item('csrf_protection', true);
+        $this->load->helper('security');
+        $this->form_validation->set_rules('type', 'Account Type', 'required');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|max_length[50]');
+        $this->form_validation->set_rules('re-password', 'Confirm Password', 'required|min_length[6]|max_length[50]|matches[password]');
+
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[users.email]');
+        $this->form_validation->set_rules('name', 'Name', 'required|max_length[100]');
+        $this->form_validation->set_rules('phone', 'Phone', 'required|max_length[20]');
+        $this->form_validation->set_rules('shipping_name', 'Shipping Name', 'required|max_length[200]');
+        $this->form_validation->set_rules('shipping_province', 'Shipping Province', 'required');
+        $this->form_validation->set_rules('shipping_zip', 'Shipping Zip', 'required|numeric|min_length[5]|max_length[5]');
+        $this->form_validation->set_rules('shipping_address', 'Shipping Address', 'required');
+        $this->form_validation->set_rules('g-recaptcha-response', 'Verify recaptcha', 'required|callback_captcha');
+
+        if ($this->input->post('type') == 'business') {
+            $this->form_validation->set_rules('business_name', 'Business Name', 'required|max_length[200]');
+            $this->form_validation->set_rules('business_address', 'Business Address', 'required');
+            $this->form_validation->set_rules('business_number', 'Federal tax identification number', 'required|max_length[30]');
         }
-        $html .= '<tr><td colspan="2"><strong>Shipping Detail</strong></td></tr>';
-        $html .= '<tr><td><strong>Name : </strong></td><td>' . $order['shipping_name'] . '</td></tr>';
-        $html .= '<tr><td><strong>Address : </strong></td><td>' . $order['shipping_address'] . '</td></tr>';
-        $html .= '<tr><td><strong>Province : </strong></td><td>' . $order['shipping_province'] . '</td></tr>';
-        $html .= '<tr><td><strong>Zip : </strong></td><td>' . $order['shipping_zip'] . '</td></tr></table>';
+        if ($this->form_validation->run()) {
 
-        echo $html;
-
-    }
-
-    public function ajax_product()
-    {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
-            exit('No direct script access allowed');
-        }
-        $oid = $this->input->post('oid');
-        $product_list = $this->orders->list_products($oid);
-
-        $html = '<table class="table table-bordered"><tr><th>Title</th><th>Price</th><th>Spacial Price</th><th>Qty</th><th>Amount</th></tr>';
-        foreach ($product_list as $product) {
-            $html .= '<tr><td><a href="' . base_url('product/' . $product['pid'] . '/' . url_title($product['product_title'])) . '" target="_blank">' . $product['product_title'] . '</a> [' . $product['product_code'] . ']</td>
-                        <td>' . $product['product_amount'] . '</td><td>' . $product['product_spacial_amount'] . '</td><td>' . $product['product_qty'] . '</td><td>' . $product['total_amount'] . '</td></tr>';
-        }
-        $html .= '</table>';
-        echo $html;
-
-    }
-
-    public function ajax_status()
-    {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
-            exit('No direct script access allowed');
-        }
-        $oid = $this->input->post('oid');
-        $status_list = $this->orders->list_status($oid);
-
-        $html = '<table class="table table-bordered"><tr><th>Date</th><th>Status</th><th>Owner</th><th>Note</th></tr>';
-        foreach ($status_list as $status) {
-            $html .= '<tr><td>' . date("d/m/Y H:i:s", $status['at_date']) . '</td>
-<td>' . order_status($status['status']) . '</td>
-                        <td>' . $status['owner'] . '</td>
-                        <td>' . nl2br($status['text']) . '</td>
-                        </tr>';
-        }
-        $html .= '</table>';
-        echo $html;
-
-    }
-
-    public function ajax_file()
-    {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
-            exit('No direct script access allowed');
-        }
-        $oid = $this->input->post('oid');
-        $files_list = $this->orders->list_files($oid, 'customer', $this->input->post('uid'));
-
-        $html = '<table class="table table-bordered"><tr><th>Title</th><th>Type</th><th>Size</th><th>Date</th></tr>';
-        foreach ($files_list as $fiile) {
-            $html .= '<tr><td><a href="' . base_url('admin/orders/download_file/' . $fiile['ufid']) . '" target="_blank">' . $fiile['file_title'] . '</a></td>
-                        <td>' . $fiile['file_type'] . '</td>
-                        <td>' . number_format($fiile['file_size'] / 1024, 2) . ' MB</td>
-                        <td>' . date("d/m/Y H:i:s", strtotime($fiile['file_date'])) . '</td></tr>';
-        }
-        $html .= '</table>';
-        echo $html;
-
-    }
-
-    public function ajax_file_list()
-    {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
-            exit('No direct script access allowed');
-        }
-        $oid = $this->input->post('oid');
-        $files_list = $this->orders->list_files($oid, 'seller', 0, 0);
-
-        $html = '';
-        foreach ($files_list as $fiile) {
-            $html .= '<tr>
-                        <td>' . date("d/m/Y H:i:s", strtotime($fiile['file_date'])) . '</td>
-                        <td>' . $fiile['file_title'] . '</td>
-                        <td>' . $fiile['file_type'] . '</td>
-                        <td>' . number_format($fiile['file_size'] / 1024, 2) . ' MB</td>
-                        <td><a href="' . base_url('admin/orders/download_file/' . $fiile['ufid']) . '" class="label-info label" target="_blank">Download</a></td>';
-            if(!is_group('sale')) {
-                $html .= '<td><a class="label label-success send-email-file" data-fid="' . $fiile['ufid'] . '">Send Email</a> <a href="#" class="label label-danger delete-file" data-fid="' . $fiile['ufid'] . '"><i class="fa fa-times-circle"></i></a></td>
-                        </tr>';
-            }else{
-                $html .= '<td></td>
-                        </tr>';
-            }
-        }
-
-        echo $html;
-
-    }
-
-    public function ajax_get_attribute()
-    {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
-            exit('No direct script access allowed');
-        }
-        $pid = $this->input->post('pid');
-
-        $alt_list = $this->orders->list_all_attribute($pid);
-        $a = array();
-        foreach ($alt_list as $item) {
-            $a[] = array(
-                'pa_id' => $item['pa_id'],
-                'code' => $item['code'],
-                'color' => $item['color'],
-                'p_value' => $item['p_value'],
-                'normal_price' => $item['normal_price'],
-                'special_price' => $item['special_price']
+            $data_create = array(
+                'account_type' => $this->input->post('type'),
+                'staff_id' => 0,
+                'password' => md5($this->input->post('password')),
+                'email' => $this->input->post('email'),
+                'name' => $this->input->post('name'),
+                'is_active' => 0,
+                'phone' => $this->input->post('phone'),
+                'shipping_name' => $this->input->post('shipping_name'),
+                'shipping_province' => $this->input->post('shipping_province'),
+                'shipping_zip' => $this->input->post('shipping_zip'),
+                'shipping_address' => $this->input->post('shipping_address'),
+                'business_name' => $this->input->post('business_name'),
+                'business_address' => $this->input->post('business_address'),
+                'business_number' => $this->input->post('business_number'),
+                'register_ip' => $this->input->ip_address(),
+                'register_date' => time(),
+                'token' => md5($this->input->post('email') . time()),
             );
-        }
-        echo json_encode($a);
+            $in_id = $this->members->add_members($data_create);
+            if ($in_id) {
 
-    }
+                $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h4 style="margin:0px; font-size: 20px;">Action required:</h4>
+	<h3 style="margin:0px; font-size: 30px;">Please verify your email address.</h3>
+</div>
 
-    public function ajax_get_coupon()
-    {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff'))) {
-            exit('No direct script access allowed');
-        }
-        $code = $this->input->post('code');
+<div style="margin-top:20px;">
+Dear FSNS Thailand Customer,<br><br><br>
+We noticed that you need to verify your email address. To do so,simply click the button below.<br>
+You will not be asked to log in to your FSNS Account - we are simply verifying ownership of this email address.
+</div>
+<div>
+<a href="' . base_url('verify-email/' . $data_create['token']) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">Verify your email address</a><br>
+If you can\'t click the button,Please copy link to open in your browser address.<br>
+<a href="' . base_url('verify-email/' . $data_create['token']) . '" target="_blank">
+' . base_url('verify-email/' . $data_create['token']) . '
+</a>
+</div>
+<div style="margin-top:50px;">
+Thanks for beging a FSNS Thailand customer.
+</div>';
 
-        $coupon = $this->orders->get_coupon($code);
-        if ($coupon) {
-            $a = array('status' => 'success', 'code' => $code, 'discount' => $coupon['discount']);
-        } else {
-            $a = array('status' => 'error');
-        }
-        echo json_encode($a);
-
-    }
-
-    function download_file($fid)
-    {
-        if (!is_group(array('admin', 'staff', 'sale'))) {
-            exit('No direct script access allowed');
-        }
-        $file = $this->orders->get_file($fid);
-        redirect(ORDER_PATH . '/' . $file['file_paht']);
-    }
-
-    function ajax_delete_file()
-    {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff'))) {
-            exit('No direct script access allowed');
-        }
-        $fid = $this->input->post('fid');
-        $this->orders->delete_file($fid);
-        echo 'success';
-    }
-
-    function save_status($id)
-    {
-        if (!is_group(array('admin', 'staff'))) {
-            exit('No direct script access allowed');
-        }
-        $this->load->library('form_validation');
-        $this->form_validation->set_rules('status', 'status', 'required');
-        $this->form_validation->set_rules('submit', 'status', 'required');
-        if ($this->form_validation->run()) {
-            $user = $this->session->userdata('fnsn');
-            switch ($this->input->post('submit')) {
-                case "save":
-                    $this->orders->save_status(array('status' => $this->input->post('status'), 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
-                    $this->__sendmail('status', $this->input->post('status'));
-                    add_log($user['name'], "Change status to : " . order_status($this->input->post('status')), "order_" . $id);
-                    break;
-                case "nomail":
-                    $this->orders->save_status(array('status' => $this->input->post('status'), 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
-                    add_log($user['name'], "Change status to : " . order_status($this->input->post('status')), "order_" . $id);
-                    break;
-                case "email":
-                    $this->__sendmail('status', $this->input->post('status'));
-                    break;
+                $this->__sendmail($this->input->post('email'), 'Please verify your email address.', $html);
+                $rs = array('status' => 'success');
+            } else {
+                $rs = array('status' => 'error', 'message' => 'Server error!');
             }
-            redirect('admin/orders/edit/' . $id);
+            echo json_encode($rs);
         } else {
-            redirect('admin/orders/edit/' . $id);
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(array('status' => 'error', 'message' => validation_errors()));
+                exit();
+            }
+            $this->render_data['web_title'] = 'Register';
+            $this->template->write_view('content', 'frontend/register', $this->render_data);
+            $this->template->render();
         }
     }
 
-    function save_shipping()
+    public function captcha($res)
     {
-        if (!is_group(array('admin', 'staff'))) {
-            exit('No direct script access allowed');
-        }
-        $this->load->library('form_validation');
-        $this->form_validation->set_rules('name', 'name', 'required');
-        $this->form_validation->set_rules('address', 'address', 'required');
-        $this->form_validation->set_rules('province', 'province', 'required');
-        $this->form_validation->set_rules('zip', 'zip', 'required');
-        $this->form_validation->set_rules('oid', 'oid', 'required');
-        if ($this->form_validation->run()) {
-            $user = $this->session->userdata('fnsn');
-            $this->orders->save_order($this->input->post('oid'), array(
-                'shipping_name' => $this->input->post('name'),
-                'shipping_address' => $this->input->post('address'),
-                'shipping_province' => $this->input->post('province'),
-                'shipping_zip' => $this->input->post('zip')
-            ));
-            add_log($user['name'], "Change shipping address.", "order_" . $this->input->post('oid'));
-
-            $a = array('status' => 'success');
+        if (verify_recaptcha($res)) {
+            return TRUE;
         } else {
-            $a = array('status' => 'error');
+            $this->form_validation->set_message('captcha', 'Please verify captcha.');
+            return FALSE;
         }
-        echo json_encode($a);
     }
 
     private function __sendmail($email, $title, $message)
     {
 
-
-        //============================= send email ==============================//
         $this->load->library('email');
         $this->email->subject('');
         $this->email->from($this->setting_data['email_for_contact'], $title);
@@ -651,80 +310,26 @@ class Orders extends CI_Controller
         $html = str_replace(array('[title]', '[message]'), array($title, $message), $html);
         $this->email->message($html);
         $this->email->send(FALSE);
-        //============================= send email ==============================//
     }
 
-    public function upload_document($id)
+    function verify_email($token = '')
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff'))) {
-            exit('No direct script access allowed');
-        }
-        $user = $this->session->userdata('fnsn');
-        if (!empty($_FILES['file']['name'])) {
-            $this->load->library('upload');
-            $path_parts = pathinfo($_FILES["file"]["name"]);
-            $extension = $path_parts['extension'];
-            $config = array();
-            $config['upload_path'] = './' . ORDER_PATH . '/';
-            $config['allowed_types'] = 'pdf|doc|jpg|png';
-            $config['encrypt_name'] = true;
-            $params = array(
-                'file_title' => $this->input->post('title'),
-                'file_date' => date('Y-m-d H:i:s'),
-                'file_size' => ($_FILES['file']['size'] / 1024),
-                'file_type' => $extension,
-                'uid' => 0,
-                'aid' => $user['aid'],
-                'oid' => $id
-            );
-            $this->upload->initialize($config);
-            if ($this->upload->do_upload('file')) {
-                $upload_data = $this->upload->data();
-                $params['file_paht'] = $upload_data['file_name'];
-
-                $this->orders->add_document($params);
-                add_log($user['name'], "Upload document : " . $this->input->post('title'), "order_" . $id);
-
-                $a = array('status' => 'success');
-            } else {
-                $a = array('status' => 'error', 'message' => $this->upload->display_errors());
-            }
+        if ($token == '' || !$dt = $this->members->get_user_by_token($token)) {
+            $html = 'Your link is invalid or expired.';
         } else {
-            $a = array('status' => 'error', 'message' => 'Can\'t upload document.');
+            $html = 'Your account is verify succes. <br>Please <a href="' . base_url('login') . '">click here</a> to login.';
         }
-
-        echo json_encode($a);
-
+        $this->render_data['html'] = $html;
+        $this->render_data['web_title'] = 'Verify email address.';
+        $this->template->write_view('content', 'frontend/verify_email', $this->render_data);
+        $this->template->render();
     }
 
-    function change_shipping($id)
+    public function logout()
     {
-        if (!is_group(array('admin', 'staff'))) {
-            exit('No direct script access allowed');
-        }
-        $user = $this->session->userdata('fnsn');
-        $odid = explode(',', $this->input->post('ids-product'));
-        array_unique($odid);
-        if ($this->input->post('type')) {
-            if ($this->input->post('type') == 'save_all') {
-                $param = array(
-                    'status' => 'shipping',
-                    'note' => $this->input->post('comment')
-                );
-                $this->orders->update_order_all_product_status($id, $param);
-                add_log($user['name'], "Add shipping all product : " . $this->input->post('comment'), "order_" . $id);
+        @session_destroy();
+        @$this->session->sess_destroy();
 
-            } else {
-                foreach ($odid as $oid) {
-                    $param = array(
-                        'status' => 'shipping',
-                        'note' => $this->input->post('comment')
-                    );
-                    $this->orders->update_order_product_status($oid, $param);
-                    add_log($user['name'], "Add shipping product : " . $this->input->post('comment'), "order_" . $id);
-                }
-            }
-        }
-        redirect('admin/orders/edit/' . $id);
+        redirect('');
     }
 }

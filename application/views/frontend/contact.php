@@ -26,7 +26,7 @@
                 </p>
 
                 <p>
-                    Tel: 083-839-2929, 081-615-2621</br>
+                    Tel: <a href="tel:0838392929">083-839-2929</a>, <a href="tel:0816152621">081-615-2621</a></br>
                     Fax: 02-6885755
                 </p>
             </section>
@@ -36,19 +36,19 @@
 
                 <ul class="contact-info">
                     <li>
-                        <span class="text-color" style="width:20px;display:inline-block"><b>E:</b> </span> <a target="_blank" href="mailto:contact@fsns-thailand.com" style="font-size:13px;">contact@fsns-thailand.com</a> 
+                        <span class="text-color" style="width:20px;display:inline-block"><b>E:</b> </span> <a target="_blank" href="mailto:<?php echo $this->setting_data['email_for_contact']; ?>" style="font-size:13px;"><?php echo $this->setting_data['email_for_contact']; ?></a>
                     </li>
                     <li>
                         <span class="text-color" style="width:20px;display:inline-block"><b>W:</b> </span> <a target="_blank" href="http://www.fsns-thailand.com" style="font-size:13px;">www.fsns-thailand.com</a>
                     </li>
                     <li>
-                        <span class="text-color" style="width:20px;display:inline-block"><b>F:</b> </span> <a target="_blank" href="https://www.facebook.com/fsns.thailand" style="font-size:13px;">FSNS Facebook Fanpage</a>
+                        <span class="text-color" style="width:20px;display:inline-block"><b>F:</b> </span> <a target="_blank" href="<?php echo $this->setting_data['facebook']; ?>" style="font-size:13px;">FSNS Facebook Fanpage</a>
                     </li>
                      <li>
-                        <span class="text-color" style="width:20px;display:inline-block"><b>I:</b> </span> <a target="_blank" href="http://instagram.com/foodserviceandsolution" style="font-size:13px;">FSNS Instagram</a>
+                        <span class="text-color" style="width:20px;display:inline-block"><b>I:</b> </span> <a target="_blank" href="<?php echo $this->setting_data['instagram']; ?>" style="font-size:13px;">FSNS Instagram</a>
                     </li>
                     <li>
-                        <span class="text-color" style="width:20px;display:inline-block"><b>G:</b> </span> <a target="_blank" href="https://plus.google.com/114326356306018262958/about" style="font-size:13px;">FSNS Google+</a>
+                        <span class="text-color" style="width:20px;display:inline-block"><b>G:</b> </span> <a target="_blank" href="<?php echo $this->setting_data['google_plus']; ?>" style="font-size:13px;">FSNS Google+</a>
                     </li>
                 </ul>
             </section>

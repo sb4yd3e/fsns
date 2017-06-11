@@ -25,7 +25,7 @@
                     <label>Account Type</label>
                     <select name="account_type" aria-controls="table" id="account_type" class="form-control  input-sm">
                         <option value="">All</option>
-                        <option value="bussiness">Bussiness</option>
+                        <option value="business">Business</option>
                         <option value="personal">Personal</option>
                     </select>
                 </div>

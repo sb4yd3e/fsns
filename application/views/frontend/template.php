@@ -9,7 +9,7 @@
 
     <meta name="author" content="Food Service and Solution Co.,Ltd"/>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, width=device-width"/>
-    <link rel="shortcut icon" href="./img/favicon.ico"/>
+    <link rel="shortcut icon" href="<?php echo base_url('img/favicon.ico'); ?>"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,39 +18,47 @@
 
 
     <!-- stylesheets -->
-    <link rel="stylesheet" href="./css/style.css"/>
-    <link rel="stylesheet" href="./css/blue.css"/>
-    <link rel="stylesheet" href="./css/override.css"/>
-    <link rel="stylesheet" href="./css/product.css"/>
+    <link rel="stylesheet" href="<?php echo base_url('css/style.css'); ?>"/>
+    <link rel="stylesheet" href="<?php echo base_url('css/blue.css'); ?>"/>
+    <link rel="stylesheet" href="<?php echo base_url('css/override.css'); ?>"/>
+    <link rel="stylesheet" href="<?php echo base_url('css/product.css'); ?>"/>
+    <link rel="stylesheet" href="<?php echo base_url('css/sweetalert.css'); ?>"/>
     <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700&amp;subset=latin,greek-ext,greek,vietnamese,latin-ext,cyrillic' rel='stylesheet' type='text/css'/>-->
-    <link rel="stylesheet" href="./pixons/style.css"/>
-    <link rel="stylesheet" href="./css/prettyPhoto.css" media="screen"/>
-    <link rel="stylesheet" href="./service-icons/style.css"/>
+    <link rel="stylesheet" href="<?php echo base_url('pixons/style.css'); ?>"/>
+    <link rel="stylesheet" href="<?php echo base_url('css/prettyPhoto.css'); ?>" media="screen"/>
+    <link rel="stylesheet" href="<?php echo base_url('service-icons/style.css'); ?>"/>
     <!-- REVOLUTION BANNER CSS SETTINGS -->
-    <link rel="stylesheet" type="text/css" href="./rs-plugin/css/settings.css" media="screen"/>
-    <link rel="stylesheet" type="text/css" href="./rs-plugin/css/revolution.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url('rs-plugin/css/settings.css'); ?>" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url('rs-plugin/css/revolution.css'); ?>"
+          media="screen"/>
 
     <!--[if lt IE 9]>
-    <script src="./js/html5shiv.js"></script>
+    <script src="<?php echo base_url('js/html5shiv.js'); ?>"></script>
     <![endif]-->
 
     <!--[if IE 8]>
-    <link rel="stylesheet" href="./css/ie8.css" media="screen"/>
+    <link rel="stylesheet" href="<?php echo base_url('css/ie8.css'); ?>" media="screen"/>
     <![endif]-->
 
     <!-- scripts -->
-    <script src="./js/jquery-1.8.3.js"></script> <!-- jQuery library -->
-    <script src="./js/jquery.placeholder.min.js"></script><!-- jQuery placeholder fix for old browsers -->
+    <script src="<?php echo base_url('js/jquery-1.8.3.js'); ?>"></script> <!-- jQuery library -->
+    <script src="<?php echo base_url('js/jquery.placeholder.min.js'); ?>"></script>
+    <!-- jQuery placeholder fix for old browsers -->
 
     <!-- jQuery REVOLUTION Slider  -->
-    <script type="text/javascript" src="./rs-plugin/js/jquery.themepunch.plugins.min.js"></script>
-    <script type="text/javascript" src="./rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
-    <script src="./js/include.js"></script> <!-- jQuery custom options -->
-    <script src="./js/product.js"></script> <!-- jQuery custom options -->
+    <script type="text/javascript"
+            src="<?php echo base_url('rs-plugin/js/jquery.themepunch.plugins.min.js'); ?>"></script>
+    <script type="text/javascript"
+            src="<?php echo base_url('rs-plugin/js/jquery.themepunch.revolution.min.js'); ?>"></script>
+    <script src="<?php echo base_url('js/form.js'); ?>"></script>
+    <script src="<?php echo base_url('js/include.js'); ?>"></script> <!-- jQuery custom options -->
+    <script src="<?php echo base_url('js/product.js'); ?>"></script> <!-- jQuery custom options -->
+    <script src="<?php echo base_url('js/sweetalert.min.js'); ?>"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <!-- FB -->
     <meta property="og:title" content="FSNS Thailand"/>
     <meta property="og:description" content="FOOD Service & Solution"/>
-    <meta property="og:image" content="./img/logo.png"/>
+    <meta property="og:image" content="<?php echo base_url('img/logo.png'); ?>"/>
 
 
 </head>
@@ -62,8 +70,8 @@
 
         <!-- #logo start -->
         <section id="logo">
-            <a href="./">
-                <img src="./img/logo.png" alt="logo"/>
+            <a href="<?php echo base_url(); ?>">
+                <img src="<?php echo base_url('img/logo.png'); ?>" alt="logo"/>
             </a>
         </section><!-- #logo end -->
 
@@ -83,7 +91,7 @@
                             <ul>
                                 <?php foreach ($category['children'] as $subcategory): ?>
                                     <li>
-                                        <a href="./catalog/<?php echo $category['term_id'] ?>/<?php echo url_title($category['title']) ?>/<?php echo $subcategory['term_id'] ?>/<?php echo url_title($subcategory['title']) ?>"><?php echo $subcategory['title'] ?></a>
+                                        <a href="<?php echo base_url('catalog/' . $category['term_id']); ?>/<?php echo url_title($category['title']) ?>/<?php echo $subcategory['term_id'] ?>/<?php echo url_title($subcategory['title']) ?>"><?php echo $subcategory['title'] ?></a>
                                     </li>
                                 <?php endforeach ?>
                             </ul>
@@ -93,17 +101,35 @@
                     <li class="has-sub <?php echo $active_menu === 'services' ? 'current-menu-item' : '' ?>">
                         <a href="javascript:void(0)">Services</a>
                         <ul style="visibility: hidden; display: block;">
-                            <li><a href="./services/food_safety_inspection">Food Safety Inspection</a></li>
-                            <li><a href="./services/basic_food_safety">Basic Food Safety</a></li>
-                            <li><a href="./services/gmp_haccp_awareness">GMP &amp; HACCP Awareness</a></li>
+                            <li><a href="<?php echo base_url('services/food_safety_inspection'); ?>">Food Safety
+                                    Inspection</a></li>
+                            <li><a href="<?php echo base_url('services/basic_food_safety'); ?>">Basic Food Safety</a>
+                            </li>
+                            <li><a href="<?php echo base_url('services/gmp_haccp_awareness'); ?>">GMP &amp; HACCP
+                                    Awareness</a></li>
                         </ul>
                     </li>
 
                     <li class="<?php echo $active_menu === 'news' ? 'current-menu-item' : '' ?>">
-                        <a href="./news">News</a>
+                        <a href="<?php echo base_url('news'); ?>">News</a>
                     </li>
 
-                    <li class="<?php echo $active_menu === 'contact' ? 'current-menu-item' : '' ?>"><a href="./contact">Contact</a>
+                    <li class="<?php echo $active_menu === 'contact' ? 'current-menu-item' : '' ?>"><a
+                                href="<?php echo base_url('contact'); ?>">Contact</a>
+                    </li>
+                    <li class="has-sub <?php echo $active_menu === 'member' ? 'current-menu-item' : '' ?>">
+                        <a href="javascript:void(0)">Member</a>
+                        <ul style="visibility: hidden; display: block; width: 130px;">
+                            <li><a href="<?php echo base_url('my-carts'); ?>">My Carts <span id="cart-number"></span></a></li>
+                            <?php if(is_login()){ ?>
+                            <li><a href="<?php echo base_url('profile'); ?>">Profile</a></li>
+                            <li><a href="<?php echo base_url('my-orders'); ?>">My Orders</a></li>
+                            <li><a href="<?php echo base_url('logout'); ?>">Logout</a></li>
+                            <?php }else{ ?>
+                            <li><a href="<?php echo base_url('register'); ?>">Register</a></li>
+                            <li><a href="<?php echo base_url('login'); ?>">Login</a></li>
+                            <?php } ?>
+                        </ul>
                     </li>
 
                 </ul>
@@ -117,24 +143,34 @@
 
                 <?php foreach ($product_category as $category): ?>
 
-                    <optgroup label="<?php echo $category['title'] ?>">
+                    <optgroup label="<?php echo strip_tags($category['title']); ?>">
                         <?php foreach ($category['children'] as $subcategory): ?>
-                            <option value="./catalog/<?php echo $category['term_id'] ?>/<?php echo url_title($category['title']) ?>/<?php echo $subcategory['term_id'] ?>/<?php echo url_title($subcategory['title']) ?>"><?php echo $subcategory['title'] ?></option>
+                            <option value="<?php echo base_url('catalog/' . $category['term_id']); ?>/<?php echo url_title($category['title']) ?>/<?php echo $subcategory['term_id'] ?>/<?php echo url_title($subcategory['title']) ?>"><?php echo strip_tags($subcategory['title']); ?></option>
 
                         <?php endforeach; ?>
 
 
                     </optgroup>
 
-
                 <?php endforeach ?>
 
 
-                <option value="./news" <?php echo $active_menu === 'news' ? 'selected="selected"' : '' ?>>News</option>
-                <option value="./contact" <?php echo $active_menu === 'contact' ? 'selected="selected"' : '' ?>>
+                <option value="news" <?php echo $active_menu === 'news' ? 'selected="selected"' : '' ?>>News</option>
+                <option value="contact" <?php echo $active_menu === 'contact' ? 'selected="selected"' : '' ?>>
                     Contact
                 </option>
+                <optgroup label="Member">
+                    <option value="<?php echo base_url('my-carts'); ?>">My Carts</option>
+                    <?php if(is_login()){ ?>
+                        <option value="<?php echo base_url('profile'); ?>">Profile</option>
+                        <option value=<?php echo base_url('my-orders'); ?>"">My Orders></option>
+                        <option value="<?php echo base_url('logout'); ?>">Logout</option>
+                    <?php }else{ ?>
+                        <option value="<?php echo base_url('register'); ?>">Register</option>
+                        <option value="<?php echo base_url('login'); ?>">Login</option>
+                    <?php } ?>
 
+                </optgroup>
             </select><!-- responsive navigation end -->
 
         </section><!-- #nav-container end -->
@@ -157,7 +193,7 @@
 
         <ul class="footer-widget-container grid_3" style="margin-bottom:0">
             <li class="widget widget_text">
-                <img src="./img/admin_logo.png" alt="FSNS thailand" style="width:150px"/>
+                <img src="<?php echo base_url('img/admin_logo.png'); ?>" alt="FSNS thailand" style="width:150px"/>
                 <p>
                     Food Service and Solution Co.,Ltd</br>
                     29 S.Chalaemnimit,</br>
@@ -176,13 +212,13 @@
                 </div>
                 <a href="http://www.fda.gov/" target="_blank" rel="nofollow"
                    style="float:left;display:block;margin: 10px;padding:5px;min-width: 100px;height: 100px"><img
-                            src="fsns_assets/misc/fda.png" style="width:100px;"/></a>
+                            src="<?php echo base_url('fsns_assets/misc/fda.png'); ?>" style="width:100px;"/></a>
                 <a href="http://www.eurobrush.com/" target="_blank" rel="nofollow"
                    style="float:left;margin: 10px;padding:5px;min-width: 100px;min-height: 100px"><img
-                            src="fsns_assets/misc/feibp.png" style="width:100px;"/></a>
+                            src="<?php echo base_url('fsns_assets/misc/feibp.png'); ?>" style="width:100px;"/></a>
                 <a href="javascript:void();" target="_blank" rel="nofollow"
                    style="float:left;margin: 10px;padding:5px;min-width: 100px;min-height: 100px"><img
-                            src="fsns_assets/misc/issa.png" style="width:100px;"/></a>
+                            src="<?php echo base_url('fsns_assets/misc/issa.png'); ?>" style="width:100px;"/></a>
             </li>
         </ul>
 
@@ -193,7 +229,7 @@
                 </div>
                 <p>
                     If you have any questions you can contact us via
-                    our contact form <a class="text-color" href="./contact">here</a> or
+                    our contact form <a class="text-color" href="<?php echo base_url('contact'); ?>">here</a> or
                     social networks.
                 </p>
 
@@ -232,9 +268,10 @@
 
             <div class="grid_6">
                 <ul class="footer-contact-info">
-                    <li class="phone">083-839-2929, 081-615-2621</li>
-                    <li class="mail"><a
-                                href="mailto:<?php echo $this->setting_data['email_for_contact']; ?>"><?php echo $this->setting_data['email_for_contact']; ?></a>
+                    <li class="phone"><a href="tel:0838392929">083-839-2929</a>, <a
+                                href="tel:0816152621">081-615-2621</a></li>
+                    <li class="mail">
+                        <a href="mailto:<?php echo $this->setting_data['email_for_contact']; ?>"><?php echo $this->setting_data['email_for_contact']; ?></a>
                     </li>
                 </ul>
             </div>
@@ -247,13 +284,13 @@
 <?php
 $this->load->helper('cookie');
 if ($this->banner_data['visible'] == '1' && !get_cookie('show_popup')) {
-    set_cookie('show_popup','true', $this->banner_data['delay']);
+    set_cookie('show_popup', 'true', $this->banner_data['delay']);
     ?>
     <div id="popup-overlay"></div>
     <div id="popup-box">
-        <div id="close"><img src="/img/close.png" width="25" height="25" alt=""></div>
-        <a href="">
-            <img src="http://via.placeholder.com/600x400" alt="">
+        <div id="close"><img src="<?php echo base_url('img/close.png'); ?>" width="25" height="25" alt=""></div>
+        <a href="<?php echo $this->banner_data['link']; ?>" target="_blank">
+            <img src="<?php echo base_url(BANNER_PATH.'/'.$this->banner_data['image']); ?>" alt="">
         </a>
     </div>
     <script>
