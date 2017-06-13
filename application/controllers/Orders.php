@@ -29,6 +29,18 @@ class Orders extends CI_Controller
     }
 
     function carts(){
+        if(!is_login()){
+            redirect('login');
+        }
+        $this->render_data['web_title'] = 'My shopping carts';
+        $this->template->write_view('content', 'frontend/my_carts', $this->render_data);
+        $this->template->render();
+    }
+
+    function checkout(){
+        if(!is_login()){
+            redirect('login');
+        }
         $this->render_data['web_title'] = 'My shopping carts';
         $this->template->write_view('content', 'frontend/my_carts', $this->render_data);
         $this->template->render();
