@@ -20,8 +20,8 @@
                             <input name="link" value="<?php echo set_value('link',$banner['link']) ?>" class="form-control" required/>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Endable</label>
-                           <?php echo form_dropdown('visible',array('1'=>'Endable','0'=>'Disable'),$banner['visible'],'class="form-control" required'); ?>
+                            <label class="control-label">Enable</label>
+                           <?php echo form_dropdown('visible',array('1'=>'Enable','0'=>'Disable'),$banner['visible'],'class="form-control" required'); ?>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Delay to show next time.(Seconds)*</label>

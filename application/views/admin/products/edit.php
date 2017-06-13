@@ -23,9 +23,9 @@
                                        class="form-control" required/>
                             </div>
                             <div class="form-group">
-                                <label>Technician info:</label>
-                                <input name="info" value="<?php echo set_value('info', $product['info']) ?>" class="form-control"
-                                />
+                                <label>Techical Info:</label>
+                                <textarea name="info" id="info"><?php echo set_value('info', $product['info']) ?></textarea>
+
                             </div>
                             <div class="row clearfix">
                                 <div class="col-md-6">
@@ -41,23 +41,25 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Specification PDF:</label><br>
-                                        <div class="col-md-8 no-padding">
+                                        <div class="input-group">
                                             <input type="file" name="pdf" size="20"
                                                    class="form-control"/>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <?php if ($product['pdf']) { ?>
+                                            <div class="input-group-btn">
+                                                <?php if ($product['pdf']) { ?>
 
-                                                <a href="<?php echo base_url('frontend/product_pdf_download/' . $product['id'] . '/' . md5($product['id'] . 'suwichalala') . '/' . url_title($product['title'])) . '_Specification.pdf'; ?>"
-                                                   class="btn  btn-info" target="_blank" style="margin-left: 10px;"
-                                                   id="download-pdf"><i class="fa fa-download"></i></a>
-                                                <a href="#" id="remove-pdf" class="btn btn-danger"
-                                                   target="_blank">
-                                                    <i class="fa fa-times-circle"></i>
-                                                </a>
+                                                    <a href="<?php echo base_url('frontend/product_pdf_download/' . $product['id'] . '/' . md5($product['id'] . 'suwichalala') . '/' . url_title($product['title'])) . '_Specification.pdf'; ?>"
+                                                       class="btn  btn-info" target="_blank" style="margin-left: 10px;"
+                                                       id="download-pdf"><i class="fa fa-download"></i></a>
+                                                    <a href="#" id="remove-pdf" class="btn btn-danger"
+                                                       target="_blank">
+                                                        <i class="fa fa-times-circle"></i>
+                                                    </a>
 
-                                            <?php } ?>
+                                                <?php } ?>
+                                            </div>
                                         </div>
+
+
                                         <input type="hidden" id="delete-pdf" value="false" name="delete-pdf">
                                         <div class="clearfix"></div>
                                     </div>
@@ -211,6 +213,7 @@
                                                 <div class="color-select color-7" data-hex="#7E2683"></div>
                                                 <div class="color-select color-8" data-hex="#F05C21"></div>
                                                 <div class="color-select-picker"></div>
+                                                <div class="clearfix"></div>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -269,6 +272,7 @@
                                                         <div class="color-select color-8" data-hex="#F05C21"></div>
                                                         <div class="color-select-picker"
                                                              id="color-picker-<?php echo $k; ?>"></div>
+                                                        <div class="clearfix"></div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group"><label>Value (Text)</label>

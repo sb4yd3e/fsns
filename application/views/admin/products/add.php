@@ -23,9 +23,8 @@
                                        required/>
                             </div>
                             <div class="form-group">
-                                <label>Technician info:</label>
-                                <input name="info" value="<?php echo set_value('info') ?>" class="form-control"
-                                       />
+                                <label>Techical Info:</label>
+                                <textarea name="info" id="info"><?php echo set_value('info') ?></textarea>
                             </div>
                             <div class="row clearfix">
                                 <div class="col-md-6">
@@ -175,6 +174,7 @@
                                                 <div class="color-select color-7" data-hex="#7E2683"></div>
                                                 <div class="color-select color-8" data-hex="#F05C21"></div>
                                                 <div class="color-select-picker" id="color-picker-0"></div>
+                                                <div class="clearfix"></div>
                                             </div>
                                         </div>
                                         <div class="form-group">

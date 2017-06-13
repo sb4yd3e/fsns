@@ -547,7 +547,7 @@ class Orders extends CI_Controller
         if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff'))) {
             exit('No direct script access allowed');
         }
-        $code = $this->input->post('code');
+        $code = strtolower($this->input->post('code'));
 
         $coupon = $this->orders->get_coupon($code);
         if ($coupon) {

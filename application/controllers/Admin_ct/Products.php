@@ -301,7 +301,17 @@ $(document).on(\'click\', \'.color-select\', function () {
   $(this).parent().find(\'.color-active\').css(\'backgroundColor\', hex);
   $(this).parent().parent().find(\'input\').val(hex);
 });
-
+$(function(){
+				CKEDITOR.replace( "info" ,{
+					filebrowserBrowseUrl : "'.base_url('js/ckfinder/ckfinder.html').'",
+					filebrowserImageBrowseUrl : "'.base_url('js/ckfinder/ckfinder.html?type=Images').'",
+					filebrowserFlashBrowseUrl : "'.base_url('js/ckfinder/ckfinder.html?type=Flash').'",
+					filebrowserUploadUrl : "'.base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files').'",
+					filebrowserImageUploadUrl : "'.base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images').'",
+					filebrowserFlashUploadUrl : "'.base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash').'"
+				});
+				
+			});
 ';
             if ($this->input->get('upload') == "error") {
                 $js .= '$.notify("Can\'n upload cover photo.", "warning");';
@@ -481,7 +491,7 @@ html += \'<div class="color-select color-5" data-hex="#0E1522"></div>\';
 html += \'<div class="color-select color-6" data-hex="#CD2026"></div>\';
 html += \'<div class="color-select color-7" data-hex="#7E2683"></div>\';
 html += \'<div class="color-select color-8" data-hex="#F05C21"></div>\';
-html += \'<div class="color-select-picker" id="color-picker-\'+num+\'"></div></div>\';
+html += \'<div class="color-select-picker" id="color-picker-\'+num+\'"></div><div class="clearfix"></div></div>\';
 html += \'</div><div class="form-group"><label>Value (Text)</label>\';
 html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group">\';
 html += \'<label>Product In Stock</label><select name="stock[]" class="form-control" required>\';
@@ -543,7 +553,17 @@ $("#download-pdf").remove();
 return false;
 });
 
-
+$(function(){
+				CKEDITOR.replace( "info" ,{
+					filebrowserBrowseUrl : "'.base_url('js/ckfinder/ckfinder.html').'",
+					filebrowserImageBrowseUrl : "'.base_url('js/ckfinder/ckfinder.html?type=Images').'",
+					filebrowserFlashBrowseUrl : "'.base_url('js/ckfinder/ckfinder.html?type=Flash').'",
+					filebrowserUploadUrl : "'.base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files').'",
+					filebrowserImageUploadUrl : "'.base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images').'",
+					filebrowserFlashUploadUrl : "'.base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash').'"
+				});
+				
+			});
 ';
             if ($this->input->get('upload') == "error") {
                 $js .= '$.notify("Can\'n upload cover photo.", "warning");';

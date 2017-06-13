@@ -6,8 +6,7 @@
             </div>
 			<?php echo form_open('admin/setting'); ?>
 			<div class="box-body">
-							
-				<div class="row clearfix">
+
 				<?php echo validation_errors(); ?>
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						<label for="site_title" class="control-label">Site Title</label>
@@ -24,7 +23,7 @@
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						<label for="site_description" class="control-label">Site Description</label>
 						<div class="form-group">
-							<textarea name="site_description" class="form-control" id="site_description"  required><?php echo ($this->input->post('site_description') ? $this->input->post('site_description') : $setting['site_description']); ?></textarea>
+                            <input type="text" name="site_description" value="<?php echo ($this->input->post('site_description') ? $this->input->post('site_description') : $setting['site_description']); ?>" class="form-control" id="site_description" required />
 						</div>
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -33,8 +32,19 @@
                             <input type="text" name="email_for_contact" value="<?php echo ($this->input->post('email_for_contact') ? $this->input->post('email_for_contact') : $setting['email_for_contact']); ?>" class="form-control" id="email_for_contact" required />
                         </div>
 					</div>
-				</div>
-				<div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <label for="email_for_order" class="control-label">Email for Order system</label>
+                        <div class="form-group">
+                            <input type="text" name="email_for_order" value="<?php echo ($this->input->post('email_for_order') ? $this->input->post('email_for_order') : $setting['email_for_order']); ?>" class="form-control" id="email_for_order" required />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <label for="email_for_member" class="control-label">Email for member system</label>
+                        <div class="form-group">
+                            <input type="text" name="email_for_member" value="<?php echo ($this->input->post('email_for_member') ? $this->input->post('email_for_member') : $setting['email_for_member']); ?>" class="form-control" id="email_for_member" required />
+                        </div>
+                    </div>
+
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						<label for="facebook" class="control-label">Facebook</label>
 						<div class="form-group">
@@ -47,16 +57,14 @@
 							<input type="text" name="google" value="<?php echo ($this->input->post('google') ? $this->input->post('google') : $setting['google_plus']); ?>" class="form-control" id="google"  required />
 						</div>
 					</div>
-				</div>
-				<div class="row clearfix">
+
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						<label for="instagram" class="control-label">Instagram</label>
 						<div class="form-group">
 							<input type="text" name="instagram" value="<?php echo ($this->input->post('instagram') ? $this->input->post('instagram') : $setting['instagram']); ?>" class="form-control" id="instagram"  required />
 						</div>
 					</div>
-					
-				</div>
+
 			</div>
 			<div class="box-footer">
             	<button type="submit" class="btn btn-success">
