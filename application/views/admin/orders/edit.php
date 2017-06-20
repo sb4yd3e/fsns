@@ -248,12 +248,12 @@
                                         <tbody>
                                         <?php foreach ($custom_files as $cs_file) { ?>
                                             <tr>
-                                                <td><?php echo $fiile['file_title']; ?></td>
-                                                <td><?php echo $fiile['file_type']; ?>'</td>
-                                                <td><?php echo number_format($fiile['file_size'] / 1024, 2); ?> MB</td>
-                                                <td><?php echo date("d/m/Y H:i:s", strtotime($fiile['file_date'])); ?></td>
+                                                <td><?php echo $cs_file['file_title']; ?></td>
+                                                <td><?php echo $cs_file['file_type']; ?></td>
+                                                <td><?php echo number_format($cs_file['file_size'], 2); ?> KB</td>
+                                                <td><?php echo date("d/m/Y H:i:s", strtotime($cs_file['file_date'])); ?></td>
                                                 <td>
-                                                    <a href="<?php echo base_url('admin/orders/download_file/' . $fiile['ufid']); ?>"
+                                                    <a href="<?php echo base_url('admin/orders/download_file/' . $cs_file['ufid']); ?>"
                                                        target="_blank" class="label label-info">Download</a></td>
                                             </tr>
                                         <?php } ?>

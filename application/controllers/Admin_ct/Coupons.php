@@ -79,7 +79,7 @@ class Coupons extends CI_Controller
                 $ex = '<label class="label label-success">' . date("d/m/Y H:i:s", $coupon->expired) . '</label>';
             }
 
-            $row[] = $coupon->code;
+            $row[] = strtoupper($coupon->code);
             $row[] = $coupon->discount;
             $row[] = $ex;
             $row[] = date("d/m/Y H:i:s", $coupon->created_at);
@@ -114,7 +114,7 @@ class Coupons extends CI_Controller
         $this->form_validation->set_rules('expired', 'Promotion Expired', 'required');
         if ($this->form_validation->run()) {
             $data_create = array(
-                'code' => $this->input->post('code', TRUE),
+                'code' => strtolower($this->input->post('code', TRUE)),
                 'discount' => $this->input->post('discount', FALSE),
                 'expired' => dateToTime($this->input->post('expired', FALSE)),
                 'created_at' => time(),
@@ -160,7 +160,7 @@ class Coupons extends CI_Controller
         $this->form_validation->set_rules('expired', 'Promotion Expired', 'required');
         if ($this->form_validation->run()) {
             $data_create = array(
-                'code' => $this->input->post('code', TRUE),
+                'code' => strtolower($this->input->post('code', TRUE)),
                 'discount' => $this->input->post('discount', FALSE),
                 'expired' => dateToTime($this->input->post('expired', FALSE)),
                 'modified_at' => time()

@@ -69,6 +69,14 @@ class Orders_model extends CI_Model
         return $this->db->get_where($this->table, array('oid' => $id))->row_array();
     }
 
+    function get_user_order($uid,$id)
+    {
+        return $this->db->select('oid,at_date,amount,spacial_amount,coupon_code,discount,discount_100k,shipping_amount,vat_amount,total_amount,shipping_name,shipping_address,shipping_province,shipping_zip,order_status')->order_by('oid','desc')->get_where($this->table, array('oid' => $id,'uid'=>$uid))->row_array();
+    }
+
+    function get_order_detail($id){
+
+    }
 
     function get_all_orders()
     {
@@ -165,7 +173,7 @@ class Orders_model extends CI_Model
 
     function get_coupon($code)
     {
-        return $this->db->select('discount')->where('code', $code)->where('expired >', time())->get('coupons')->row_array();
+        return $this->db->select('discount')->where('code', strtolower($code))->where('expired >', time())->get('coupons')->row_array();
     }
 
     function get_order_product($id, $paid)
@@ -175,7 +183,7 @@ class Orders_model extends CI_Model
             $user = $this->session->userdata('fnsn');
             $this->db->where("sale_id", $user['aid']);
         }
-        return $this->where('pa_id', $paid)->get('order_details')->row_array();
+        return $this->db->where('pa_id', $paid)->get('order_details')->row_array();
     }
 
     function save_order_product($id, $paid, $data)
@@ -195,12 +203,17 @@ class Orders_model extends CI_Model
 
     function add_document($params)
     {
-        return $this->db->insert('order_files', $params);
+         $this->db->insert('order_files', $params);
+        return $this->db->insert_id();
     }
 
     function get_file($fid)
     {
         return $this->db->where('ufid', $fid)->get('order_files')->row_array();
+    }
+    function list_order_by_user($uid)
+    {
+        return $this->db->where('uid', $uid)->order_by('oid','desc')->get('orders')->result_array();
     }
 
     function delete_file($fid)
@@ -224,5 +237,13 @@ class Orders_model extends CI_Model
     function update_order_product_status($odid, $data)
     {
         $this->db->where('odid', $odid)->update('order_details', $data);
+    }
+
+    function get_shipping_address($uid){
+        return $this->db->select('shipping_name,shipping_address,shipping_province,shipping_zip')->where('uid',$uid)->get('users')->row_array();
+    }
+
+    function list_timeline($oid){
+        return $this->db->select('at_date,process_type,process_title,process_detail')->where('oid',$oid)->order_by('opid','desc')->get('order_process')->result_array();
     }
 }

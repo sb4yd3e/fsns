@@ -110,7 +110,7 @@ class Products extends CI_Controller
             $row[] = $products->normal_price;
             $row[] = $products->special_price;
             $row[] = in_stock($products->in_stock);
-            $btnpdf = ($products->pdf)?'<a href="' . base_url('frontend/product_pdf_download/' . $products->id . '/' . md5($products->id . 'suwichalala') . '/' . url_title($products->title)) . '_Specification.pdf' . '" class="label label-info"><i class="fa fa-download"></i> PDF</a> ':'';
+            $btnpdf = ($products->pdf) ? '<a href="' . base_url('frontend/product_pdf_download/' . $products->id . '/' . md5($products->id . 'suwichalala') . '/' . url_title($products->title)) . '_Specification.pdf' . '" class="label label-info"><i class="fa fa-download"></i> PDF</a> ' : '';
             $row[] = $btnpdf . '
 <a href="' . base_url('admin/products/edit/' . $products->id) . '" class="label label-warning"><i class="fa fa-pencil"></i> Edit</a> 
             <a href="' . base_url('admin/products/delete/' . $products->id) . '" class="label label-danger"  onclick="return confirm(\'Are you sure?\')"><i class="fa fa-times-circle"></i> Delete</a>';
@@ -149,6 +149,7 @@ class Products extends CI_Controller
         $this->form_validation->set_rules('product_in_stock', 'Product In Stock', 'required');
         $this->form_validation->set_rules('taxonomy_term_id', 'Product Category', 'required');
         $this->form_validation->set_rules('product_online', 'Product is color', 'required');
+        $this->form_validation->set_rules('type', 'Type', 'required');
         if ($this->form_validation->run()) {
             $params = array(
                 'title' => $this->input->post('title'),
@@ -160,7 +161,8 @@ class Products extends CI_Controller
                 'model_code' => $this->input->post('model_code'),
                 'in_stock' => $this->input->post('product_in_stock'),
                 'taxonomy_term_id' => $this->input->post('taxonomy_term_id'),
-                'online' => $this->input->post('product_online')
+                'online' => $this->input->post('product_online'),
+                'att_type'=> $this->input->post('type')
             );
             if ($this->upload->do_upload('cover')) {
                 //Get Cover DATA
@@ -187,13 +189,23 @@ class Products extends CI_Controller
             if ($iid = $this->products->add_product($params)) {
                 //add product alt
                 foreach ($_POST['code'] as $k => $code) {
+                    if ($this->input->post('type') == 'color') {
+                        $color = strtoupper($_POST['color'][$k]);
+                    } elseif ($this->input->post('type') == 'model') {
+                        $color = '';
+                    } else {
+                        $color = '';
+                    }
+
+
                     $param_alt = array(
                         'pid' => $iid,
                         'code' => $code,
+                        'p_type' => $this->input->post('type'),
                         'normal_price' => $_POST['price'][$k],
                         'special_price' => $_POST['sp_price'][$k],
                         'p_value' => $_POST['value'][$k],
-                        'color' => strtoupper($_POST['color'][$k]),
+                        'color' => $color,
                         'in_stock' => $_POST['stock'][$k]
                     );
                     $this->products->add_product_alt($param_alt);
@@ -230,6 +242,33 @@ class Products extends CI_Controller
                 },
                 minLength: 3
             });
+            var attr_type;
+            $("#add-color").click(function(){
+                $("#type").val("color");
+                attr_type = "color";
+                $("#add-color,#add-model,#add-size").remove();
+                $("#first-box").show();
+                $("#add-at").show();
+            });
+            
+            $("#add-model").click(function(){
+                $("#type").val("model");
+                attr_type = "model";
+                $("#add-color,#add-model,#add-size").remove();
+                $("#first-box").show();
+                $("#add-at").show();
+                $("#color-boxed").remove();
+                $("#other-boxed label").html("Model (Text)");
+            });
+            $("#add-size").click(function(){
+                $("#type").val("size");
+                attr_type = "size";
+                $("#add-color,#add-model,#add-size").remove();
+                $("#first-box").show();
+                $("#add-at").show();
+                $("#color-boxed").remove();
+                $("#other-boxed label").html("Size (Text)");
+            });
             
             $(\'#add-at\').click(function(){
 var num = $(\'.sub-alt\').length + 1;
@@ -238,10 +277,13 @@ html += \'<button type="button" class="btn btn-sm btn-danger pull-right delete-a
 html += \'<div class="clearfix"></div> <div class="col-md-6"> <div class="form-group"> <label>Code</label>\';
 html += \'<input type="text" name="code[]" class="form-control" required/>\';
 html += \'</div><div class="form-group"><label>Price</label>\';
-html += \'<input type="number" name="price[]" class="form-control" required/></div>\';
+html += \'<input type="text" name="price[]" class="form-control digi" required/></div>\';
 html += \'<div class="form-group"><label>Special Price</label>\';
-html += \'<input type="number" name="sp_price[]" class="form-control" required/>\';
-html += \'</div></div><div class="col-md-6"><div class="form-group"><label>Color</label>\';
+html += \'<input type="text" name="sp_price[]" class="form-control digi" required/>\';
+html += \'</div></div><div class="col-md-6">\';
+
+if(attr_type==="color"){
+html += \'<div class="form-group"><label>Color</label>\';
 html += \'<input type="hidden" name="color[]" id="color-selector-\'+num+\'" value="#ffffff" class="form-control color-input" required/>\';
 html += \'<div class="color-box"><div class="color-active"></div>\';
 html += \'<div class="color-select color-1" data-hex="#ffffff"></div>\';
@@ -252,8 +294,15 @@ html += \'<div class="color-select color-5" data-hex="#0E1522"></div>\';
 html += \'<div class="color-select color-6" data-hex="#CD2026"></div>\';
 html += \'<div class="color-select color-7" data-hex="#7E2683"></div>\';
 html += \'<div class="color-select color-8" data-hex="#F05C21"></div>\';
-html += \'<div class="color-select-picker" id="color-picker-\'+num+\'"></div></div>\';
-html += \'</div><div class="form-group"><label>Value (Text)</label>\';
+html += \'<div class="color-select-picker" id="color-picker-\'+num+\'"></div><div class="clearfix"></div></div></div>\';
+html += \'<div class="form-group"><label>Value (Text)</label>\';
+}
+if(attr_type==="model"){
+html += \'<div class="form-group"><label>Model (Text)</label>\';
+}
+if(attr_type==="size"){
+html += \'<div class="form-group"><label>Size (Text)</label>\';
+}
 html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group">\';
 html += \'<label>Product In Stock</label><select name="stock[]" class="form-control" required>\';
 html += \'<option value="" selected="selected">Select</option><option value="0">NO</option><option value="1">YES</option>\';
@@ -301,7 +350,17 @@ $(document).on(\'click\', \'.color-select\', function () {
   $(this).parent().find(\'.color-active\').css(\'backgroundColor\', hex);
   $(this).parent().parent().find(\'input\').val(hex);
 });
-
+$(function(){
+				CKEDITOR.replace( "info" ,{
+					filebrowserBrowseUrl : "' . base_url('js/ckfinder/ckfinder.html') . '",
+					filebrowserImageBrowseUrl : "' . base_url('js/ckfinder/ckfinder.html?type=Images') . '",
+					filebrowserFlashBrowseUrl : "' . base_url('js/ckfinder/ckfinder.html?type=Flash') . '",
+					filebrowserUploadUrl : "' . base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files') . '",
+					filebrowserImageUploadUrl : "' . base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images') . '",
+					filebrowserFlashUploadUrl : "' . base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash') . '"
+				});
+				
+			});
 ';
             if ($this->input->get('upload') == "error") {
                 $js .= '$.notify("Can\'n upload cover photo.", "warning");';
@@ -351,6 +410,7 @@ $(document).on(\'click\', \'.color-select\', function () {
         $this->form_validation->set_rules('product_in_stock', 'Product In Stock', 'required');
         $this->form_validation->set_rules('taxonomy_term_id', 'Product Category', 'required');
         $this->form_validation->set_rules('product_online', 'Product is color', 'required');
+        $this->form_validation->set_rules('type', 'Type', 'required');
         if ($this->form_validation->run()) {
             $params = array(
                 'title' => $this->input->post('title'),
@@ -362,6 +422,7 @@ $(document).on(\'click\', \'.color-select\', function () {
                 'model_code' => $this->input->post('model_code'),
                 'in_stock' => $this->input->post('product_in_stock'),
                 'taxonomy_term_id' => $this->input->post('taxonomy_term_id'),
+                'att_type'=> $this->input->post('type'),
                 'online' => $this->input->post('product_online')
             );
             if (!empty($_FILES['cover']['name'])) {
@@ -409,13 +470,21 @@ $(document).on(\'click\', \'.color-select\', function () {
                 //add product alt
 
                 foreach ($_POST['code'] as $k => $code) {
+                    if ($this->input->post('type') == 'color') {
+                        $color = strtoupper($_POST['color'][$k]);
+                    } elseif ($this->input->post('type') == 'model') {
+                        $color = '';
+                    } else {
+                        $color = '';
+                    }
                     $param_alt = array(
                         'pid' => $pid,
                         'code' => $code,
                         'normal_price' => $_POST['price'][$k],
                         'special_price' => $_POST['sp_price'][$k],
+                        'p_type' => $this->input->post('type'),
                         'p_value' => $_POST['value'][$k],
-                        'color' => strtoupper($_POST['color'][$k]),
+                        'color' => $color,
                         'in_stock' => $_POST['stock'][$k]
                     );
                     if (isset($_POST['at-id'][$k]) && $_POST['at-id'][$k] != "") {
@@ -459,7 +528,33 @@ $(document).on(\'click\', \'.color-select\', function () {
                 },
                 minLength: 3
             });
+            var attr_type = "'.$product['att_type'].'";
+            $("#add-color").click(function(){
+                $("#type").val("color");
+                attr_type = "color";
+                $("#add-color,#add-model,#add-size").remove();
+                $("#first-box").show();
+                $("#add-at").show();
+            });
             
+            $("#add-model").click(function(){
+                $("#type").val("model");
+                attr_type = "model";
+                $("#add-color,#add-model,#add-size").remove();
+                $("#first-box").show();
+                $("#add-at").show();
+                $("#color-boxed").remove();
+                $("#other-boxed label").html("Model (Text)");
+            });
+            $("#add-size").click(function(){
+                $("#type").val("size");
+                attr_type = "size";
+                $("#add-color,#add-model,#add-size").remove();
+                $("#first-box").show();
+                $("#add-at").show();
+                $("#color-boxed").remove();
+                $("#other-boxed label").html("Size (Text)");
+            });
             $(\'#add-at\').click(function(){
 var num = $(\'.sub-alt\').length + 1;
 var html = \'<div class="clearfix row sub-alt" id="at-\'+num+\'" style="padding-right: 20px;"><div class="thumbnail clearfix ">\';
@@ -467,10 +562,13 @@ html += \'<button type="button" class="btn btn-sm btn-danger pull-right delete-a
 html += \'<div class="clearfix"></div> <div class="col-md-6"> <div class="form-group"> <label>Code</label>\';
 html += \'<input type="text" name="code[]" class="form-control" required/>\';
 html += \'</div><div class="form-group"><label>Price</label>\';
-html += \'<input type="number" name="price[]" class="form-control" required/></div>\';
+html += \'<input type="text" name="price[]" class="form-control digi" required/></div>\';
 html += \'<div class="form-group"><label>Special Price</label>\';
-html += \'<input type="number" name="sp_price[]" class="form-control" required/>\';
-html += \'</div></div><div class="col-md-6"><div class="form-group"><label>Color</label>\';
+html += \'<input type="text" name="sp_price[]" class="form-control digi" required/>\';
+html += \'</div></div><div class="col-md-6">\';
+
+if(attr_type==="color"){
+html += \'<div class="form-group"><label>Color</label>\';
 html += \'<input type="hidden" name="color[]" id="color-selector-\'+num+\'" value="#ffffff" class="form-control color-input" required/>\';
 html += \'<div class="color-box"><div class="color-active"></div>\';
 html += \'<div class="color-select color-1" data-hex="#ffffff"></div>\';
@@ -481,8 +579,15 @@ html += \'<div class="color-select color-5" data-hex="#0E1522"></div>\';
 html += \'<div class="color-select color-6" data-hex="#CD2026"></div>\';
 html += \'<div class="color-select color-7" data-hex="#7E2683"></div>\';
 html += \'<div class="color-select color-8" data-hex="#F05C21"></div>\';
-html += \'<div class="color-select-picker" id="color-picker-\'+num+\'"></div></div>\';
-html += \'</div><div class="form-group"><label>Value (Text)</label>\';
+html += \'<div class="color-select-picker" id="color-picker-\'+num+\'"></div><div class="clearfix"></div></div></div>\';
+html += \'<div class="form-group"><label>Value (Text)</label>\';
+}
+if(attr_type==="model"){
+html += \'<div class="form-group"><label>Model (Text)</label>\';
+}
+if(attr_type==="size"){
+html += \'<div class="form-group"><label>Size (Text)</label>\';
+}
 html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group">\';
 html += \'<label>Product In Stock</label><select name="stock[]" class="form-control" required>\';
 html += \'<option value="" selected="selected">Select</option><option value="0">NO</option><option value="1">YES</option>\';
@@ -543,70 +648,81 @@ $("#download-pdf").remove();
 return false;
 });
 
-
+$(function(){
+				CKEDITOR.replace( "info" ,{
+					filebrowserBrowseUrl : "' . base_url('js/ckfinder/ckfinder.html') . '",
+					filebrowserImageBrowseUrl : "' . base_url('js/ckfinder/ckfinder.html?type=Images') . '",
+					filebrowserFlashBrowseUrl : "' . base_url('js/ckfinder/ckfinder.html?type=Flash') . '",
+					filebrowserUploadUrl : "' . base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files') . '",
+					filebrowserImageUploadUrl : "' . base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images') . '",
+					filebrowserFlashUploadUrl : "' . base_url('js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash') . '"
+				});
+				
+			});
 ';
-            if ($this->input->get('upload') == "error") {
-                $js .= '$.notify("Can\'n upload cover photo.", "warning");';
-            }
-            if ($this->input->get('pdf') == "error") {
-                $js .= '$.notify("Can\'n upload PDF file!.", "warning");';
-            }
-            if ($this->input->get('save') == "success") {
-                $js .= '$.notify("Save product success.", "success");';
-            }
-            if ($this->input->get('save') == "error") {
-                $js .= '$.notify("Can\'n save product!.", "warning");';
-            }
-            $this->template->write('js', $js);
-            //******* Defalut ********//
-            $render_data['user'] = $this->session->userdata('fnsn');
-            $this->template->write('title', 'Edit product');
-            $this->template->write('user_id', $render_data['user']['aid']);
-            $this->template->write('user_name', $render_data['user']['name']);
-            $this->template->write('user_group', $render_data['user']['group']);
-            //******* Defalut ********//
-            $render_data['product'] = $product;
-            $render_data['product_alts'] = $this->products->get_product_alt($pid);
-            $this->load->model('taxonomy_model', 'taxonomy');
-            $render_data['product_category'] = $this->taxonomy->get_taxonomy_term('product_category');
-            $this->template->write_view('content', 'admin/products/edit', $render_data);
-            $this->template->render();
+        if ($this->input->get('upload') == "error") {
+            $js .= '$.notify("Can\'n upload cover photo.", "warning");';
         }
+        if ($this->input->get('pdf') == "error") {
+            $js .= '$.notify("Can\'n upload PDF file!.", "warning");';
+        }
+        if ($this->input->get('save') == "success") {
+            $js .= '$.notify("Save product success.", "success");';
+        }
+        if ($this->input->get('save') == "error") {
+            $js .= '$.notify("Can\'n save product!.", "warning");';
+        }
+        $this->template->write('js', $js);
+        //******* Defalut ********//
+        $render_data['user'] = $this->session->userdata('fnsn');
+        $this->template->write('title', 'Edit product');
+        $this->template->write('user_id', $render_data['user']['aid']);
+        $this->template->write('user_name', $render_data['user']['name']);
+        $this->template->write('user_group', $render_data['user']['group']);
+        //******* Defalut ********//
+        $render_data['product'] = $product;
+        $render_data['product_alts'] = $this->products->get_product_alt($pid);
+        $this->load->model('taxonomy_model', 'taxonomy');
+        $render_data['product_category'] = $this->taxonomy->get_taxonomy_term('product_category');
+        $this->template->write_view('content', 'admin/products/edit', $render_data);
+        $this->template->render();
     }
+}
 
 
-    function delete($pid)
-    {
-        if (!is_group(array('admin'))) {
-            redirect('admin');
-            exit();
-        }
-        $product = $this->products->get_product($pid);
-        if (isset($product['id'])) {
-            $this->products->product_delete($pid);
-            redirect('admin/products?delete=true');
-        } else {
-            show_error('The product you are trying to delete does not exist.');
-        }
+function delete($pid)
+{
+    if (!is_group(array('admin'))) {
+        redirect('admin');
+        exit();
     }
-
-
-    public function ajax_get_group()
-    {
-        $term_id = $this->input->post('term_id');
-        $keyword = $this->input->post('keyword');
-        $result = $this->db->distinct()->select('group')
-            ->where('taxonomy_term_id', $term_id)
-            ->like('group', $keyword)->order_by('group')->get('products');
-
-        if ($result->num_rows() > 0) {
-            $return_list = $result->result_array();
-            $return_array = array();
-            foreach ($return_list as $row) {
-                $return_array[] = $row['group'];
-            }
-            echo json_encode($return_array);
-        }
+    $product = $this->products->get_product($pid);
+    if (isset($product['id'])) {
+        $this->products->product_delete($pid);
+        redirect('admin/products?delete=true');
+    } else {
+        show_error('The product you are trying to delete does not exist.');
     }
+}
+
+
+public
+function ajax_get_group()
+{
+    $term_id = $this->input->post('term_id');
+    $keyword = $this->input->post('keyword');
+    $result = $this->db->distinct()->select('group')
+        ->where('taxonomy_term_id', $term_id)
+        ->like('group', $keyword)->order_by('group')->get('products');
+
+    if ($result->num_rows() > 0) {
+        $return_list = $result->result_array();
+        $return_array = array();
+        foreach ($return_list as $row) {
+            $return_array[] = $row['group'];
+        }
+        echo json_encode($return_array);
+    }
+}
 
 }

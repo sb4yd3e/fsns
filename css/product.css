@@ -1,0 +1,1068 @@
+#product-content {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 1px dotted #EEEEEE;
+}
+#product-content .inner-wrap {
+  padding: 20px;
+}
+#product-detail {
+  margin-top: 50px;
+}
+.container_6 {
+  width: 50%;
+  float: left;
+}
+.container_6 .inner-wrap {
+  padding: 20px;
+}
+.container_6 .inner-wrap .product-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+.container_6 .inner-wrap .product-desc {
+  margin-top: 10px;
+  font-size: 20px;
+}
+.container_6 .inner-wrap .product-code {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.container_6 .inner-wrap .product-code span {
+  font-weight: normal;
+}
+.container_6 .inner-wrap .product-price {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.container_6 .inner-wrap .product-price .default-price {
+  font-weight: normal;
+}
+.container_6 .inner-wrap .product-price .special-price {
+  font-weight: normal;
+  color: red;
+}
+.container_6 .inner-wrap .product-color {
+  background: #EEEEEE;
+  display: inline-block;
+  height: 42px;
+}
+.container_6 .inner-wrap .product-color .color-wrap {
+  padding: 5px;
+}
+.container_6 .inner-wrap .product-color .color-wrap .select-color {
+  width: 25px;
+  height: 25px;
+  float: left;
+  cursor: pointer;
+  margin: 3px;
+  position: relative;
+}
+.container_6 .inner-wrap .product-color .color-wrap .select-color.active::after {
+  content: '';
+  background: url("../img/check.png") top center no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 25px;
+  height: 25px;
+}
+.container_6 .inner-wrap #qty {
+  width: 100px;
+  border: 1px solid #ccc;
+  background: #fff;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  font-size: 14px;
+  padding: 5px;
+  margin-top: 20px;
+}
+.container_6 .inner-wrap #add-to-cart {
+  margin: 20px auto;
+  padding: 10px 20px;
+  background: #00A6C7;
+  font-size: 18px;
+  text-align: center;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+.container_6 .inner-wrap #add-to-cart:hover {
+  background: #00acd6;
+}
+.container_6 .big-thumb {
+  max-width: 480px;
+}
+.container_6 .big-thumb img {
+  width: 100%;
+  height: auto;
+}
+.container_6 .pdf {
+  margin-top: 30px;
+  text-align: center;
+}
+.container_6 .pdf a {
+  margin: 0 auto;
+  color: #2e2e2e;
+  width: 150px;
+  height: 30px;
+  border: 1px solid #2e2e2e;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 5px 10px;
+  display: block;
+  line-height: 2;
+}
+.container_6 .pdf a:hover {
+  background: #eee;
+}
+.container_6 .pdf a img {
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  margin-top: -5px;
+}
+.clearfix {
+  clear: both;
+}
+@media screen and (max-width: 767px) {
+  .hide-mobile {
+    display: none;
+  }
+  .container_6 {
+    width: 100%;
+    float: none;
+  }
+  #membber-form .col-6 {
+    width: 100% !important;
+    float: none !important;
+  }
+  #membber-form .col-6#div-login,
+  #membber-form .col-6#div-forgot {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+}
+/*================ POPUP ===============*/
+#popup-overlay,
+#lightbox-overlay,
+#upload-overlay,
+#confirm-overlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  z-index: 9998;
+  display: none;
+}
+#popup-box,
+#lightbox,
+#uploadbox,
+#confirmbox {
+  display: none;
+  position: fixed;
+  width: auto;
+  height: auto;
+  min-width: 300px;
+  background: #ffffff;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+#popup-box #close,
+#lightbox #close,
+#uploadbox #close,
+#confirmbox #close,
+#popup-box #close-lightbox,
+#lightbox #close-lightbox,
+#uploadbox #close-lightbox,
+#confirmbox #close-lightbox,
+#popup-box #close-uploadbox,
+#lightbox #close-uploadbox,
+#uploadbox #close-uploadbox,
+#confirmbox #close-uploadbox,
+#popup-box #close-confirmbox,
+#lightbox #close-confirmbox,
+#uploadbox #close-confirmbox,
+#confirmbox #close-confirmbox {
+  width: 30px;
+  height: 26px;
+  padding-top: 4px;
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  cursor: pointer;
+  background: #cccccc;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+#popup-box #close img,
+#lightbox #close img,
+#uploadbox #close img,
+#confirmbox #close img,
+#popup-box #close-lightbox img,
+#lightbox #close-lightbox img,
+#uploadbox #close-lightbox img,
+#confirmbox #close-lightbox img,
+#popup-box #close-uploadbox img,
+#lightbox #close-uploadbox img,
+#uploadbox #close-uploadbox img,
+#confirmbox #close-uploadbox img,
+#popup-box #close-confirmbox img,
+#lightbox #close-confirmbox img,
+#uploadbox #close-confirmbox img,
+#confirmbox #close-confirmbox img {
+  width: 16px;
+  height: 16px;
+}
+#order-info {
+  min-width: 800px;
+  padding: 20px;
+}
+#order-info .col-6 {
+  width: calc(50% - 40px);
+  padding: 20px;
+  float: left;
+  text-align: left;
+}
+#order-info .p-detail {
+  float: left;
+  padding-left: 20px;
+}
+#order-info h3 {
+  color: #00a65a;
+  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+}
+#order-info .p-thumb {
+  max-width: 100px;
+  float: left;
+}
+#order-info .p-thumb img {
+  width: 100%;
+  height: auto;
+}
+#order-info .p-title {
+  font-size: 16px;
+  font-weight: bold;
+  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+}
+#order-info .p-code,
+#order-info .p-price,
+#order-info .p-spprice {
+  font-size: 16px;
+  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+}
+#order-info .p-checkout {
+  display: block;
+  padding: 10px 20px;
+  color: #ffffff;
+  text-align: center;
+  background: #3f69fc;
+  font-size: 18px;
+  margin-top: 25px;
+  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+}
+#order-info .num-text,
+#order-info .total-amount,
+#order-info .total-vat {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 4px;
+  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+}
+#order-info .num-text span,
+#order-info .total-amount span,
+#order-info .total-vat span {
+  font-weight: normal;
+  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+}
+@media screen and (max-width: 885px) {
+  #order-info {
+    min-width: 26px;
+    padding: 0;
+  }
+  #order-info .col-6 {
+    width: calc(100% - 40px);
+    padding: 20px;
+    float: none;
+  }
+  #order-info .p-detail {
+    width: calc(100% - 120px);
+  }
+}
+/*========= member ============*/
+#div-forgot {
+  display: none;
+}
+#membber-form {
+  padding: 20px;
+}
+#membber-form .col-6 {
+  width: 50%;
+  float: left;
+}
+#membber-form .col-6#div-login,
+#membber-form .col-6#div-forgot {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 400px;
+}
+#membber-form label {
+  display: block;
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+#membber-form .input {
+  width: calc(100% - 60px);
+  margin-top: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #ccc;
+  background: #ffffff;
+  -webkit-border-radius: 3px;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 7px 10px;
+  display: block;
+}
+#membber-form .biz {
+  display: none;
+}
+#membber-form .btn {
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  border: none;
+  background: green;
+  -webkit-border-radius: 3px;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 10px 10px;
+  display: block;
+  color: #fff;
+  cursor: pointer;
+}
+#membber-form .g-recaptcha {
+  max-width: 300px;
+  margin: 20px auto;
+}
+#verify-email {
+  padding: 20px;
+  text-align: center;
+  font-size: 30px;
+  margin: 50px auto;
+  min-height: 200px;
+}
+#verify-email a {
+  font-size: 30px;
+}
+.table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+/* ====== cart =====*/
+#empty {
+  text-align: center;
+  color: #001f3f;
+  font-size: 20px;
+  min-height: 400px;
+}
+#table-orders {
+  /* This is used as the traditional .clearfix class */
+  /* Column headers */
+  /* Product entries */
+  /* Totals section */
+  /* Make adjustments for tablet */
+  /* Make more adjustments for phone */
+}
+#table-orders .product-image {
+  float: left;
+  width: 20%;
+}
+#table-orders .product-details {
+  float: left;
+  width: 37%;
+  font-weight: bold;
+}
+#table-orders .product-details.wd {
+  width: 50%;
+}
+#table-orders .product-price {
+  float: left;
+  width: 12%;
+}
+#table-orders .product-price.wd {
+  width: 20%;
+}
+#table-orders .product-quantity {
+  float: left;
+  width: 10%;
+}
+#table-orders .product-quantity.wd {
+  width: 10%;
+}
+#table-orders .product-removal {
+  float: left;
+  width: 9%;
+}
+#table-orders .product-line-price {
+  float: left;
+  width: 12%;
+  text-align: right;
+}
+#table-orders .product-line-price.wd {
+  width: 20%;
+}
+#table-orders .group:before,
+#table-orders .shopping-cart:before,
+#table-orders .column-labels:before,
+#table-orders .product:before,
+#table-orders .totals-item:before,
+#table-orders .group:after,
+#table-orders .shopping-cart:after,
+#table-orders .column-labels:after,
+#table-orders .product:after,
+#table-orders .totals-item:after {
+  content: '';
+  display: table;
+}
+#table-orders .group:after,
+#table-orders .shopping-cart:after,
+#table-orders .column-labels:after,
+#table-orders .product:after,
+#table-orders .totals-item:after {
+  clear: both;
+}
+#table-orders .group,
+#table-orders .shopping-cart,
+#table-orders .column-labels,
+#table-orders .product,
+#table-orders .totals-item {
+  zoom: 1;
+}
+#table-orders span {
+  color: #000000;
+}
+#table-orders button {
+  cursor: pointer;
+}
+#table-orders .column-labels span {
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+#table-orders .column-labels .product-image,
+#table-orders .column-labels .product-details,
+#table-orders .column-labels .product-removal {
+  text-indent: -9999px;
+}
+#table-orders .product {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+#table-orders .product .product-image {
+  text-align: center;
+}
+#table-orders .product .product-image img {
+  width: 100px;
+}
+#table-orders .product .product-details .product-title {
+  margin-right: 20px;
+  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+}
+#table-orders .product .product-details .product-description {
+  margin: 5px 20px 5px 0;
+  line-height: 1.4em;
+}
+#table-orders .product .product-quantity input {
+  width: 40px;
+}
+#table-orders .product .remove-product {
+  border: 0;
+  padding: 4px 8px;
+  background-color: #c66;
+  color: #fff;
+  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+  font-size: 12px;
+  border-radius: 3px;
+}
+#table-orders .product .remove-product:hover {
+  background-color: #a44;
+}
+#table-orders .totals .totals-item {
+  float: right;
+  clear: both;
+  width: 100%;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eeeeee;
+}
+#table-orders .totals .totals-item label {
+  float: left;
+  clear: both;
+  width: 79%;
+  text-align: right;
+}
+#table-orders .totals .totals-item .totals-value {
+  float: right;
+  width: 21%;
+  text-align: right;
+}
+#table-orders .totals .totals-item-total {
+  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+}
+#table-orders .checkout {
+  float: right;
+  border: 0;
+  margin-top: 20px;
+  padding: 10px 25px;
+  background-color: #6b6;
+  color: #fff;
+  font-size: 18px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+#table-orders .checkout:hover {
+  background-color: #494;
+}
+#table-orders .column-labels {
+  font-weight: bold;
+}
+@media screen and (max-width: 650px) {
+  #table-orders .shopping-cart {
+    margin: 0;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+  #table-orders .column-labels {
+    display: none;
+  }
+  #table-orders .product-image {
+    float: right;
+    width: auto;
+  }
+  #table-orders .product-image img {
+    margin: 0 0 10px 10px;
+  }
+  #table-orders .product-details {
+    float: none;
+    margin-bottom: 10px;
+    width: auto;
+  }
+  #table-orders .product-price {
+    clear: both;
+    width: 70px;
+  }
+  #table-orders .product-quantity {
+    width: 100px;
+  }
+  #table-orders .product-quantity input {
+    margin-left: 20px;
+  }
+  #table-orders .product-quantity:before {
+    content: 'x';
+  }
+  #table-orders .product-removal {
+    width: auto;
+  }
+  #table-orders .product-line-price {
+    float: right;
+    width: 70px;
+  }
+}
+@media screen and (max-width: 350px) {
+  #table-orders .product-removal {
+    float: right;
+  }
+  #table-orders .product-line-price {
+    float: right;
+    clear: left;
+    width: auto;
+    margin-top: 10px;
+  }
+  #table-orders .product .product-line-price:before {
+    content: 'Item Total: $';
+  }
+  #table-orders .totals .totals-item label {
+    width: 60%;
+  }
+  #table-orders .totals .totals-item .totals-value {
+    width: 40%;
+  }
+}
+#discount-result {
+  display: inline-block;
+}
+/*!
+Pure v1.0.0
+Copyright 2013 Yahoo!
+Licensed under the BSD License.
+https://github.com/yahoo/pure/blob/master/LICENSE.md
+*/
+/*csslint box-model:false*/
+/*
+Box-model set to false because we're setting a height on select elements, which
+also have border and padding. This is done because some browsers don't render
+the padding. We explicitly set the box-model for select elements to border-box,
+so we can ignore the csslint warning.
+*/
+.pure-form input[type="text"],
+.pure-form input[type="password"],
+.pure-form input[type="email"],
+.pure-form input[type="url"],
+.pure-form input[type="date"],
+.pure-form input[type="month"],
+.pure-form input[type="time"],
+.pure-form input[type="datetime"],
+.pure-form input[type="datetime-local"],
+.pure-form input[type="week"],
+.pure-form input[type="number"],
+.pure-form input[type="search"],
+.pure-form input[type="tel"],
+.pure-form input[type="color"],
+.pure-form select,
+.pure-form textarea {
+  padding: 0.5em 0.6em;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 1px 3px #ddd;
+  border-radius: 4px;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+/*
+Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
+since IE8 won't execute CSS that contains a CSS3 selector.
+*/
+.pure-form input:not([type]) {
+  padding: 0.5em 0.6em;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 1px 3px #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+/* Chrome (as of v.32/34 on OS X) needs additional room for color to display. */
+/* May be able to remove this tweak as color inputs become more standardized across browsers. */
+.pure-form input[type="color"] {
+  padding: 0.2em 0.5em;
+}
+.pure-form input[type="text"]:focus,
+.pure-form input[type="password"]:focus,
+.pure-form input[type="email"]:focus,
+.pure-form input[type="url"]:focus,
+.pure-form input[type="date"]:focus,
+.pure-form input[type="month"]:focus,
+.pure-form input[type="time"]:focus,
+.pure-form input[type="datetime"]:focus,
+.pure-form input[type="datetime-local"]:focus,
+.pure-form input[type="week"]:focus,
+.pure-form input[type="number"]:focus,
+.pure-form input[type="search"]:focus,
+.pure-form input[type="tel"]:focus,
+.pure-form input[type="color"]:focus,
+.pure-form select:focus,
+.pure-form textarea:focus {
+  outline: 0;
+  border-color: #129FEA;
+}
+/*
+Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
+since IE8 won't execute CSS that contains a CSS3 selector.
+*/
+.pure-form input:not([type]):focus {
+  outline: 0;
+  border-color: #129FEA;
+}
+.pure-form input[type="file"]:focus,
+.pure-form input[type="radio"]:focus,
+.pure-form input[type="checkbox"]:focus {
+  outline: thin solid #129FEA;
+  outline: 1px auto #129FEA;
+}
+.pure-form .pure-checkbox,
+.pure-form .pure-radio {
+  margin: 0.5em 0;
+  display: block;
+}
+.pure-form input[type="text"][disabled],
+.pure-form input[type="password"][disabled],
+.pure-form input[type="email"][disabled],
+.pure-form input[type="url"][disabled],
+.pure-form input[type="date"][disabled],
+.pure-form input[type="month"][disabled],
+.pure-form input[type="time"][disabled],
+.pure-form input[type="datetime"][disabled],
+.pure-form input[type="datetime-local"][disabled],
+.pure-form input[type="week"][disabled],
+.pure-form input[type="number"][disabled],
+.pure-form input[type="search"][disabled],
+.pure-form input[type="tel"][disabled],
+.pure-form input[type="color"][disabled],
+.pure-form select[disabled],
+.pure-form textarea[disabled] {
+  cursor: not-allowed;
+  background-color: #eaeded;
+  color: #cad2d3;
+}
+/*
+Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
+since IE8 won't execute CSS that contains a CSS3 selector.
+*/
+.pure-form input:not([type])[disabled] {
+  cursor: not-allowed;
+  background-color: #eaeded;
+  color: #cad2d3;
+}
+.pure-form input[readonly],
+.pure-form select[readonly],
+.pure-form textarea[readonly] {
+  background-color: #eee;
+  /* menu hover bg color */
+  color: #777;
+  /* menu text color */
+  border-color: #ccc;
+}
+.pure-form input:focus:invalid,
+.pure-form textarea:focus:invalid,
+.pure-form select:focus:invalid {
+  color: #b94a48;
+  border-color: #e9322d;
+}
+.pure-form input[type="file"]:focus:invalid:focus,
+.pure-form input[type="radio"]:focus:invalid:focus,
+.pure-form input[type="checkbox"]:focus:invalid:focus {
+  outline-color: #e9322d;
+}
+.pure-form select {
+  /* Normalizes the height; padding is not sufficient. */
+  height: 2.25em;
+  border: 1px solid #ccc;
+  background-color: white;
+}
+.pure-form select[multiple] {
+  height: auto;
+}
+.pure-form label {
+  margin: 0.5em 0 0.2em;
+}
+.pure-form fieldset {
+  margin: 0;
+  padding: 0.35em 0 0.75em;
+  border: 0;
+}
+.pure-form legend {
+  display: block;
+  width: 100%;
+  padding: 0.3em 0;
+  margin-bottom: 0.3em;
+  color: #333;
+  border-bottom: 1px solid #e5e5e5;
+}
+.pure-form-stacked input[type="text"],
+.pure-form-stacked input[type="password"],
+.pure-form-stacked input[type="email"],
+.pure-form-stacked input[type="url"],
+.pure-form-stacked input[type="date"],
+.pure-form-stacked input[type="month"],
+.pure-form-stacked input[type="time"],
+.pure-form-stacked input[type="datetime"],
+.pure-form-stacked input[type="datetime-local"],
+.pure-form-stacked input[type="week"],
+.pure-form-stacked input[type="number"],
+.pure-form-stacked input[type="search"],
+.pure-form-stacked input[type="tel"],
+.pure-form-stacked input[type="color"],
+.pure-form-stacked input[type="file"],
+.pure-form-stacked select,
+.pure-form-stacked label,
+.pure-form-stacked textarea {
+  display: block;
+  margin: 0.25em 0;
+}
+/*
+Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
+since IE8 won't execute CSS that contains a CSS3 selector.
+*/
+.pure-form-stacked input:not([type]) {
+  display: block;
+  margin: 0.25em 0;
+}
+.pure-form-aligned input,
+.pure-form-aligned textarea,
+.pure-form-aligned select,
+.pure-form-aligned .pure-help-inline,
+.pure-form-message-inline {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  vertical-align: middle;
+}
+.pure-form-aligned textarea {
+  vertical-align: top;
+}
+/* Aligned Forms */
+.pure-form-aligned .pure-control-group {
+  margin-bottom: 0.5em;
+}
+.pure-form-aligned .pure-control-group label {
+  text-align: right;
+  display: inline-block;
+  vertical-align: middle;
+  width: 10em;
+  margin: 0 1em 0 0;
+}
+.pure-form-aligned .pure-controls {
+  margin: 1.5em 0 0 11em;
+}
+/* Rounded Inputs */
+.pure-form input.pure-input-rounded,
+.pure-form .pure-input-rounded {
+  border-radius: 2em;
+  padding: 0.5em 1em;
+}
+/* Grouped Inputs */
+.pure-form .pure-group fieldset {
+  margin-bottom: 10px;
+}
+.pure-form .pure-group input,
+.pure-form .pure-group textarea {
+  display: block;
+  padding: 10px;
+  margin: 0 0 -1px;
+  border-radius: 0;
+  position: relative;
+  top: -1px;
+}
+.pure-form .pure-group input:focus,
+.pure-form .pure-group textarea:focus {
+  z-index: 3;
+}
+.pure-form .pure-group input:first-child,
+.pure-form .pure-group textarea:first-child {
+  top: 1px;
+  border-radius: 4px 4px 0 0;
+  margin: 0;
+}
+.pure-form .pure-group input:first-child:last-child,
+.pure-form .pure-group textarea:first-child:last-child {
+  top: 1px;
+  border-radius: 4px;
+  margin: 0;
+}
+.pure-form .pure-group input:last-child,
+.pure-form .pure-group textarea:last-child {
+  top: -2px;
+  border-radius: 0 0 4px 4px;
+  margin: 0;
+}
+.pure-form .pure-group button {
+  margin: 0.35em 0;
+}
+.pure-form .pure-input-1 {
+  width: 100%;
+}
+.pure-form .pure-input-3-4 {
+  width: 75%;
+}
+.pure-form .pure-input-2-3 {
+  width: 66%;
+}
+.pure-form .pure-input-1-2 {
+  width: 50%;
+}
+.pure-form .pure-input-1-3 {
+  width: 33%;
+}
+.pure-form .pure-input-1-4 {
+  width: 25%;
+}
+/* Inline help for forms */
+/* NOTE: pure-help-inline is deprecated. Use .pure-form-message-inline instead. */
+.pure-form .pure-help-inline,
+.pure-form-message-inline {
+  display: inline-block;
+  padding-left: 0.3em;
+  color: #666;
+  vertical-align: middle;
+  font-size: 0.875em;
+}
+/* Block help for forms */
+.pure-form-message {
+  display: block;
+  color: #666;
+  font-size: 0.875em;
+}
+#shoping-detail {
+  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+  width: calc(100% - 20px);
+  margin: 0 auto;
+  border: 1px solid #ccc;
+}
+#shoping-detail #head-table {
+  font-weight: bold;
+  font-size: 16px;
+  padding: 9px 0px 4px 10px;
+  background: #8bbbbb;
+  color: #000;
+  overflow: hidden;
+}
+#shoping-detail table th {
+  background: #eee;
+}
+#shoping-detail table td,
+#shoping-detail table th {
+  padding: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+#shoping-detail table tfoot #summery td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: #eeeeee;
+  font-size: 14px;
+  border-bottom: 1px solid #ccc;
+}
+#shoping-detail table tfoot #shipping td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: #eeeeee;
+  font-size: 14px;
+  color: #001f3f;
+  border-bottom: 1px solid #ccc;
+}
+#shoping-detail table tfoot #amount td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: #eeeeee;
+  font-size: 16px;
+  color: #000;
+}
+#shoping-detail table tfoot #amount td span {
+  display: block;
+  color: #1e282c;
+  font-size: 12px;
+}
+#coupon {
+  max-width: 200px;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+#table-history thead tr th {
+  color: #fff;
+  padding: 5px;
+  background: #000000;
+  font-weight: bold;
+}
+#table-history tbody tr td {
+  padding: 5px;
+  border-bottom: 1px solid #eeeeee;
+}
+#table-history tbody tr td:last-child {
+  text-align: right;
+}
+.timeline {
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.timeline .title {
+  background: #cccccc;
+  color: #000000;
+  font-size: 16px;
+  padding: 10px;
+  border-bottom: 1px solid #cccccc;
+}
+.timeline .detail {
+  padding: 10px;
+}
+.btn {
+  display: inline-block;
+  padding: 5px 10px;
+  text-align: center;
+  color: #ffffff;
+  border: none;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+.btn.btn-default {
+  background: #00A6C7;
+}
+.btn.btn-success {
+  background: #00a65a;
+}
+.btn:hover {
+  color: #ffffff;
+}
+#box-document {
+  border: 1px solid #eeeeee;
+  width: calc(100% - 60px);
+  padding: 10px;
+  margin: 0px auto;
+}
+#box-document .more-document {
+  border-bottom: 1px solid #eeeeee;
+  margin-top: 10px;
+  padding-bottom: 10px;
+}
+#box-document .more-document input {
+  width: calc(100% - 10px);
+}
+#box-document .more-document:last-child {
+  border: none;
+  padding-bottom: 0px;
+}
+#select-size,
+#select-model {
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  padding: 5px 10px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+.panel {
+  border: 1px solid #eeeeee;
+  max-width: 98%;
+  background: #ffffff;
+}
+.panel .box-header {
+  background: #000000;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 5px 10px;
+}
+.panel .panel-body {
+  padding: 5px;
+  background: #ffffff;
+}
+.panel .panel-body th {
+  color: #000000;
+  border-bottom: 1px solid #eeeeee;
+  padding: 5px;
+}
+.panel .panel-body td {
+  border-bottom: 1px solid #eeeeee;
+  padding: 5px;
+}

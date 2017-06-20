@@ -219,11 +219,11 @@ class Products_model extends CI_Model
             $product = $query->row_array();
             // Unlink Cover //
             if (file_exists('./' . UPLOAD_PATH . '/' . $product['cover'])) {
-                unlink('./' . UPLOAD_PATH . '/' . $product['cover']);
+                @unlink('./' . UPLOAD_PATH . '/' . $product['cover']);
             }
             // Unlink PDF //
             if (file_exists('./' . PDF_PATH . '/' . $product['pdf'])) {
-                unlink('./' . PDF_PATH . '/' . $product['pdf']);
+                @unlink('./' . PDF_PATH . '/' . $product['pdf']);
             }
             // Delete product by id
             $this->db->where('id', $product_id);

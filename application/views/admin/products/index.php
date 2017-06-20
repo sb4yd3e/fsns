@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="box">
-            <div class="box-header">
+        <div class="box box-info">
+            <div class="box-header with-border">
                 <h3 class="box-title">Products Listing</h3>
                 <div class="box-tools">
                     <a href="<?php echo site_url('admin/products/add'); ?>" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add new product</a> 

@@ -51,8 +51,8 @@
     <script type="text/javascript"
             src="<?php echo base_url('rs-plugin/js/jquery.themepunch.revolution.min.js'); ?>"></script>
     <script src="<?php echo base_url('js/form.js'); ?>"></script>
-    <script src="<?php echo base_url('js/include.js'); ?>"></script> <!-- jQuery custom options -->
-    <script src="<?php echo base_url('js/product.js'); ?>"></script> <!-- jQuery custom options -->
+    <script src="<?php echo base_url('js/include.js'); ?>"></script>
+    <script src="<?php echo base_url('js/product.js'); ?>"></script>
     <script src="<?php echo base_url('js/sweetalert.min.js'); ?>"></script>
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <!-- FB -->
@@ -85,18 +85,25 @@
             <!-- #nav start -->
             <nav id="nav">
                 <ul>
-                    <?php foreach ($product_category as $category): ?>
-                        <li class="has-sub">
-                            <a href="javascript:void(0)"><?php echo $category['title'] ?></a>
-                            <ul>
+                    <li class="has-sub">
+                        <a href="javascript:void(0)">Products</a>
+                        <ul>
+                            <?php foreach ($product_category as $category): ?>
+
+                                <li>
+                                    <a href="javascript:void(0)"><?php echo strip_tags($category['title']) ?></a>
+                                        <ul>
                                 <?php foreach ($category['children'] as $subcategory): ?>
                                     <li>
                                         <a href="<?php echo base_url('catalog/' . $category['term_id']); ?>/<?php echo url_title($category['title']) ?>/<?php echo $subcategory['term_id'] ?>/<?php echo url_title($subcategory['title']) ?>"><?php echo $subcategory['title'] ?></a>
                                     </li>
                                 <?php endforeach ?>
-                            </ul>
-                        </li>
-                    <?php endforeach ?>
+                                    </ul></li>
+
+
+                            <?php endforeach ?>
+                        </ul>
+                    </li>
 
                     <li class="has-sub <?php echo $active_menu === 'services' ? 'current-menu-item' : '' ?>">
                         <a href="javascript:void(0)">Services</a>
@@ -117,17 +124,18 @@
                     <li class="<?php echo $active_menu === 'contact' ? 'current-menu-item' : '' ?>"><a
                                 href="<?php echo base_url('contact'); ?>">Contact</a>
                     </li>
+                    <li class="<?php echo $active_menu === 'cart' ? 'current-menu-item' : '' ?>"><a href="<?php echo base_url('shopping-carts'); ?>">My Carts <span
+                                    class="cart-number"></span></a></li>
+
                     <li class="has-sub <?php echo $active_menu === 'member' ? 'current-menu-item' : '' ?>">
                         <a href="javascript:void(0)">Member</a>
-                        <ul style="visibility: hidden; display: block; width: 130px;">
-                            <li><a href="<?php echo base_url('my-carts'); ?>">My Carts <span id="cart-number"></span></a></li>
-                            <?php if(is_login()){ ?>
-                            <li><a href="<?php echo base_url('profile'); ?>">Profile</a></li>
-                            <li><a href="<?php echo base_url('my-orders'); ?>">My Orders</a></li>
-                            <li><a href="<?php echo base_url('logout'); ?>">Logout</a></li>
-                            <?php }else{ ?>
-                            <li><a href="<?php echo base_url('register'); ?>">Register</a></li>
-                            <li><a href="<?php echo base_url('login'); ?>">Login</a></li>
+                        <ul style="visibility: hidden; display: block; width: 200px;">
+                            <?php if (is_login()) { ?>                                <li><a href="<?php echo base_url('profile'); ?>">Profile</a></li>
+                                <li><a href="<?php echo base_url('my-orders'); ?>">My Orders</a></li>
+                                <li><a href="<?php echo base_url('logout'); ?>">Logout</a></li>
+                            <?php } else { ?>
+                                <li><a href="<?php echo base_url('register'); ?>">Register</a></li>
+                                <li><a href="<?php echo base_url('login'); ?>">Login</a></li>
                             <?php } ?>
                         </ul>
                     </li>
@@ -160,12 +168,12 @@
                     Contact
                 </option>
                 <optgroup label="Member">
-                    <option value="<?php echo base_url('my-carts'); ?>">My Carts</option>
-                    <?php if(is_login()){ ?>
+                    <option value="<?php echo base_url('shopping-carts'); ?>">My Carts</option>
+                    <?php if (is_login()) { ?>
                         <option value="<?php echo base_url('profile'); ?>">Profile</option>
                         <option value=<?php echo base_url('my-orders'); ?>"">My Orders></option>
                         <option value="<?php echo base_url('logout'); ?>">Logout</option>
-                    <?php }else{ ?>
+                    <?php } else { ?>
                         <option value="<?php echo base_url('register'); ?>">Register</option>
                         <option value="<?php echo base_url('login'); ?>">Login</option>
                     <?php } ?>
@@ -290,7 +298,7 @@ if ($this->banner_data['visible'] == '1' && !get_cookie('show_popup')) {
     <div id="popup-box">
         <div id="close"><img src="<?php echo base_url('img/close.png'); ?>" width="25" height="25" alt=""></div>
         <a href="<?php echo $this->banner_data['link']; ?>" target="_blank">
-            <img src="<?php echo base_url(BANNER_PATH.'/'.$this->banner_data['image']); ?>" alt="">
+            <img src="<?php echo base_url(BANNER_PATH . '/' . $this->banner_data['image']); ?>" alt="">
         </a>
     </div>
     <script>
@@ -307,6 +315,33 @@ if ($this->banner_data['visible'] == '1' && !get_cookie('show_popup')) {
         });
     </script>
 <?php } ?>
+
+<div id="lightbox-overlay"></div>
+<div id="lightbox">
+    <div id="close-lightbox"><img src="<?php echo base_url('img/close.png'); ?>" width="25" height="25" alt=""></div>
+    <div id="order-info">
+        <div class="col-6">
+            <h3>สินค้า 1 ชิ้น ได้ถูกเพิ่มเข้าไปยังตะกร้าสินค้าของคุณ</h3>
+            <div class="p-thumb"></div>
+            <div class="p-detail">
+                <div class="p-title"></div>
+                <div class="p-code"></div>
+                <div class="p-price"></div>
+                <div class="p-spprice"></div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="col-6">
+            <div class="num-text">ตะกร้าสินค้าของคุณ <span class="cart-number">0</span> สินค้า</div>
+            <div class="total-amount">มูลค่าสินค้า: <span>0</span> บาท</div>
+            <div class="total-vat">ยอดสุทธิ (รวมภาษีมูลค่าเพิ่ม): <span>0</span> บาท</div>
+            <a href="<?php echo base_url('checkout/delivery-info'); ?>" class="p-checkout">ชำระค่าสินค้า</a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
 <script>
     /* <![CDATA[ */
     /* REVOLUTION SLIDER */
