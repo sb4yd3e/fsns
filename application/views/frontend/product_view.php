@@ -32,27 +32,48 @@
                 <div class="product-desc">
                     <?php echo $product_data['info']; ?>
                 </div>
-                <div class="product-code">
+                <?php if ($product_data['online'] == '1') { ?>
+                    <div class="product-code">
 
-                    CODE : <span id="code"><?php echo $product_attr[0]['code']; ?></span>
-                </div>
-                <strong>เลือกสี : </strong><br>
-                <div class="product-color">
-
-                    <div class="color-wrap">
-                        <?php foreach ($product_attr as $k => $attr) { ?>
-                            <div class="select-color" data-code="<?php echo $attr['code']; ?>"
-                                 data-price="<?php echo $attr['normal_price']; ?>"
-                                 data-stock="<?php echo $attr['in_stock']; ?>"
-                                 data-spprice="<?php echo $attr['special_price']; ?>"
-                                 data-aid="<?php echo $attr['pa_id']; ?>"
-                                 data-code="<?php echo $attr['code']; ?>"
-                                 data-value="<?php echo $attr['p_value']; ?>"
-                                 style="background: <?php echo $attr['color']; ?>"></div>
-                        <?php } ?>
+                        CODE : <span id="code"><?php echo $product_attr[0]['code']; ?></span>
                     </div>
-                </div>
+                    <?php if ($product_data['att_type'] == "color") { ?>
+                        <strong>เลือกสี : </strong><br>
+                        <div class="product-color">
 
+                            <div class="color-wrap">
+                                <?php foreach ($product_attr as $k => $attr) { ?>
+                                    <div class="select-color" data-code="<?php echo $attr['code']; ?>"
+                                         data-price="<?php echo $attr['normal_price']; ?>"
+                                         data-stock="<?php echo $attr['in_stock']; ?>"
+                                         data-spprice="<?php echo $attr['special_price']; ?>"
+                                         data-aid="<?php echo $attr['pa_id']; ?>"
+                                         data-code="<?php echo $attr['code']; ?>"
+                                         data-value="<?php echo $attr['p_value']; ?>"
+                                         style="background: <?php echo $attr['color']; ?>"></div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <?php if ($product_data['att_type'] == "size") { ?>
+                        <strong>เลือกขนาด : </strong><br>
+                        <select id="select-size">
+                            <option value="" >--- Size ---</option>
+                            <?php foreach ($product_attr as $k => $attr) { ?>
+                                <option value="<?php echo $attr['code'].'|'.$attr['normal_price'].'|'.$attr['in_stock'].'|'.$attr['special_price'].'|'.$attr['pa_id'].'|'.$attr['p_value']; ?>" ><?php echo $attr['p_value']; ?></option>
+                            <?php } ?>
+                        </select>
+                    <?php } ?>
+                    <?php if ($product_data['att_type'] == "model") { ?>
+                        <strong>เลือรุ่น : </strong><br>
+                        <select id="select-size">
+                            <option value="" >--- Model ---</option>
+                            <?php foreach ($product_attr as $k => $attr) { ?>
+                                <option value="<?php echo $attr['code'].'|'.$attr['normal_price'].'|'.$attr['in_stock'].'|'.$attr['special_price'].'|'.$attr['pa_id'].'|'.$attr['p_value']; ?>" ><?php echo $attr['p_value']; ?></option>
+                            <?php } ?>
+                        </select>
+                    <?php } ?>
+                <?php } ?>
                 <div class="product-price">
 
                     <?php if (is_login()) { ?>
@@ -66,16 +87,17 @@
                         <?php } ?>
                         บาท / ชิ้น
                     <?php } else { ?>
-                    <span class="special-price">Please login to make an order.</span>
+                        <span class="special-price">Please login to make an order.</span>
                     <?php } ?>
                 </div>
-                <div class="product-qty">
-                    <input type="number" class="number" min="1" id="qty" value="1">
-                </div>
-                <div class="product-addcart">
-                    <button id="add-to-cart" <?php if (!is_login()) { ?>disabled<?php } ?>>ADD TO CART</button>
-                </div>
-
+                <?php if ($product_data['online'] == '1' && is_login()) { ?>
+                    <div class="product-qty">
+                        <input type="number" class="number" min="1" id="qty" value="1">
+                    </div>
+                    <div class="product-addcart">
+                        <button id="add-to-cart">ADD TO CART</button>
+                    </div>
+                <?php } ?>
             </div>
         </div>
         <div class="clearfix"></div>

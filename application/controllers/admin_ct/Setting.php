@@ -38,6 +38,9 @@ class Setting extends CI_Controller
                     'site_description' => $this->input->post('site_description'),
                     'email_for_contact' => $this->input->post('email_for_contact'),
                     'email_for_order' => $this->input->post('email_for_order'),
+                    'shipping_zip' => $this->input->post('shipping_zip'),
+                    'shipping_inarea' => $this->input->post('shipping_inarea'),
+                    'shipping_outarea' => $this->input->post('shipping_outarea'),
                     'email_for_member' => $this->input->post('email_for_member')
                 );
 

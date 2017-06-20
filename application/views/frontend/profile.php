@@ -41,17 +41,17 @@
                                disabled>
                     </div>
                     <?php if ($user['account_type'] == 'business') { ?>
-                        <div class="biz">
+                        <div>
                             <label>Business Name</label>
                             <input type="text" name="business_name" class="input" placeholder="Business Name" value="<?php echo $user['business_name']; ?>"
                                    maxlength="200" required>
                         </div>
-                        <div class="biz">
+                        <div>
                             <label>Business Number</label>
                             <input type="text" name="business_number" class="input" placeholder="Business Number" value="<?php echo $user['business_number']; ?>"
                                    maxlength="50" required>
                         </div>
-                        <div class="biz">
+                        <div>
                             <label>Business Address</label>
                             <textarea name="business_address" class="input" placeholder="Business Address"
                                       rows="4" required><?php echo $user['business_address']; ?></textarea>

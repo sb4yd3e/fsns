@@ -24,7 +24,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Techical Info:</label>
-                                <textarea name="info" id="info"><?php echo set_value('info', $product['info']) ?></textarea>
+                                <textarea name="info"
+                                          id="info"><?php echo set_value('info', $product['info']) ?></textarea>
 
                             </div>
                             <div class="row clearfix">
@@ -171,97 +172,109 @@
                         <input type="hidden" value="" name="deleted-alt" id="deleted-alt">
                         <div class="col-md-6">
                             <h4>Product Attribute</h4>
-                            <div class="clearfix row" style="padding-right: 20px;">
-                                <div class="thumbnail clearfix ">
-                                    <div class="col-md-6">
-                                        <input type="hidden" name="at-id[]" value="<?php echo isset($product_alts[0]['pa_id'])?$product_alts[0]['pa_id']:""; ?>">
-                                        <div class="form-group">
-                                            <label>Code</label>
-                                            <input type="text" name="code[]"
-                                                   value="<?php echo isset($product_alts[0]['code'])?$product_alts[0]['code']:""; ?>"
-                                                   class="form-control" required/>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Price</label>
-                                            <input type="number" name="price[]"
-                                                   value="<?php echo isset($product_alts[0]['normal_price'])?$product_alts[0]['normal_price']:"0"; ?>"
-                                                   class="form-control" required/>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Special Price</label>
-                                            <input type="number" name="sp_price[]"
-                                                   value="<?php echo isset($product_alts[0]['special_price'])?$product_alts[0]['special_price']:"0"; ?>"
-                                                   class="form-control" required/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Color</label>
-                                            <input type="hidden" name="color[]"
-                                                   value="<?php echo isset($product_alts[0]['color'])?$product_alts[0]['color']:"#FFFFFF"; ?>"
-                                                   id="color-selector-0"
-                                                   class="form-control color-input" required/>
-                                            <div class="color-box">
-                                                <div class="color-active"
-                                                     style="background-color: <?php echo isset($product_alts[0]['color'])?$product_alts[0]['color']:"#FFFFFF"; ?>"></div>
-                                                <div class="color-select color-1" data-hex="#ffffff"></div>
-                                                <div class="color-select color-2" data-hex="#1B88CB"></div>
-                                                <div class="color-select color-3" data-hex="#12A144"></div>
-                                                <div class="color-select color-4" data-hex="#FDDA1A"></div>
-                                                <div class="color-select color-5" data-hex="#0E1522"></div>
-                                                <div class="color-select color-6" data-hex="#CD2026"></div>
-                                                <div class="color-select color-7" data-hex="#7E2683"></div>
-                                                <div class="color-select color-8" data-hex="#F05C21"></div>
-                                                <div class="color-select-picker"></div>
-                                                <div class="clearfix"></div>
+                            <input type="hidden" name="type" value="<?php echo $product['att_type']; ?>" id="type"/>
+                            <?php if ($product['att_type'] == "") { ?>
+                                <button type="button" class="btn btn-info btn-sm" id="add-color">Add Colors</button>
+                                <button type="button" class="btn btn-primary btn-sm" id="add-model">Add Models</button>
+                                <button type="button" class="btn btn-success btn-sm" id="add-size">Add Size</button>
+
+                                <div class="clearfix row" style="padding-right: 20px; display: none;" id="first-box">
+
+                                    <div class="thumbnail clearfix ">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Code</label>
+                                                <input type="text" name="code[]" class="form-control" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Price</label>
+                                                <input type="text" name="price[]" class="form-control digi" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Special Price</label>
+                                                <input type="text" name="sp_price[]" class="form-control digi"
+                                                       required/>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Value (Text)</label>
-                                            <input type="text" name="value[]"
-                                                   value="<?php echo isset($product_alts[0]['p_value'])?$product_alts[0]['p_value']:""; ?>"
-                                                   class="form-control" required/>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Product In Stock</label>
-                                            <?php echo form_dropdown('stock[]', array(
-                                                '' => 'Select',
-                                                '0' => 'NO',
-                                                '1' => 'YES',
-                                            ), isset($product_alts[0]['in_stock'])?$product_alts[0]['in_stock']:"", 'class="form-control" required'); ?>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="color-boxed">
+                                                <label>Color</label>
+                                                <input type="hidden" name="color[]" value="#ffffff"
+                                                       id="color-selector-0" class="form-control color-input" required/>
+                                                <div class="color-box">
+                                                    <div class="color-active"></div>
+                                                    <div class="color-select color-1" data-hex="#ffffff"></div>
+                                                    <div class="color-select color-2" data-hex="#1B88CB"></div>
+                                                    <div class="color-select color-3" data-hex="#12A144"></div>
+                                                    <div class="color-select color-4" data-hex="#FDDA1A"></div>
+                                                    <div class="color-select color-5" data-hex="#0E1522"></div>
+                                                    <div class="color-select color-6" data-hex="#CD2026"></div>
+                                                    <div class="color-select color-7" data-hex="#7E2683"></div>
+                                                    <div class="color-select color-8" data-hex="#F05C21"></div>
+                                                    <div class="color-select-picker" id="color-picker-0"></div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            </div>
 
+                                            <div class="form-group" id="other-boxed">
+                                                <label>Value (Text)</label>
+                                                <input type="text" name="value[]" class="form-control" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Product In Stock</label>
+                                                <?php echo form_dropdown('stock[]', array(
+                                                    '' => 'Select',
+                                                    '0' => 'NO',
+                                                    '1' => 'YES',
+                                                ), '', 'class="form-control" required'); ?>
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div id="more-att">
-                                <?php
-                                array_shift($product_alts);
-                                foreach ($product_alts as $k => $pa) { ?>
-                                    <div class="clearfix row sub-alt" id="at-<?php echo $k; ?>" style="padding-right: 20px;">
-                                        <div class="thumbnail clearfix ">
-                                            <button type="button" class="btn btn-sm btn-danger pull-right delete-at"
-                                                    data-id="<?php echo $k; ?>" data-aid="<?php echo isset($pa['pa_id'])?$pa['pa_id']:""; ?>"><i class="fa fa-times-circle"></i></button>
-                                            <div class="clearfix"></div>
-                                            <input type="hidden" name="at-id[]" value="<?php echo isset($pa['pa_id'])?$pa['pa_id']:""; ?>">
-                                            <div class="col-md-6">
-                                                <div class="form-group"><label>Code</label>
-                                                    <input type="text" name="code[]" class="form-control" value="<?php echo isset($pa['code'])?$pa['code']:""; ?>" required/>
-                                                </div>
-                                                <div class="form-group"><label>Price</label>
-                                                    <input type="number" name="price[]" class="form-control" value="<?php echo isset($pa['normal_price'])?$pa['normal_price']:""; ?>" required/>
-                                                </div>
-                                                <div class="form-group"><label>Special Price</label>
-                                                    <input type="number" name="sp_price[]" value="<?php echo isset($pa['special_price'])?$pa['special_price']:""; ?>" class="form-control"
-                                                           required/>
-                                                </div>
+                                <div id="more-att">
+
+
+                                </div>
+                                <button type="button" class="btn btn-success pull-right" id="add-at"
+                                        style="display: none;"><i class="fa fa-plus"></i> Add more
+                                </button>
+                            <?php } else { ?>
+                                <div class="clearfix row" style="padding-right: 20px;">
+                                    <div class="thumbnail clearfix ">
+                                        <div class="col-md-6">
+                                            <input type="hidden" name="at-id[]"
+                                                   value="<?php echo isset($product_alts[0]['pa_id']) ? $product_alts[0]['pa_id'] : ""; ?>">
+                                            <div class="form-group">
+                                                <label>Code</label>
+                                                <input type="text" name="code[]"
+                                                       value="<?php echo isset($product_alts[0]['code']) ? $product_alts[0]['code'] : ""; ?>"
+                                                       class="form-control" required/>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group"><label>Color</label>
-                                                    <input type="hidden" name="color[]" id="color-selector-<?php echo $k; ?>"
-                                                           class="form-control color-input" value="<?php echo isset($pa['color'])?$pa['color']:""; ?>" required/>
+                                            <div class="form-group">
+                                                <label>Price</label>
+                                                <input type="number" name="price[]"
+                                                       value="<?php echo isset($product_alts[0]['normal_price']) ? $product_alts[0]['normal_price'] : "0"; ?>"
+                                                       class="form-control" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Special Price</label>
+                                                <input type="number" name="sp_price[]"
+                                                       value="<?php echo isset($product_alts[0]['special_price']) ? $product_alts[0]['special_price'] : "0"; ?>"
+                                                       class="form-control" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <?php if ($product['att_type'] == 'color') { ?>
+                                                <div class="form-group">
+                                                    <label>Color</label>
+                                                    <input type="hidden" name="color[]"
+                                                           value="<?php echo isset($product_alts[0]['color']) ? $product_alts[0]['color'] : "#FFFFFF"; ?>"
+                                                           id="color-selector-0"
+                                                           class="form-control color-input" required/>
                                                     <div class="color-box">
-                                                        <div class="color-active" style="background-color: <?php echo isset($pa['color'])?$pa['color']:""; ?>"></div>
+                                                        <div class="color-active"
+                                                             style="background-color: <?php echo isset($product_alts[0]['color']) ? $product_alts[0]['color'] : "#FFFFFF"; ?>"></div>
                                                         <div class="color-select color-1" data-hex="#ffffff"></div>
                                                         <div class="color-select color-2" data-hex="#1B88CB"></div>
                                                         <div class="color-select color-3" data-hex="#12A144"></div>
@@ -270,30 +283,131 @@
                                                         <div class="color-select color-6" data-hex="#CD2026"></div>
                                                         <div class="color-select color-7" data-hex="#7E2683"></div>
                                                         <div class="color-select color-8" data-hex="#F05C21"></div>
-                                                        <div class="color-select-picker"
-                                                             id="color-picker-<?php echo $k; ?>"></div>
+                                                        <div class="color-select-picker"></div>
                                                         <div class="clearfix"></div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group"><label>Value (Text)</label>
-                                                    <input type="text" name="value[]" class="form-control" value="<?php echo isset($pa['p_value'])?$pa['p_value']:""; ?>" required/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Product In Stock</label>
-                                                    <?php echo form_dropdown('stock[]', array(
-                                                        '' => 'Select',
-                                                        '0' => 'NO',
-                                                        '1' => 'YES',
-                                                    ), isset($pa['in_stock'])?$pa['in_stock']:"", 'class="form-control" required'); ?>
-                                                </div>
+                                            <?php } ?>
+                                            <div class="form-group">
+                                                <?php if ($product['att_type'] == 'size') { ?>
+                                                    <label>Size (Text)</label>
+                                                <?php } elseif ($product['att_type'] == 'model') { ?>
+                                                    <label>Model (Text)</label>
+                                                <?php } else { ?>
+                                                    <label>Value (Text)</label>
+                                                <?php } ?>
+                                                <input type="text" name="value[]"
+                                                       value="<?php echo isset($product_alts[0]['p_value']) ? $product_alts[0]['p_value'] : ""; ?>"
+                                                       class="form-control" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Product In Stock</label>
+                                                <?php echo form_dropdown('stock[]', array(
+                                                    '' => 'Select',
+                                                    '0' => 'NO',
+                                                    '1' => 'YES',
+                                                ), isset($product_alts[0]['in_stock']) ? $product_alts[0]['in_stock'] : "", 'class="form-control" required'); ?>
+
                                             </div>
                                         </div>
                                     </div>
-                                <?php } ?>
-                            </div>
-                            <button type="button" class="btn btn-success pull-right" id="add-at"><i
-                                        class="fa fa-plus"></i> Add more
-                            </button>
+                                </div>
+                                <div id="more-att">
+                                    <?php
+                                    array_shift($product_alts);
+                                    foreach ($product_alts as $k => $pa) { ?>
+                                        <div class="clearfix row sub-alt" id="at-<?php echo $k; ?>"
+                                             style="padding-right: 20px;">
+                                            <div class="thumbnail clearfix ">
+                                                <button type="button" class="btn btn-sm btn-danger pull-right delete-at"
+                                                        data-id="<?php echo $k; ?>"
+                                                        data-aid="<?php echo isset($pa['pa_id']) ? $pa['pa_id'] : ""; ?>">
+                                                    <i
+                                                            class="fa fa-times-circle"></i></button>
+                                                <div class="clearfix"></div>
+                                                <input type="hidden" name="at-id[]"
+                                                       value="<?php echo isset($pa['pa_id']) ? $pa['pa_id'] : ""; ?>">
+                                                <div class="col-md-6">
+                                                    <div class="form-group"><label>Code</label>
+                                                        <input type="text" name="code[]" class="form-control"
+                                                               value="<?php echo isset($pa['code']) ? $pa['code'] : ""; ?>"
+                                                               required/>
+                                                    </div>
+                                                    <div class="form-group"><label>Price</label>
+                                                        <input type="number" name="price[]" class="form-control"
+                                                               value="<?php echo isset($pa['normal_price']) ? $pa['normal_price'] : ""; ?>"
+                                                               required/>
+                                                    </div>
+                                                    <div class="form-group"><label>Special Price</label>
+                                                        <input type="number" name="sp_price[]"
+                                                               value="<?php echo isset($pa['special_price']) ? $pa['special_price'] : ""; ?>"
+                                                               class="form-control"
+                                                               required/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <?php if ($product['att_type'] == 'color') { ?>
+                                                        <div class="form-group"><label>Color</label>
+                                                            <input type="hidden" name="color[]"
+                                                                   id="color-selector-<?php echo $k; ?>"
+                                                                   class="form-control color-input"
+                                                                   value="<?php echo isset($pa['color']) ? $pa['color'] : ""; ?>"
+                                                                   required/>
+                                                            <div class="color-box">
+                                                                <div class="color-active"
+                                                                     style="background-color: <?php echo isset($pa['color']) ? $pa['color'] : ""; ?>"></div>
+                                                                <div class="color-select color-1"
+                                                                     data-hex="#ffffff"></div>
+                                                                <div class="color-select color-2"
+                                                                     data-hex="#1B88CB"></div>
+                                                                <div class="color-select color-3"
+                                                                     data-hex="#12A144"></div>
+                                                                <div class="color-select color-4"
+                                                                     data-hex="#FDDA1A"></div>
+                                                                <div class="color-select color-5"
+                                                                     data-hex="#0E1522"></div>
+                                                                <div class="color-select color-6"
+                                                                     data-hex="#CD2026"></div>
+                                                                <div class="color-select color-7"
+                                                                     data-hex="#7E2683"></div>
+                                                                <div class="color-select color-8"
+                                                                     data-hex="#F05C21"></div>
+                                                                <div class="color-select-picker"
+                                                                     id="color-picker-<?php echo $k; ?>"></div>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
+
+                                                    <div class="form-group">
+                                                        <?php if ($product['att_type'] == 'size') { ?>
+                                                            <label>Size (Text)</label>
+                                                        <?php } elseif ($product['att_type'] == 'model') { ?>
+                                                            <label>Model (Text)</label>
+                                                        <?php } else { ?>
+                                                            <label>Value (Text)</label>
+                                                        <?php } ?>
+                                                        <input type="text" name="value[]" class="form-control"
+                                                               value="<?php echo isset($pa['p_value']) ? $pa['p_value'] : ""; ?>"
+                                                               required/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Product In Stock</label>
+                                                        <?php echo form_dropdown('stock[]', array(
+                                                            '' => 'Select',
+                                                            '0' => 'NO',
+                                                            '1' => 'YES',
+                                                        ), isset($pa['in_stock']) ? $pa['in_stock'] : "", 'class="form-control" required'); ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                                <button type="button" class="btn btn-success pull-right" id="add-at"><i
+                                            class="fa fa-plus"></i> Add more
+                                </button>
+                            <?php } ?>
                         </div>
 
                     </div>

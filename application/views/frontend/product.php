@@ -41,17 +41,7 @@
                             <a href="<?php echo base_url('product/'.$product['id'].'/'.url_title($product['title'])); ?>">
                                 <img src="./timthumb.php?src=./<?php echo PRODUCT_PATH?>/<?php echo $product['cover']?>&zc=1&w=449&235" alt="portfolio" width="300" alt="<?php echo $web_title.' - '.$product['title']?>"/>
                             </a>
-                            <?php if($product['pdf'] && $product['online']=='0'):?>
-                            <div class="portfolio-hover">
-                                <div class="mask"></div>
-                                <ul>
 
-                                    <li class="portfolio-single">
-                                        <a href="<?php echo base_url()?>frontend/product_pdf_download/<?php echo $product['id']?>/<?php echo md5($product['id'].'suwichalala')?>/<?php echo url_title($product['title'])?>_Specification.pdf" target="_blank">PDF</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <?php endif;?>
                         </div>
 
                         <figcaption>

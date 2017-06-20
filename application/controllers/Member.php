@@ -178,6 +178,7 @@ Thanks for beging a FSNS Thailand customer.
                     'group' => 'user',
                     'name' => $userdata['name'],
                     'phone' => $userdata['phone'],
+                    'staff_id' => $userdata['staff_id'],
                     'email' => $userdata['email']
                 );
                 $this->db->where('uid', $userdata['uid'])->update('users', array('last_login' => time()));

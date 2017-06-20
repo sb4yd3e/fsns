@@ -60,11 +60,18 @@ $route['verify-email/(:any)'] = 'member/verify_email/$1';
 $route['forgot-password'] = 'member/forgot_password';
 $route['reset-password/(:any)'] = 'member/reset_password/$1';
 //orders
+$route['my-orders'] = 'orders/my_orders';
 $route['shopping-carts'] = 'orders/carts';
 $route['checkout/delivery-info'] = 'orders/delivery';
 $route['checkout/payment'] = 'orders/payment';
 $route['checkout/result'] = 'orders/result';
+$route['get-coupon'] = 'orders/ajax_get_coupon';
+$route['checkout/confirm-order'] = 'orders/confirm_order';
 $route['order/view/(:num)'] = 'orders/view/$1';
+$route['order/print/(:num)'] = 'orders/print_file/$1';
+$route['order/confirm-payment/(:num)'] = 'orders/confirm_payment/$1';
+$route['order/document/(:num)'] = 'orders/document/$1';
+$route['download/document/(:num)'] = 'orders/download_file/$1';
 
 //admin
 $route['admin'] = 'admin/index';

@@ -85,18 +85,25 @@
             <!-- #nav start -->
             <nav id="nav">
                 <ul>
-                    <?php foreach ($product_category as $category): ?>
-                        <li class="has-sub">
-                            <a href="javascript:void(0)"><?php echo $category['title'] ?></a>
-                            <ul>
+                    <li class="has-sub">
+                        <a href="javascript:void(0)">Products</a>
+                        <ul>
+                            <?php foreach ($product_category as $category): ?>
+
+                                <li>
+                                    <a href="javascript:void(0)"><?php echo strip_tags($category['title']) ?></a>
+                                        <ul>
                                 <?php foreach ($category['children'] as $subcategory): ?>
                                     <li>
                                         <a href="<?php echo base_url('catalog/' . $category['term_id']); ?>/<?php echo url_title($category['title']) ?>/<?php echo $subcategory['term_id'] ?>/<?php echo url_title($subcategory['title']) ?>"><?php echo $subcategory['title'] ?></a>
                                     </li>
                                 <?php endforeach ?>
-                            </ul>
-                        </li>
-                    <?php endforeach ?>
+                                    </ul></li>
+
+
+                            <?php endforeach ?>
+                        </ul>
+                    </li>
 
                     <li class="has-sub <?php echo $active_menu === 'services' ? 'current-menu-item' : '' ?>">
                         <a href="javascript:void(0)">Services</a>
@@ -117,13 +124,13 @@
                     <li class="<?php echo $active_menu === 'contact' ? 'current-menu-item' : '' ?>"><a
                                 href="<?php echo base_url('contact'); ?>">Contact</a>
                     </li>
+                    <li class="<?php echo $active_menu === 'cart' ? 'current-menu-item' : '' ?>"><a href="<?php echo base_url('shopping-carts'); ?>">My Carts <span
+                                    class="cart-number"></span></a></li>
+
                     <li class="has-sub <?php echo $active_menu === 'member' ? 'current-menu-item' : '' ?>">
                         <a href="javascript:void(0)">Member</a>
-                        <ul style="visibility: hidden; display: block; width: 130px;">
-                            <li><a href="<?php echo base_url('shopping-carts'); ?>">My Carts <span
-                                            class="cart-number"></span></a></li>
-                            <?php if (is_login()) { ?>
-                                <li><a href="<?php echo base_url('profile'); ?>">Profile</a></li>
+                        <ul style="visibility: hidden; display: block; width: 200px;">
+                            <?php if (is_login()) { ?>                                <li><a href="<?php echo base_url('profile'); ?>">Profile</a></li>
                                 <li><a href="<?php echo base_url('my-orders'); ?>">My Orders</a></li>
                                 <li><a href="<?php echo base_url('logout'); ?>">Logout</a></li>
                             <?php } else { ?>
