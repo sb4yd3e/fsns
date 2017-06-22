@@ -113,6 +113,7 @@ blockquote{
 
 #nav li.has-sub:hover, #nav li.has-sub.current-menu-item, #nav li.current-menu-item.has-sub{
     background: url('../img/colors/blue/menu-icon-hover.png') no-repeat right center;
+    background-position: 100% 3px;
 }
 
 .service-hex-icon:hover{

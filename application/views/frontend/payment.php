@@ -24,7 +24,7 @@
                     </div>
                     <div class="totals-item" id="coupon-box">
                         <span>รหัสส่วนลด
-                        <input type="text" class="input" maxlength="20" placeholder="Please enter coupon code"
+                        <input type="text" class="wpcf7-text" maxlength="20" placeholder="Please enter coupon code"
                                id="coupon"></span>
                         <div class="totals-value" id="amount"></div>
                     </div>
@@ -54,7 +54,7 @@
                 <div id="payment-method">
 
                 </div>
-                <button id="submit-order" class="checkout">Confirm order</button>
+                <button id="submit-order" class="btn-big black" style="float: right;">Confirm order</button>
 
             </div>
 

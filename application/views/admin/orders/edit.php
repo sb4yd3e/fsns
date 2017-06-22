@@ -296,7 +296,7 @@
                     <div role="tabpanel" class="tab-pane fade in" id="shipping">
 
                         <div class="col-md-6">
-                            <label for=""></label>
+                            <strong>Shipping Address</strong><br>
                             <label for="shipping_name" class="control-label">Name</label>
                             <div class="form-group">
                                 <input type="text" name="shipping_name"
@@ -317,6 +317,29 @@
                                 <input type="text" name="shipping_zip" maxlength="5"
                                        value="<?php echo($this->input->post('shipping_zip') ? $this->input->post('shipping_zip') : $data['shipping_zip']); ?>"
                                        class="form-control" id="shipping_zip" required/>
+                            </div>
+                            <hr>
+                            <strong>Billing Address</strong><br>
+                            <label for="billing_name" class="control-label">Name</label>
+                            <div class="form-group">
+                                <input type="text" name="billing_name"
+                                       value="<?php echo($this->input->post('billing_name') ? $this->input->post('billing_name') : $data['billing_name']); ?>"
+                                       class="form-control" id="billing_name" required/>
+                            </div>
+                            <label for="billing_address" class="control-label">Shipping Address</label>
+                            <div class="form-group">
+                                <textarea name="billing_address" rows="4" class="form-control" id="billing_address"
+                                          required><?php echo($this->input->post('billing_address') ? $this->input->post('billing_address') : $data['billing_address']); ?></textarea>
+                            </div>
+                            <label for="billing_province" class="control-label">Shipping Province</label>
+                            <div class="form-group">
+                                <?php echo form_dropdown('billing_province', list_province(), $data['billing_province'], 'class="form-control" id="billing_province" required'); ?>
+                            </div>
+                            <label for="billing_zip" class="control-label">Shipping Zip</label>
+                            <div class="form-group">
+                                <input type="text" name="billing_zip" maxlength="5"
+                                       value="<?php echo($this->input->post('billing_zip') ? $this->input->post('billing_zip') : $data['billing_zip']); ?>"
+                                       class="form-control" id="billing_zip" required/>
                             </div>
                             <?php if(!is_group('sale')){ ?>
                             <div class="box-footer">

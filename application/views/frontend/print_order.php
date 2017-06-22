@@ -435,14 +435,14 @@
 
                         <tr>
                             <td width="100">ชื่อ-นามสกุล</td>
-                            <td><?php echo $order['shipping_name']; ?></td>
+                            <td><?php echo $order['billing_name']?$order['billing_name']:$order['shipping_name']; ?></td>
                         </tr>
                         <tr valign="top">
                             <td>ที่อยู่</td>
                             <td>
-                                <?php echo nl2br($order['shipping_address']); ?><br>
-                                <?php echo $order['shipping_province']; ?><br>
-                                <?php echo $order['shipping_zip']; ?>
+                                <?php echo nl2br($order['billing_address'])?$order['billing_address']:$order['shipping_address']; ?><br>
+                                <?php echo $order['billing_province']?$order['billing_province']:$order['shipping_province']; ?><br>
+                                <?php echo $order['billing_zip']?$order['billing_zip']:$order['shipping_zip']; ?>
                             </td>
                         </tr>
 

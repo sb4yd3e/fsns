@@ -1226,7 +1226,7 @@ li.pricing-footer{
 
 #nav li a{
     float: none;
-    display: block;
+    /*display: block;*/
     font: 14px 'Open Sans', Arial, sans-serif;
     color: #444;  
     font-weight: bold;
@@ -1236,7 +1236,7 @@ li.pricing-footer{
 #nav li.has-sub{
     background: url('../img/menu-icon.png') no-repeat right top;
     display: block;
-
+    background-position: 100% 3px;
     -webkit-transition: all 0.2s ease 0s;
     -moz-transition: all 0.2s ease 0s;
     -o-transition: all 0.2s ease 0s;

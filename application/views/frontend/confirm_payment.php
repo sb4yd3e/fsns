@@ -1,61 +1,61 @@
 <section>
     <section id="product-detail">
 
-        <div id="membber-form">
+        <div id="membber-form" class="wpcf7">
             <div class="col-6" id="div-login">
                 <div align="center"><h2>แจ้งชำระค่าสินค้า</h2></div>
                 <form action="" method="post" enctype="multipart/form-data" id="confirm-form">
-                    <div>
+                    <fieldset>
                         <label>Order Number</label>
-                        <input type="text" class="input"
+                        <input type="text" class="wpcf7-text"
                                value="<?php echo str_pad($order['oid'], 6, "0", STR_PAD_LEFT); ?>" maxlength="100"
                                readonly>
-                    </div>
+                    </fieldset>
 
-                    <div>
+                    <fieldset>
                         <label>ชื่อ นามสกุล</label>
-                        <input type="text" name="name" value="<?php echo $user_data['name']; ?>" class="input"
+                        <input type="text" name="name" value="<?php echo $user_data['name']; ?>" class="wpcf7-text"
                                maxlength="100" required>
-                    </div>
-                    <div>
+                    </fieldset>
+                    <fieldset>
                         <label>Email</label>
-                        <input type="email" name="email" value="<?php echo $user_data['email']; ?>" class="input"
+                        <input type="email" name="email" value="<?php echo $user_data['email']; ?>" class="wpcf7-text"
                                maxlength="100" required>
-                    </div>
-                    <div>
+                    </fieldset>
+                    <fieldset>
                         <label>เบอร์โทรศัพท์</label>
-                        <input type="text" name="phone" value="<?php echo $user_data['phone']; ?>" class="input"
+                        <input type="text" name="phone" value="<?php echo $user_data['phone']; ?>" class="wpcf7-text"
                                maxlength="100" required>
-                    </div>
-                    <div>
+                    </fieldset>
+                    <fieldset>
                         <label>จำนวนเงินที่ชำระ</label>
                         <input type="text" name="amount" value="<?php echo $order['total_amount']; ?>"
-                               class="input digi"
+                               class="wpcf7-text digi"
                                maxlength="100" required>
-                    </div>
-                    <div>
+                    </fieldset>
+                    <fieldset>
                         <label>วัน เวลาที่ชำระเงิน</label>
-                        <input type="text" name="date" value="<?php echo date('d/m/Y H:i:s'); ?>" class="input"
+                        <input type="text" name="date" value="<?php echo date('d/m/Y H:i:s'); ?>" class="wpcf7-text"
                                maxlength="100" required>
-                    </div>
-                    <div>
+                    </fieldset>
+                    <fieldset>
                         <label>ช่องทางการชำระเงิน</label>
-                        <select name="gateway" class="input" style="width: calc(100% - 40px);" required>
+                        <select name="gateway" class="wpcf7-text" style="width: calc(100% - 40px);" required>
                             <option value="bank1">โอนเงินผ่านธนาคารอะไรซักอย่าง</option>
                         </select>
-                    </div>
-                    <div>
+                    </fieldset>
+                    <fieldset>
                         <label>หลักฐานการชำระ</label>
-                        <input type="file" name="slip" accept="image/*,.pdf,.doc" class="input" required>
-                    </div>
-                    <div>
+                        <input type="file" name="slip" accept="image/*,.pdf,.doc" class="wpcf7-text">
+                    </fieldset>
+                    <fieldset>
                         <label>หมายเหตุ</label>
-                        <textarea name="note" class="input" rows="4" maxlength="500"></textarea>
-                    </div>
+                        <textarea name="note" class="wpcf7-textarea" rows="4" maxlength="500"></textarea>
+                    </fieldset>
 
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>"
                            value="<?php echo $this->security->get_csrf_hash(); ?>">
-                    <button class="btn" type="submit" id="submit-confirm">ยืนยันการชำระเงิน</button>
+                    <button class="btn-medium black" type="submit" id="submit-confirm">ยืนยันการชำระเงิน</button>
 
                 </form>
             </div>

@@ -2,6 +2,7 @@
     <section class="container_12 clearfix" id="product-detail">
 
         <div id="membber-form">
+            <div align="center"><h2>My Orders</h2></div>
             <?php if (!$orders) { ?>
                 <div id="empty">
                     No order history
@@ -14,7 +15,7 @@
                             <th>วันที่</th>
                             <th>การสั่งซื้อ</th>
                             <th>จำนวน</th>
-                            <th>ยอดชำระ</th>
+                            <th>ยอดชำระ(บาท)</th>
                             <th>สถานะ</th>
                             <th></th>
                         </tr>

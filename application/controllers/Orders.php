@@ -57,12 +57,21 @@ class Orders extends CI_Controller
         $this->form_validation->set_rules('shipping_province', 'Shipping Province', 'required');
         $this->form_validation->set_rules('shipping_zip', 'Shipping Zip', 'required|numeric|min_length[5]|max_length[5]');
         $this->form_validation->set_rules('shipping_address', 'Shipping Address', 'required');
+        $this->form_validation->set_rules('billing_name', 'Billing Name', 'required|max_length[200]');
+        $this->form_validation->set_rules('billing_province', 'Billing Province', 'required');
+        $this->form_validation->set_rules('billing_zip', 'Billing Zip', 'required|numeric|min_length[5]|max_length[5]');
+        $this->form_validation->set_rules('billing_address', 'Billing Address', 'required');
         if ($this->form_validation->run()) {
             $data_create = array(
                 'shipping_name' => $this->input->post('shipping_name'),
                 'shipping_province' => $this->input->post('shipping_province'),
                 'shipping_zip' => $this->input->post('shipping_zip'),
-                'shipping_address' => $this->input->post('shipping_address')
+                'shipping_zip' => $this->input->post('shipping_zip'),
+                'shipping_address' => $this->input->post('shipping_address'),
+                'billing_name' => $this->input->post('billing_name'),
+                'billing_province' => $this->input->post('billing_province'),
+                'billing_zip' => $this->input->post('billing_zip'),
+                'billing_address' => $this->input->post('billing_address')
             );
             $this->load->model('members_model', 'members');
             $this->members->update_members($user['uid'], $data_create);
@@ -74,7 +83,7 @@ class Orders extends CI_Controller
             }
 
             $this->render_data['shipping'] = $this->order->get_shipping_address($user['uid']);
-            $this->render_data['web_title'] = 'My Delivery Infomation';
+            $this->render_data['web_title'] = 'My Shipping Information';
             $this->template->write_view('content', 'frontend/my_delivery', $this->render_data);
             $this->template->render();
         }
@@ -173,7 +182,11 @@ class Orders extends CI_Controller
                 'shipping_name' => $user_data['shipping_name'],
                 'shipping_address' => $user_data['shipping_address'],
                 'shipping_province' => $user_data['shipping_province'],
-                'shipping_zip' => $user_data['shipping_zip']
+                'shipping_zip' => $user_data['shipping_zip'],
+                'billing_name' => $user_data['billing_name'],
+                'billing_address' => $user_data['billing_address'],
+                'billing_province' => $user_data['billing_province'],
+                'billing_zip' => $user_data['billing_zip']
             ));
 
             //cal order
@@ -475,17 +488,16 @@ Thanks for beging a FSNS Thailand customer.
                         $upload_data = $this->upload->data();
                         $params['file_paht'] = $upload_data['file_name'];
                         $fid = $this->order->add_document($params);
-                        $this->order->save_status(array('status' => 'wait_payment', 'at_date' => time(), 'text' => $html, 'owner' => $user['name'], 'oid' => $oid));
-                        add_log($user['name'], "Change status to : wait_payment", "order_" . $oid);
-                        add_order_process($oid, 'status', 'wait_payment', $html);
-                        $a = array('status' => 'success');
+                        
                     } else {
                         $a = array('status' => 'error', 'message' => $this->upload->display_errors());
+                        echo json_encode($a); exit();
                     }
-                } else {
-                    $a = array('status' => 'error', 'message' => 'Can\'t upload document.');
                 }
-
+                $this->order->save_status(array('status' => 'wait_payment', 'at_date' => time(), 'text' => $html, 'owner' => $user['name'], 'oid' => $oid));
+                add_log($user['name'], "Change status to : wait_payment", "order_" . $oid);
+                add_order_process($oid, 'status', 'wait_payment', $html);
+                $a = array('status' => 'success');
                 echo json_encode($a);
             } else {
                 if ($this->input->is_ajax_request()) {

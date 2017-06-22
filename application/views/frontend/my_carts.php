@@ -11,12 +11,12 @@
             <div class="shopping-cart" id="table-orders">
 
                 <div class="column-labels">
-                    <span class="product-image">Image</span>
-                    <span class="product-details">Product</span>
-                    <span class="product-price">Price</span>
-                    <span class="product-quantity">Quantity</span>
-                    <span class="product-removal">Remove</span>
-                    <span class="product-line-price">Total</span>
+                    <span class="product-image">&nbbsp;</span>
+                    <span class="product-details">สินค้า</span>
+                    <span class="product-price">ราคา(บาท)</span>
+                    <span class="product-quantity">จำนวน</span>
+                    <span class="product-removal">&nbbsp;</span>
+                    <span class="product-line-price">รวม(บาท)</span>
                 </div>
                 <div id="order-list">
 
@@ -25,11 +25,11 @@
                 <div class="totals">
                     <div class="totals-item">
                         <span>จำนวนทั้งหมดโดยประมาณ<br>(รวมภาษีมูลค่าเพิ่ม)</span>
-                        <div class="totals-value" id="total-simple">71.97</div>
+                        <div class="totals-value" id="total-simple">0</div>
                     </div>
                 </div>
 
-                <a href="<?php echo base_url('checkout/delivery-info'); ?>" class="checkout">Checkout</a>
+                <a href="<?php echo base_url('checkout/delivery-info'); ?>" class="wpcf7-submit" style="float: right;">Checkout</a>
 
             </div>
 
@@ -59,15 +59,15 @@
                 html += '<div class="product-title">' + '['+products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</div><p class="product-description"></p></div><div class="product-price">';
                 if (products[i]['sp_price'] > 0) {
 
-                    html += '<div class="cart-spprice"> ราคาพิเศษ : ' + products[i]['sp_price'] + '</div>';
-                    html += '<div class="cart-price">ราคา : <s>' + products[i]['price'] + '</s></div>';
+                    html += '<div class="cart-spprice"> ราคาพิเศษ : ' + products[i]['sp_price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div>';
+                    html += '<div class="cart-price">ราคา : <s>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s></div>';
                     t = products[i]['sp_price'] * products[i]['qty'];
                 } else {
                     t =  products[i]['price'] * products[i]['qty'];
-                    html += '<div class="cart-price">ราคา : ' + products[i]['price'] + '</div>';
+                    html += '<div class="cart-price">ราคา : ' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div>';
                 }
 
-                html += '</div><div class="product-quantity"><input type="number" class="number" min="1" data-id="' + i + '" value="' + products[i]['qty'] + '"></div>';
+                html += '</div><div class="product-quantity"><input type="number" class="wpcf7-text number" min="1" data-id="' + i + '" value="' + products[i]['qty'] + '"></div>';
                 html += '<div class="product-removal"><button class="remove-product"  data-id="' + i + '">ลบ</button></div><div  id="price-' + i + '" class="product-line-price" >' + t.toFixed(2) + '</div> </div> ';
 
 

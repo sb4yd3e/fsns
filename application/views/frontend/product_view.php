@@ -38,12 +38,17 @@
                         CODE : <span id="code"><?php echo $product_attr[0]['code']; ?></span>
                     </div>
                     <?php if ($product_data['att_type'] == "color") { ?>
-                        <strong>เลือกสี : </strong><br>
+                        <?php if (is_login()) { ?>
+                            <strong>เลือกสี : </strong><br>
+                        <?php } else { ?>
+                            <strong>สี : </strong><br>
+                        <?php } ?>
                         <div class="product-color">
 
                             <div class="color-wrap">
                                 <?php foreach ($product_attr as $k => $attr) { ?>
-                                    <div class="select-color" data-code="<?php echo $attr['code']; ?>"
+                                    <div class="select-color <?php if (!is_login()) { ?>disabled<?php } ?>"
+                                         data-code="<?php echo $attr['code']; ?>"
                                          data-price="<?php echo $attr['normal_price']; ?>"
                                          data-stock="<?php echo $attr['in_stock']; ?>"
                                          data-spprice="<?php echo $attr['special_price']; ?>"
@@ -56,22 +61,42 @@
                         </div>
                     <?php } ?>
                     <?php if ($product_data['att_type'] == "size") { ?>
-                        <strong>เลือกขนาด : </strong><br>
-                        <select id="select-size">
-                            <option value="" >--- Size ---</option>
+                        <?php if (is_login()) { ?>
+                            <strong>เลือกขนาด : </strong><br>
+                            <select id="select-size">
+                                <option value="">--- Size ---</option>
+                                <?php foreach ($product_attr as $k => $attr) { ?>
+                                    <option value="<?php echo $attr['code'] . '|' . $attr['normal_price'] . '|' . $attr['in_stock'] . '|' . $attr['special_price'] . '|' . $attr['pa_id'] . '|' . $attr['p_value']; ?>"><?php echo $attr['p_value']; ?></option>
+                                <?php } ?>
+                            </select>
+                        <?php } else { ?>
+                            <strong>รุ่น : </strong><br>
+                            <div class="tagcloud">
                             <?php foreach ($product_attr as $k => $attr) { ?>
-                                <option value="<?php echo $attr['code'].'|'.$attr['normal_price'].'|'.$attr['in_stock'].'|'.$attr['special_price'].'|'.$attr['pa_id'].'|'.$attr['p_value']; ?>" ><?php echo $attr['p_value']; ?></option>
+                                <a><?php echo $attr['p_value']; ?></a>
                             <?php } ?>
-                        </select>
+                            </div>
+                        <?php } ?>
                     <?php } ?>
                     <?php if ($product_data['att_type'] == "model") { ?>
-                        <strong>เลือรุ่น : </strong><br>
-                        <select id="select-size">
-                            <option value="" >--- Model ---</option>
-                            <?php foreach ($product_attr as $k => $attr) { ?>
-                                <option value="<?php echo $attr['code'].'|'.$attr['normal_price'].'|'.$attr['in_stock'].'|'.$attr['special_price'].'|'.$attr['pa_id'].'|'.$attr['p_value']; ?>" ><?php echo $attr['p_value']; ?></option>
-                            <?php } ?>
-                        </select>
+                        <?php if (is_login()) { ?>
+                            <strong>เลือกรุ่น : </strong><br>
+                            <select id="select-size">
+                                <option value="">--- Model ---</option>
+                                <?php foreach ($product_attr as $k => $attr) { ?>
+                                    <option value="<?php echo $attr['code'] . '|' . $attr['normal_price'] . '|' . $attr['in_stock'] . '|' . $attr['special_price'] . '|' . $attr['pa_id'] . '|' . $attr['p_value']; ?>"><?php echo $attr['p_value']; ?></option>
+                                <?php } ?>
+                            </select>
+                        <?php } else { ?>
+                            <strong>รุ่น : </strong><br>
+                            <div class="widget_tag_cloud">
+                            <div class="tagcloud">
+                                <?php foreach ($product_attr as $k => $attr) { ?>
+                                    <a><?php echo $attr['p_value']; ?></a>
+                                <?php } ?>
+                            </div>
+                            </div>
+                        <?php } ?>
                     <?php } ?>
                 <?php } ?>
                 <div class="product-price">
@@ -86,7 +111,7 @@
                             <span class="special-price"></span>
                         <?php } ?>
                         บาท / ชิ้น
-                    <?php }?>
+                    <?php } ?>
 
                 </div>
                 <?php if ($product_data['online'] == '1' && is_login()) { ?>
@@ -94,7 +119,7 @@
                         <input type="number" class="number" min="1" id="qty" value="1">
                     </div>
                     <div class="product-addcart">
-                        <button id="add-to-cart">ADD TO CART</button>
+                        <button id="add-to-cart" class="btn-big black">ADD TO CART</button>
                     </div>
                 <?php } ?>
             </div>

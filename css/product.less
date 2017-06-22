@@ -1,3 +1,16 @@
+@font-face {
+  font-family: 'THSarabunNewRegular';
+  src: url('../fonts/thsarabunnew.eot');
+  src: url('../fonts/thsarabunnew.eot') format('embedded-opentype'),
+  url('../fonts/thsarabunnew.woff') format('woff'),
+  url('../fonts/thsarabunnew.ttf') format('truetype'),
+  url('../fonts/thsarabunnew.svg#THSarabunNewRegular') format('svg');
+}
+
+.th {
+  font-family: THSarabunNewRegular;
+}
+
 #product-content {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -86,17 +99,7 @@
     }
     #add-to-cart {
       margin: 20px auto;
-      padding: 10px 20px;
-      background: #00A6C7;
-      font-size: 18px;
-      text-align: center;
-      -webkit-border-radius: 5px;
-      border-radius: 5px;
-      border: none;
-      cursor: pointer;
-      &:hover {
-        background: #00acd6;
-      }
+
     }
   }
   .big-thumb {
@@ -213,10 +216,13 @@
   min-width: 800px;
   padding: 20px;
   .col-6 {
-    width: calc(~"50%" - 40px);
+    width: calc(~"50%" - 42px);
     padding: 20px;
     float: left;
     text-align: left;
+    &:first-child {
+      border-right: 1px solid #eeeeee;
+    }
   }
   .p-detail {
     float: left;
@@ -224,7 +230,8 @@
   }
   h3 {
     color: #00a65a;
-    font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+    font-size: 28px;
+    font-weight: normal;
   }
   .p-thumb {
     max-width: 100px;
@@ -235,35 +242,34 @@
     }
   }
   .p-title {
-    font-size: 16px;
-    font-weight: bold;
-    font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+    font-size: 24px;
+
   }
   .p-code, .p-price, .p-spprice {
-    font-size: 16px;
-    font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+    font-size: 24px;
   }
-  .p-checkout {
-    display: block;
-    padding: 10px 20px;
-    color: #ffffff;
-    text-align: center;
-    background: #3f69fc;
-    font-size: 18px;
-    margin-top: 25px;
-    font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+  .num-text {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eeeeee;
+    margin-bottom: 10px;
+    font-size: 24px;
   }
   .num-text, .total-amount, .total-vat {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 22px;
     margin-top: 4px;
-    font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
     span {
       font-weight: normal;
-      font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
     }
   }
 
+  #checkout-btn {
+    margin-top: 20px;
+    float: right;
+    color: #ffffff;
+    &:hover {
+      color: #ffffff;
+    }
+  }
 }
 
 @media screen and (max-width: 885px) {
@@ -288,8 +294,10 @@
 
 #membber-form {
   .col-6 {
-    width: 50%;
+    width: calc(~"50%" - 20px);
     float: left;
+    padding: 10px;
+
     &#div-login, &#div-forgot {
       float: none;
       margin-left: auto;
@@ -298,12 +306,18 @@
     }
   }
   padding: 20px;
-  label {
-    display: block;
-    font-weight: bold;
-    font-size: 14px;
-    margin-top: 20px;
-    margin-left: 20px;
+  //label {
+  //  display: block;
+  //  font-weight: bold;
+  //  font-size: 14px;
+  //  margin-top: 20px;
+  //  margin-left: 20px;
+  //}
+  .wpcf7-text {
+    width: calc(~"100%" - 20px);
+  }
+  #link-forgot-password, #link-login {
+    float: right;
   }
   .input {
     width: calc(~"100%" - 60px);
@@ -461,7 +475,6 @@
   }
   .product .product-details .product-title {
     margin-right: 20px;
-    font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
   }
   .product .product-details .product-description {
     margin: 5px 20px 5px 0;
@@ -475,7 +488,6 @@
     padding: 4px 8px;
     background-color: #c66;
     color: #fff;
-    font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
     font-size: 12px;
     border-radius: 3px;
   }
@@ -504,7 +516,6 @@
     text-align: right;
   }
   .totals .totals-item-total {
-    font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
   }
 
   .checkout {
@@ -609,346 +620,6 @@
   display: inline-block;
 }
 
-/*!
-Pure v1.0.0
-Copyright 2013 Yahoo!
-Licensed under the BSD License.
-https://github.com/yahoo/pure/blob/master/LICENSE.md
-*/
-/*csslint box-model:false*/
-/*
-Box-model set to false because we're setting a height on select elements, which
-also have border and padding. This is done because some browsers don't render
-the padding. We explicitly set the box-model for select elements to border-box,
-so we can ignore the csslint warning.
-*/
-
-.pure-form input[type="text"],
-.pure-form input[type="password"],
-.pure-form input[type="email"],
-.pure-form input[type="url"],
-.pure-form input[type="date"],
-.pure-form input[type="month"],
-.pure-form input[type="time"],
-.pure-form input[type="datetime"],
-.pure-form input[type="datetime-local"],
-.pure-form input[type="week"],
-.pure-form input[type="number"],
-.pure-form input[type="search"],
-.pure-form input[type="tel"],
-.pure-form input[type="color"],
-.pure-form select,
-.pure-form textarea {
-  padding: 0.5em 0.6em;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-shadow: inset 0 1px 3px #ddd;
-  border-radius: 4px;
-  vertical-align: middle;
-  box-sizing: border-box;
-}
-
-/*
-Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
-since IE8 won't execute CSS that contains a CSS3 selector.
-*/
-.pure-form input:not([type]) {
-  padding: 0.5em 0.6em;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-shadow: inset 0 1px 3px #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-/* Chrome (as of v.32/34 on OS X) needs additional room for color to display. */
-/* May be able to remove this tweak as color inputs become more standardized across browsers. */
-.pure-form input[type="color"] {
-  padding: 0.2em 0.5em;
-}
-
-.pure-form input[type="text"]:focus,
-.pure-form input[type="password"]:focus,
-.pure-form input[type="email"]:focus,
-.pure-form input[type="url"]:focus,
-.pure-form input[type="date"]:focus,
-.pure-form input[type="month"]:focus,
-.pure-form input[type="time"]:focus,
-.pure-form input[type="datetime"]:focus,
-.pure-form input[type="datetime-local"]:focus,
-.pure-form input[type="week"]:focus,
-.pure-form input[type="number"]:focus,
-.pure-form input[type="search"]:focus,
-.pure-form input[type="tel"]:focus,
-.pure-form input[type="color"]:focus,
-.pure-form select:focus,
-.pure-form textarea:focus {
-  outline: 0;
-  border-color: #129FEA;
-}
-
-/*
-Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
-since IE8 won't execute CSS that contains a CSS3 selector.
-*/
-.pure-form input:not([type]):focus {
-  outline: 0;
-  border-color: #129FEA;
-}
-
-.pure-form input[type="file"]:focus,
-.pure-form input[type="radio"]:focus,
-.pure-form input[type="checkbox"]:focus {
-  outline: thin solid #129FEA;
-  outline: 1px auto #129FEA;
-}
-
-.pure-form .pure-checkbox,
-.pure-form .pure-radio {
-  margin: 0.5em 0;
-  display: block;
-}
-
-.pure-form input[type="text"][disabled],
-.pure-form input[type="password"][disabled],
-.pure-form input[type="email"][disabled],
-.pure-form input[type="url"][disabled],
-.pure-form input[type="date"][disabled],
-.pure-form input[type="month"][disabled],
-.pure-form input[type="time"][disabled],
-.pure-form input[type="datetime"][disabled],
-.pure-form input[type="datetime-local"][disabled],
-.pure-form input[type="week"][disabled],
-.pure-form input[type="number"][disabled],
-.pure-form input[type="search"][disabled],
-.pure-form input[type="tel"][disabled],
-.pure-form input[type="color"][disabled],
-.pure-form select[disabled],
-.pure-form textarea[disabled] {
-  cursor: not-allowed;
-  background-color: #eaeded;
-  color: #cad2d3;
-}
-
-/*
-Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
-since IE8 won't execute CSS that contains a CSS3 selector.
-*/
-.pure-form input:not([type])[disabled] {
-  cursor: not-allowed;
-  background-color: #eaeded;
-  color: #cad2d3;
-}
-
-.pure-form input[readonly],
-.pure-form select[readonly],
-.pure-form textarea[readonly] {
-  background-color: #eee; /* menu hover bg color */
-  color: #777; /* menu text color */
-  border-color: #ccc;
-}
-
-.pure-form input:focus:invalid,
-.pure-form textarea:focus:invalid,
-.pure-form select:focus:invalid {
-  color: #b94a48;
-  border-color: #e9322d;
-}
-
-.pure-form input[type="file"]:focus:invalid:focus,
-.pure-form input[type="radio"]:focus:invalid:focus,
-.pure-form input[type="checkbox"]:focus:invalid:focus {
-  outline-color: #e9322d;
-}
-
-.pure-form select {
-  /* Normalizes the height; padding is not sufficient. */
-  height: 2.25em;
-  border: 1px solid #ccc;
-  background-color: white;
-}
-
-.pure-form select[multiple] {
-  height: auto;
-}
-
-.pure-form label {
-  margin: 0.5em 0 0.2em;
-}
-
-.pure-form fieldset {
-  margin: 0;
-  padding: 0.35em 0 0.75em;
-  border: 0;
-}
-
-.pure-form legend {
-  display: block;
-  width: 100%;
-  padding: 0.3em 0;
-  margin-bottom: 0.3em;
-  color: #333;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.pure-form-stacked input[type="text"],
-.pure-form-stacked input[type="password"],
-.pure-form-stacked input[type="email"],
-.pure-form-stacked input[type="url"],
-.pure-form-stacked input[type="date"],
-.pure-form-stacked input[type="month"],
-.pure-form-stacked input[type="time"],
-.pure-form-stacked input[type="datetime"],
-.pure-form-stacked input[type="datetime-local"],
-.pure-form-stacked input[type="week"],
-.pure-form-stacked input[type="number"],
-.pure-form-stacked input[type="search"],
-.pure-form-stacked input[type="tel"],
-.pure-form-stacked input[type="color"],
-.pure-form-stacked input[type="file"],
-.pure-form-stacked select,
-.pure-form-stacked label,
-.pure-form-stacked textarea {
-  display: block;
-  margin: 0.25em 0;
-}
-
-/*
-Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
-since IE8 won't execute CSS that contains a CSS3 selector.
-*/
-.pure-form-stacked input:not([type]) {
-  display: block;
-  margin: 0.25em 0;
-}
-
-.pure-form-aligned input,
-.pure-form-aligned textarea,
-.pure-form-aligned select,
-  /* NOTE: pure-help-inline is deprecated. Use .pure-form-message-inline instead. */
-.pure-form-aligned .pure-help-inline,
-.pure-form-message-inline {
-  display: inline-block;
-  *display: inline;
-  *zoom: 1;
-  vertical-align: middle;
-}
-
-.pure-form-aligned textarea {
-  vertical-align: top;
-}
-
-/* Aligned Forms */
-.pure-form-aligned .pure-control-group {
-  margin-bottom: 0.5em;
-}
-
-.pure-form-aligned .pure-control-group label {
-  text-align: right;
-  display: inline-block;
-  vertical-align: middle;
-  width: 10em;
-  margin: 0 1em 0 0;
-}
-
-.pure-form-aligned .pure-controls {
-  margin: 1.5em 0 0 11em;
-}
-
-/* Rounded Inputs */
-.pure-form input.pure-input-rounded,
-.pure-form .pure-input-rounded {
-  border-radius: 2em;
-  padding: 0.5em 1em;
-}
-
-/* Grouped Inputs */
-.pure-form .pure-group fieldset {
-  margin-bottom: 10px;
-}
-
-.pure-form .pure-group input,
-.pure-form .pure-group textarea {
-  display: block;
-  padding: 10px;
-  margin: 0 0 -1px;
-  border-radius: 0;
-  position: relative;
-  top: -1px;
-}
-
-.pure-form .pure-group input:focus,
-.pure-form .pure-group textarea:focus {
-  z-index: 3;
-}
-
-.pure-form .pure-group input:first-child,
-.pure-form .pure-group textarea:first-child {
-  top: 1px;
-  border-radius: 4px 4px 0 0;
-  margin: 0;
-}
-
-.pure-form .pure-group input:first-child:last-child,
-.pure-form .pure-group textarea:first-child:last-child {
-  top: 1px;
-  border-radius: 4px;
-  margin: 0;
-}
-
-.pure-form .pure-group input:last-child,
-.pure-form .pure-group textarea:last-child {
-  top: -2px;
-  border-radius: 0 0 4px 4px;
-  margin: 0;
-}
-
-.pure-form .pure-group button {
-  margin: 0.35em 0;
-}
-
-.pure-form .pure-input-1 {
-  width: 100%;
-}
-
-.pure-form .pure-input-3-4 {
-  width: 75%;
-}
-
-.pure-form .pure-input-2-3 {
-  width: 66%;
-}
-
-.pure-form .pure-input-1-2 {
-  width: 50%;
-}
-
-.pure-form .pure-input-1-3 {
-  width: 33%;
-}
-
-.pure-form .pure-input-1-4 {
-  width: 25%;
-}
-
-/* Inline help for forms */
-/* NOTE: pure-help-inline is deprecated. Use .pure-form-message-inline instead. */
-.pure-form .pure-help-inline,
-.pure-form-message-inline {
-  display: inline-block;
-  padding-left: 0.3em;
-  color: #666;
-  vertical-align: middle;
-  font-size: 0.875em;
-}
-
-/* Block help for forms */
-.pure-form-message {
-  display: block;
-  color: #666;
-  font-size: 0.875em;
-}
-
 #shoping-detail {
   font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
   width: calc(~"100%" - 20px);
@@ -1019,9 +690,9 @@ since IE8 won't execute CSS that contains a CSS3 selector.
   thead {
     tr {
       th {
-        color: #fff;
+        color: #999;
         padding: 5px;
-        background: #000000;
+        background: #3a3a3a;
         font-weight: bold;
       }
     }
@@ -1079,54 +750,72 @@ since IE8 won't execute CSS that contains a CSS3 selector.
   }
 }
 
-
-
 #box-document {
   border: 1px solid #eeeeee;
   width: calc(~"100%" - 60px);
   padding: 10px;
   margin: 0px auto;
-  .more-document{
-    border-bottom: 1px solid #eeeeee;
-    margin-top: 10px;
-    padding-bottom: 10px;
-    input{
-      width: calc(~"100%" - 10px);
-    }
-    &:last-child{
-      border: none;
-      padding-bottom: 0px;
-    }
-  }
+
 }
-#select-size,#select-model{
+
+#select-size, #select-model {
   background: #ffffff;
-  border:1px solid #eeeeee;
+  border: 1px solid #eeeeee;
   padding: 5px 10px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
 }
-.panel{
-  border:1px solid #eeeeee;
+
+.panel {
+  border: 1px solid #eeeeee;
   max-width: 98%;
   background: #ffffff;
-  .box-header{
+  .box-header {
     background: #000000;
     color: #ffffff;
     font-size: 16px;
     padding: 5px 10px;
   }
-  .panel-body{
+  .panel-body {
     padding: 5px;
     background: #ffffff;
-    th{
+    th {
       color: #000000;
       border-bottom: 1px solid #eeeeee;
       padding: 5px;
     }
-    td{
+    td {
       border-bottom: 1px solid #eeeeee;
       padding: 5px;
+    }
+  }
+}
+
+.widget_tag_cloud a {
+  background: #5a5959 !important;
+}
+
+.box-border {
+  padding: 10px;
+  border: 1px solid #eeeeee;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#nav {
+  ul {
+    li {
+      &#member-no-login {
+        &:hover {
+          color: #3cb9ed;
+        }
+        a {
+          color: #444444;
+          &:hover {
+            color: #3cb9ed;
+          }
+        }
+      }
     }
   }
 }

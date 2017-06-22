@@ -2,42 +2,72 @@
     <section class="container_12 clearfix" id="product-detail">
 
         <div id="membber-form">
-            <div align="center"><h2>My Delivery Information</h2></div>
+            <div align="center"><h2>My Shipping Information</h2></div>
             <div id="empty">
-                ไม่มีสินค้าในรถเข็น
+                There are no items in this cart.
             </div>
-            <div id="shiping_address">
+            <div id="shiping_address" class="wpcf7">
                 <div class="col-6">
                     <a href="<?php echo base_url('shopping-carts'); ?>" id="back-btn">< Back to carts</a>
                     <form method="post" action="<?php echo base_url('checkout/delivery-info'); ?>" id="shipping-form">
-                        <div>
-                            <label> Name</label>
-                            <input type="text" name="shipping_name" class="input" placeholder="Shipping Name"
-                                   maxlength="200" value="<?php echo $shipping['shipping_name']; ?>" required>
-                        </div>
+                        <div class="box-border">
+                            <h5>Default Shipping Address</h5>
+                            <fieldset>
+                                <label> Name</label>
+                                <input type="text" name="shipping_name" class="wpcf7-text"
+                                       maxlength="200" value="<?php echo $shipping['shipping_name']; ?>" required>
+                            </fieldset>
 
-                        <div>
-                            <label> Address</label>
-                            <textarea name="shipping_address" class="input" placeholder="Shipping Address" rows="4"
-                                      required><?php echo $shipping['shipping_address']; ?></textarea>
+                            <fieldset>
+                                <label> Address</label>
+                                <textarea name="shipping_address" class="wpcf7-text"
+                                          rows="4"
+                                          required><?php echo $shipping['shipping_address']; ?></textarea>
+                            </fieldset>
+                            <fieldset>
+                                <label> Province</label>
+                                <?php echo form_dropdown('shipping_province', list_province(), $shipping['shipping_province'], 'class="wpcf7-text"required'); ?>
+                            </fieldset>
+                            <fieldset>
+                                <label> Zip</label>
+                                <input type="text" name="shipping_zip" id="shipping_zip" class="wpcf7-text number"
+                                       placeholder="Zip code"
+                                       maxlength="5"
+                                       value="<?php echo $shipping['shipping_zip']; ?>" minlength="5" required>
+                            </fieldset>
                         </div>
-                        <div>
-                            <label> Province</label>
-                            <?php echo form_dropdown('shipping_province', list_province(), $shipping['shipping_province'], 'class="input" style="width: calc(100% - 40px);height: 34px;" required'); ?>
-                        </div>
-                        <div>
-                            <label> Zip</label>
-                            <input type="text" name="shipping_zip" id="shipping_zip" class="input number"
-                                   placeholder="Zip code"
-                                   maxlength="5"
-                                   value="<?php echo $shipping['shipping_zip']; ?>" minlength="5" required>
+                        <div class="box-border">
+                            <h5>Default Billing Address</h5>
+                            <fieldset>
+                                <label> Name</label>
+                                <input type="text" name="billing_name" class="wpcf7-text"
+                                       maxlength="200" value="<?php echo $shipping['billing_name']?$shipping['billing_name']:$shipping['shipping_name']; ?>" required>
+                            </fieldset>
+
+                            <fieldset>
+                                <label> Address</label>
+                                <textarea name="billing_address" class="wpcf7-text"
+                                          rows="4"
+                                          required><?php echo $shipping['billing_address']?$shipping['billing_address']:$shipping['shipping_address']; ?></textarea>
+                            </fieldset>
+                            <fieldset>
+                                <label> Province</label>
+                                <?php echo form_dropdown('billing_province', list_province(), ($shipping['billing_province']?$shipping['billing_province']:$shipping['shipping_province']), 'class="wpcf7-text"required'); ?>
+                            </fieldset>
+                            <fieldset>
+                                <label> Zip</label>
+                                <input type="text" name="billing_zip" id="billing_zip" class="wpcf7-text number"
+                                       placeholder="Zip code"
+                                       maxlength="5"
+                                       value="<?php echo $shipping['billing_zip']?$shipping['billing_zip']:$shipping['shipping_zip']; ?>" minlength="5" required>
+                            </fieldset>
                         </div>
 
 
                         <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>"
                                value="<?php echo $this->security->get_csrf_hash(); ?>">
 
-                        <button class="btn" type="submit" id="submit-shipping">Continue to checkout</button>
+                        <button class="wpcf7-submit" type="submit" id="submit-shipping">Continue to checkout</button>
                     </form>
                 </div>
                 <div class="col-6 hide-mobile">
@@ -113,19 +143,19 @@
             } else {
                 shipping = parseInt('<?php echo $this->setting_data['shipping_outarea']; ?>');
             }
-            $('#shipping td:nth-child(2)').html(shipping.toFixed(2));
+            $('#shipping td:nth-child(2)').html(shipping.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
             for (var i in products) {
                 var t = 0;
                 var html = '';
                 html += '';
                 if (products[i]['sp_price'] > 0) {
-                    html += '<tr><td>' + products[i]['title'] + '</td><td>' + products[i]['qty'] + '</td><td><s>' + products[i]['price'] + '</s><br>' + products[i]['sp_price'] + '</td></tr>';
+                    html += '<tr><td>' + '[' + products[i]['code'] + '] ' + products[i]['title'] + ' ' + products[i]['value'] + '</td><td>' + products[i]['qty'] + '</td><td><s>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s><br>' + products[i]['sp_price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</td></tr>';
                     t = products[i]['sp_price'] * products[i]['qty'];
                     summery = summery + t;
                 } else {
                     t = products[i]['price'] * products[i]['qty'];
                     summery = summery + t;
-                    html += '<tr><td>' + products[i]['title'] + '</td><td>' + products[i]['qty'] + '</td><td>' + products[i]['price'] + '</td></tr>';
+                    html += '<tr><td>' + products[i]['title'] + '</td><td>' + products[i]['qty'] + '</td><td>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</td></tr>';
                 }
 
                 $('#shoping-detail tbody').append(html);

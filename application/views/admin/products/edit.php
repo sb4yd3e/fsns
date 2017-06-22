@@ -287,8 +287,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6" id="edit-type">
-                                            <?php if ($product['att_type'] == 'color') { ?>
-                                                <div class="form-group" id="color-boxed">
+
+                                                <div class="form-group" id="color-boxed"  <?php if ($product['att_type'] != 'color') { ?> style="display: none;" <?php } ?>>
                                                     <label>Color</label>
                                                     <input type="hidden" name="color[]"
                                                            value="<?php echo isset($product_alts[0]['color']) ? $product_alts[0]['color'] : "#FFFFFF"; ?>"
@@ -317,7 +317,7 @@
                                                         <div class="clearfix"></div>
                                                     </div>
                                                 </div>
-                                            <?php } ?>
+
                                             <div class="form-group" id="other-boxed">
                                                 <?php if ($product['att_type'] == 'size') { ?>
                                                     <label>Size (Text)</label>

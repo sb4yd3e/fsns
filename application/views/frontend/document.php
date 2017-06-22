@@ -67,18 +67,24 @@
                             <?php } ?>
                             </tbody>
                         </table>
-                        <?php if($order['order_status']!="success" && $order['order_status']!="cancel"){ ?>
-                        <div id="upload-box">
-                            <form method="post" action=""
-                                  enctype="multipart/form-data" id="ajax-upload-document">
-                                <label>ชื่อไฟล์ : </label>
-                                <input type="text" name="title" maxlength="50" class="input" required>
-                                <label>เลือกไฟล์เอกสาร (jpg,png,doc,pdf) : </label>
-                                <input type="file" name="file" class="input" accept="image/*,.doc,.pdf" required>
-
-                                <button type="submit" class="btn btn-success" id="add-file-btn">อัพโหลด</button>
-                            </form>
-                        </div>
+                        <?php if ($order['order_status'] != "success" && $order['order_status'] != "cancel") { ?>
+                            <div id="upload-box" class="wpcf7">
+                                <form method="post" action=""
+                                      enctype="multipart/form-data" id="ajax-upload-document">
+                                    <br>
+                                    <fieldset>
+                                        <label>ชื่อไฟล์ : </label>
+                                        <input type="text" name="title" maxlength="50" class="wpcf7-text" required>
+                                    </fieldset>
+                                    <fieldset>
+                                        <label>เลือกไฟล์เอกสาร (jpg,png,doc,pdf) : </label>
+                                        <input type="file" name="file" class="wpcf7-text" accept="image/*,.doc,.pdf"
+                                               required>
+                                    </fieldset>
+                                    <button type="submit" class="btn-medium black" id="add-file-btn">อัพโหลด</button>
+                                    <div class="clearfix"></div>
+                                </form>
+                            </div>
                         <?php } ?>
                     </div>
                 </div>

@@ -166,6 +166,10 @@ function init_order() {
                 address: $('#shipping_address').val(),
                 province: $('#shipping_province').val(),
                 zip: $('#shipping_zip').val(),
+                bil_name: $('#billing_name').val(),
+                bil_address: $('#billing_address').val(),
+                bil_province: $('#billing_province').val(),
+                bil_zip: $('#billing_zip').val(),
                 oid: $('#oid').val()
             },
             url: '/admin/orders/save_shipping',

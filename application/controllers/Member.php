@@ -40,6 +40,10 @@ class Member extends CI_Controller
         $this->form_validation->set_rules('shipping_province', 'Shipping Province', 'required');
         $this->form_validation->set_rules('shipping_zip', 'Shipping Zip', 'required|numeric|min_length[5]|max_length[5]');
         $this->form_validation->set_rules('shipping_address', 'Shipping Address', 'required');
+        $this->form_validation->set_rules('billing_name', 'Billing Name', 'required|max_length[200]');
+        $this->form_validation->set_rules('billing_province', 'Billing Province', 'required');
+        $this->form_validation->set_rules('billing_zip', 'Billing Zip', 'required|numeric|min_length[5]|max_length[5]');
+        $this->form_validation->set_rules('billing_address', 'Billing Address', 'required');
 
 
         if ($this->render_data['user']['account_type'] == 'business') {
@@ -57,7 +61,11 @@ class Member extends CI_Controller
                 'shipping_address' => $this->input->post('shipping_address'),
                 'business_name' => $this->input->post('business_name'),
                 'business_address' => $this->input->post('business_address'),
-                'business_number' => $this->input->post('business_number')
+                'business_number' => $this->input->post('business_number'),
+                'billing_name' => $this->input->post('billing_name'),
+                'billing_province' => $this->input->post('billing_province'),
+                'billing_zip' => $this->input->post('billing_zip'),
+                'billing_address' => $this->input->post('billing_address')
             );
             if ($this->input->post('password')) {
                 $data_create['password'] = md5($this->input->post('password'));
@@ -83,7 +91,7 @@ class Member extends CI_Controller
         $this->load->helper('security');
         $this->load->library('form_validation');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-        $this->form_validation->set_rules('g-recaptcha-response', 'Verify recaptcha', 'required|callback_captcha');
+//        $this->form_validation->set_rules('g-recaptcha-response', 'Verify recaptcha', 'required|callback_captcha');
         if ($this->form_validation->run() && $this->input->is_ajax_request()) {
 
             if ($d = $this->members->forgot_password($this->input->post('email'))) {
@@ -166,7 +174,7 @@ Thanks for beging a FSNS Thailand customer.
         $this->load->library('form_validation');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|max_length[50]');
-        $this->form_validation->set_rules('g-recaptcha-response', 'Verify recaptcha', 'required|callback_captcha');
+//        $this->form_validation->set_rules('g-recaptcha-response', 'Verify recaptcha', 'required|callback_captcha');
         if ($this->form_validation->run()) {
             $this->load->model('auth_model', 'auth');
             $param = array('email' => $this->input->post('email'), 'password' => $this->input->post('password'));
@@ -242,6 +250,10 @@ Thanks for beging a FSNS Thailand customer.
                 'business_name' => $this->input->post('business_name'),
                 'business_address' => $this->input->post('business_address'),
                 'business_number' => $this->input->post('business_number'),
+                'billing_name' => $this->input->post('shipping_name'),
+                'billing_province' => $this->input->post('shipping_province'),
+                'billing_zip' => $this->input->post('shipping_zip'),
+                'billing_address' => $this->input->post('shipping_address'),
                 'register_ip' => $this->input->ip_address(),
                 'register_date' => time(),
                 'token' => md5($this->input->post('email') . time()),

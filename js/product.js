@@ -9,6 +9,9 @@ $(document).ready(function () {
     var select_attr = false;
 
     $('.select-color').click(function () {
+        if($(this).hasClass('disabled')){
+            return false;
+        }
         $('.select-color').removeClass('active');
         $(this).addClass('active');
         var price = $(this).data('price');
@@ -25,10 +28,10 @@ $(document).ready(function () {
         $('#product_spprice').val(spprice);
 
         if (parseInt(spprice) > 0) {
-            $('.default-price').html('<s>' + price + '</s>');
-            $('.special-price').html(spprice);
+            $('.default-price').html('<s>' + parseInt(price).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s>');
+            $('.special-price').html(parseInt(spprice).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
         } else {
-            $('.default-price').html(price);
+            $('.default-price').html(parseInt(price).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
             $('.special-price').html('');
         }
 
@@ -67,10 +70,10 @@ $(document).ready(function () {
             $('#product_spprice').val(spprice);
 
             if (parseInt(spprice) > 0) {
-                $('.default-price').html('<s>' + price + '</s>');
-                $('.special-price').html(spprice);
+                $('.default-price').html('<s>' + price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s>');
+                $('.special-price').html(spprice.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
             } else {
-                $('.default-price').html(price);
+                $('.default-price').html(price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                 $('.special-price').html('');
             }
 
@@ -159,10 +162,10 @@ $(document).ready(function () {
             $('#order-info .p-title').html(product_title);
             $('#order-info .p-code').html(product_code + " : " + product_value);
             if (parseInt(product_spprice) > 0) {
-                $('#order-info .p-price').html('ราคา : <s>' + product_price + '</s> บาท/ชิ้น');
-                $('#order-info .p-spprice').html('ราคาพิเศษ : ' + product_spprice + ' บาท/ชิ้น');
+                $('#order-info .p-price').html('ราคา : <s>' + product_price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s> บาท/ชิ้น');
+                $('#order-info .p-spprice').html('ราคาพิเศษ : ' + product_spprice.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' บาท/ชิ้น');
             } else {
-                $('#order-info .p-price').html('ราคา : ' + product_price + ' บาท/ชิ้น');
+                $('#order-info .p-price').html('ราคา : ' + product_price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' บาท/ชิ้น');
                 $('#order-info .p-spprice').html('');
             }
 
@@ -397,15 +400,15 @@ function cal_simpleorder() {
             var t = products[i]['price'] * products[i]['qty'];
         }
         total_qty = total_qty + products[i]['qty'];
-        $('#price-' + i).html(t.toFixed(2));
+        $('#price-' + i).html(t.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     }
 
     total_amount = total_normal - total_sp_discount;
     total_vat = (total_amount / 100) * 7;
     total = total_amount + total_vat;
-    $('#order-info .total-amount span').html(total_amount.toFixed(2));
-    $('#order-info .total-vat span').html(total.toFixed(2));
-    $('#total-simple').html(total.toFixed(2) + ' บาท');
+    $('#order-info .total-amount span').html(total_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#order-info .total-vat span').html(total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#total-simple').html(total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' บาท');
     if (total_qty > 0) {
         $('.cart-number').html('(' + total_qty + ')');
     } else {

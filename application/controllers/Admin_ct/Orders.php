@@ -416,11 +416,16 @@ class Orders extends CI_Controller
             $html .= '<tr><td><strong>Business Name : </strong></td><td>' . $member['business_name'] . '</td></tr>';
             $html .= '<tr><td><strong>Business Address : </strong></td><td>' . $member['business_address'] . '</td></tr>';
         }
-        $html .= '<tr><td colspan="2"><strong>Shipping Detail</strong></td></tr>';
+        $html .= '<tr><td colspan="2"><strong>Shipping Address</strong></td></tr>';
         $html .= '<tr><td><strong>Name : </strong></td><td>' . $order['shipping_name'] . '</td></tr>';
         $html .= '<tr><td><strong>Address : </strong></td><td>' . $order['shipping_address'] . '</td></tr>';
         $html .= '<tr><td><strong>Province : </strong></td><td>' . $order['shipping_province'] . '</td></tr>';
-        $html .= '<tr><td><strong>Zip : </strong></td><td>' . $order['shipping_zip'] . '</td></tr></table>';
+        $html .= '<tr><td><strong>Zip : </strong></td><td>' . $order['shipping_zip'] . '</td></tr>';
+        $html .= '<tr><td colspan="2"><strong>Billing Address</strong></td></tr>';
+        $html .= '<tr><td><strong>Name : </strong></td><td>' . $order['billing_name'] . '</td></tr>';
+        $html .= '<tr><td><strong>Address : </strong></td><td>' . $order['billing_address'] . '</td></tr>';
+        $html .= '<tr><td><strong>Province : </strong></td><td>' . $order['billing_province'] . '</td></tr>';
+        $html .= '<tr><td><strong>Zip : </strong></td><td>' . $order['billing_zip'] . '</td></tr></table>';
 
         echo $html;
 
@@ -614,6 +619,10 @@ class Orders extends CI_Controller
         $this->form_validation->set_rules('address', 'address', 'required');
         $this->form_validation->set_rules('province', 'province', 'required');
         $this->form_validation->set_rules('zip', 'zip', 'required');
+        $this->form_validation->set_rules('bil_name', 'billing name', 'required');
+        $this->form_validation->set_rules('bil_address', 'billing address', 'required');
+        $this->form_validation->set_rules('bil_province', 'billing province', 'required');
+        $this->form_validation->set_rules('bil_zip', 'billing zip', 'required');
         $this->form_validation->set_rules('oid', 'oid', 'required');
         if ($this->form_validation->run()) {
             $user = $this->session->userdata('fnsn');
@@ -621,7 +630,11 @@ class Orders extends CI_Controller
                 'shipping_name' => $this->input->post('name'),
                 'shipping_address' => $this->input->post('address'),
                 'shipping_province' => $this->input->post('province'),
-                'shipping_zip' => $this->input->post('zip')
+                'shipping_zip' => $this->input->post('zip'),
+                'billing_name' => $this->input->post('bil_name'),
+                'billing_address' => $this->input->post('bil_address'),
+                'billing_province' => $this->input->post('bil_province'),
+                'billing_zip' => $this->input->post('bil_zip')
             ));
             add_log($user['name'], "Change shipping address.", "order_" . $this->input->post('oid'));
             add_order_process($this->input->post('oid'), 'shipping', 'แก้ไขข้อมูลที่อยู่จัดส่งสินค้า', $this->input->post('name') . '<br>' . $this->input->post('address') . '<br>' . $this->input->post('province') . '<br>' . $this->input->post('zip'));
