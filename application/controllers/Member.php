@@ -45,7 +45,7 @@ class Member extends CI_Controller
         if ($this->render_data['user']['account_type'] == 'business') {
             $this->form_validation->set_rules('business_name', 'Business Name', 'required|max_length[200]');
             $this->form_validation->set_rules('business_address', 'Business Address', 'required');
-            $this->form_validation->set_rules('business_number', 'Federal tax identification number', 'required|max_length[30]');
+            $this->form_validation->set_rules('business_number', 'Business Tax ID', 'required|max_length[30]');
         }
         if ($this->form_validation->run()) {
             $data_create = array(
@@ -223,7 +223,7 @@ Thanks for beging a FSNS Thailand customer.
         if ($this->input->post('type') == 'business') {
             $this->form_validation->set_rules('business_name', 'Business Name', 'required|max_length[200]');
             $this->form_validation->set_rules('business_address', 'Business Address', 'required');
-            $this->form_validation->set_rules('business_number', 'Federal tax identification number', 'required|max_length[30]');
+            $this->form_validation->set_rules('business_number', 'Business Tax ID', 'required|max_length[30]');
         }
         if ($this->form_validation->run()) {
 

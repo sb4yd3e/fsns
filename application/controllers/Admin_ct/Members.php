@@ -17,7 +17,7 @@ class Members extends CI_Controller {
 
 
 	public function index() {
-		if(!is_group(array('admin','staff','sale'))){
+		if(!is_group(array('admin','co-sale','sale'))){
 			redirect('admin');
 			exit();
 		}
@@ -94,7 +94,7 @@ class Members extends CI_Controller {
 	}
 
 	public function ajax(){
-		if (!$this->input->is_ajax_request() || !is_group(array('admin','staff','sale'))) {
+		if (!$this->input->is_ajax_request() || !is_group(array('admin','co-sale','sale'))) {
 			exit('No direct script access allowed');
 		}
 
@@ -127,7 +127,7 @@ class Members extends CI_Controller {
 	function add()
 	{   
 		$this->load->library('form_validation');
-		if(!is_group(array('admin','staff','sale'))){
+		if(!is_group(array('admin','co-sale','sale'))){
 			redirect('admin');
 			exit();
 		}
@@ -147,7 +147,7 @@ class Members extends CI_Controller {
 		if($this->input->post('account_type')=='business'){
 			$this->form_validation->set_rules('business_name','Business Name','required|max_length[200]');
 			$this->form_validation->set_rules('business_address','Business Address','required');
-			$this->form_validation->set_rules('business_number','Federal tax identification number','required|max_length[30]');
+			$this->form_validation->set_rules('business_number','Business Tax ID','required|max_length[30]');
 		}
 		if($this->form_validation->run())     
 		{   
@@ -172,7 +172,7 @@ class Members extends CI_Controller {
 				);
 
 			//for Seller
-			if(is_group('sale') && $this->input->post('staff_id')!="0"){
+			if(is_group('sale')){
 				$data_create['staff_id'] = $render_data['user']['aid'];
 			}
 
@@ -227,7 +227,7 @@ class Members extends CI_Controller {
 		$content = $this->members->get_members($id);
 		$render_data['content'] = $content;
 		
-		if(!is_group(array('admin','staff','sale')) || !$content){
+		if(!is_group(array('admin','co-sale','sale')) || !$content){
 			redirect('admin');
 			exit();
 		}
@@ -247,7 +247,7 @@ class Members extends CI_Controller {
 		if($this->input->post('account_type')=='business'){
 			$this->form_validation->set_rules('business_name','Business Name','required|max_length[200]');
 			$this->form_validation->set_rules('business_address','Business Address','required');
-			$this->form_validation->set_rules('business_number','Federal tax identification number','required|max_length[30]');
+			$this->form_validation->set_rules('business_number','Business Tax ID','required|max_length[30]');
 		}
 		if($this->input->post('password')){
 			$this->form_validation->set_rules('password','Password','required|min_length[6]|max_length[50]');
@@ -274,7 +274,7 @@ class Members extends CI_Controller {
 				);
 
 			//for Seller
-			if(is_group('sale') && $this->input->post('staff_id')!="0"){
+			if(is_group('sale')){
 				$data_update['staff_id'] = $render_data['user']['aid'];
 			}
 

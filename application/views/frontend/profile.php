@@ -47,7 +47,7 @@
                                    maxlength="200" required>
                         </div>
                         <div>
-                            <label>Business Number</label>
+                            <label>Business Tax ID</label>
                             <input type="text" name="business_number" class="input" placeholder="Business Number" value="<?php echo $user['business_number']; ?>"
                                    maxlength="50" required>
                         </div>

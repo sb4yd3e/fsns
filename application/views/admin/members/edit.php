@@ -37,10 +37,12 @@
 											?>
 										</select>
 									</div>
-									<label for="staf_id" class="control-label">Seller Staff</label>
+									<label for="staff_id" class="control-label">Sale</label>
 									<div class="form-group">
 										<select name="staff_id" class="form-control">
-											<option value="0">No Seller Staff</option>
+                                            <?php if(!is_group('sale')){ ?>
+											<option value="0">No Sale</option>
+                                            <?php } ?>
 											<?php 
 											foreach($all_admins as $admin)
 											{
@@ -102,7 +104,7 @@
 								<div class="form-group">
 									<textarea name="business_address" class="form-control" id="business_address" autocomplete="off"><?php echo ($this->input->post('business_address') ? $this->input->post('business_address') : $content['business_address']); ?></textarea>
 								</div>
-								<label for="business_number" class="control-label">Federal tax identification number</label>
+								<label for="business_number" class="control-label">Business Tax ID</label>
 								<div class="form-group">
 									<input type="text" name="business_number" value="<?php echo ($this->input->post('business_number') ? $this->input->post('business_number') : $content['business_number']); ?>" class="form-control" id="business_number" autocomplete="off" />
 								</div>

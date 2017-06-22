@@ -220,7 +220,7 @@ class Admin extends CI_Controller{
         }
     }
     else{
-        redirect('admin/dashboard');
+        redirect('admin/orders');
     }
 } 
 

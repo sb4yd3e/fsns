@@ -13,7 +13,7 @@ class Orders extends CI_Controller
 
     public function index()
     {
-        if (!is_group(array('admin', 'staff', 'sale'))) {
+        if (!is_group(array('admin', 'co-sale', 'sale'))) {
             redirect('admin');
             exit();
         }
@@ -40,7 +40,6 @@ class Orders extends CI_Controller
                     data:function(data){
                         data.status = $("#status").val();
                         data.order_type = $("#order_type").val();
-                        data.uid = $("#uid").val();
                     }
                 },
 				"columnDefs": [
@@ -62,7 +61,8 @@ class Orders extends CI_Controller
             $("#status").change(function(){
                 var table = $("#table").DataTable();
                 table.ajax.reload();
-            });$("#ordet_type").change(function(){
+            });
+            $("#order_type").change(function(){
                 var table = $("#table").DataTable();
                 table.ajax.reload();
             });$("#uid").change(function(){
@@ -141,12 +141,7 @@ class Orders extends CI_Controller
             $js .= '$.notify("Save order success.", "success");';
         }
         $this->load->model("Members_model", "members");
-        $members = $this->members->get_list_members();
-        $arr_member = array('' => 'Show All');
-        foreach ($members as $member) {
-            $arr_member[$member['uid']] = $member['name'];
-        }
-        $render_data['members'] = $arr_member;
+
         $this->template->write('js', $js);
         $this->template->write_view('content', 'admin/orders/index', $render_data);
         $this->template->render();
@@ -154,7 +149,7 @@ class Orders extends CI_Controller
 
     public function ajax()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
 
@@ -171,7 +166,7 @@ class Orders extends CI_Controller
             $row[] = '<a href="#" class="ajax-product" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . number_format($order->total_product) . '</a>';
             $row[] = '<a href="#" class="ajax-status" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . order_status($order->order_status) . '</a>';
             $row[] = number_format($order->total_amount, 2);
-            if (is_group(array('admin', 'staff'))) {
+            if (is_group(array('admin', 'co-sale'))) {
                 $row[] = '<a href="#" class="label label-info ajax-file" data-uid="' . $order->uid . '" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal"><i class="fa fa-download"></i> ดาวน์โหลดเอกสารลูกค้า</a> 
             <a href="' . base_url('admin/orders/edit/' . $order->oid) . '" class="label label-warning"><i class="fa fa-pencil"></i> แก้ไขคำสั่งซื้อ</a> 
             ';
@@ -194,7 +189,7 @@ class Orders extends CI_Controller
     function edit($id = '')
     {
         $this->load->library('form_validation');
-        if (!is_group(array('admin', 'staff', 'sale'))) {
+        if (!is_group(array('admin', 'co-sale', 'sale'))) {
             redirect('admin');
             exit();
         }
@@ -406,7 +401,7 @@ class Orders extends CI_Controller
 
     public function ajax_user()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $this->load->model("Members_model", "members");
@@ -433,7 +428,7 @@ class Orders extends CI_Controller
 
     public function ajax_product()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $oid = $this->input->post('oid');
@@ -451,7 +446,7 @@ class Orders extends CI_Controller
 
     public function ajax_status()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $oid = $this->input->post('oid');
@@ -472,7 +467,7 @@ class Orders extends CI_Controller
 
     public function ajax_file()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $oid = $this->input->post('oid');
@@ -492,7 +487,7 @@ class Orders extends CI_Controller
 
     public function ajax_file_list()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $oid = $this->input->post('oid');
@@ -521,7 +516,7 @@ class Orders extends CI_Controller
 
     public function ajax_get_attribute()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $pid = $this->input->post('pid');
@@ -544,7 +539,7 @@ class Orders extends CI_Controller
 
     public function ajax_get_coupon()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $code = strtolower($this->input->post('code'));
@@ -561,7 +556,7 @@ class Orders extends CI_Controller
 
     function download_file($fid)
     {
-        if (!is_group(array('admin', 'staff', 'sale'))) {
+        if (!is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $file = $this->orders->get_file($fid);
@@ -570,7 +565,7 @@ class Orders extends CI_Controller
 
     function ajax_delete_file()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $fid = $this->input->post('fid');
@@ -580,7 +575,7 @@ class Orders extends CI_Controller
 
     function save_status($id)
     {
-        if (!is_group(array('admin', 'staff'))) {
+        if (!is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $this->load->library('form_validation');
@@ -611,7 +606,7 @@ class Orders extends CI_Controller
 
     function save_shipping()
     {
-        if (!is_group(array('admin', 'staff'))) {
+        if (!is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $this->load->library('form_validation');
@@ -657,7 +652,7 @@ class Orders extends CI_Controller
 
     public function upload_document($id)
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $user = $this->session->userdata('fnsn');
@@ -700,7 +695,7 @@ class Orders extends CI_Controller
 
     function change_shipping($id)
     {
-        if (!is_group(array('admin', 'staff'))) {
+        if (!is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $user = $this->session->userdata('fnsn');
@@ -709,10 +704,11 @@ class Orders extends CI_Controller
         if ($this->input->post('type')) {
             if ($this->input->post('type') == 'save_all') {
                 $param = array(
-                    'status' => 'shipping',
+                    'status' => 'success',
                     'note' => $this->input->post('comment')
                 );
                 $this->orders->update_order_all_product_status($id, $param);
+                $this->orders->save_status(array('status' => 'success', 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
                 add_log($user['name'], "Add shipping all product : " . $this->input->post('comment'), "order_" . $id);
                 add_order_process($id, 'shipping_all', 'จัดส่งสินค้าทิ้งหมดแล้ว', $this->input->post('comment'));
 
@@ -727,7 +723,14 @@ class Orders extends CI_Controller
                     add_log($user['name'], "Add shipping product : " . $this->input->post('comment'), "order_" . $id);
                     if($oid!='') {
                         $html .= $oid . '|' . $this->input->post('comment') . ',';
+
                     }
+                }
+                if($this->orders->check_status_shipping($id)){
+                    $this->orders->save_status(array('status' => 'shipping', 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
+                }else{
+                    $this->orders->save_status(array('status' => 'success', 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
+                    $this->orders->update_order_product_success($id);
                 }
                 add_order_process($id, 'shipping_list', 'จัดส่งสินค้าแล้ว', $html);
             }

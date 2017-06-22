@@ -86,9 +86,8 @@
                             <span class="special-price"></span>
                         <?php } ?>
                         บาท / ชิ้น
-                    <?php } else { ?>
-                        <span class="special-price">Please login to make an order.</span>
-                    <?php } ?>
+                    <?php }?>
+
                 </div>
                 <?php if ($product_data['online'] == '1' && is_login()) { ?>
                     <div class="product-qty">

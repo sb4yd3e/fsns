@@ -28,7 +28,7 @@
                                 </td>
                                 <td><?php echo number_format($order['total_qty']); ?></td>
                                 <td>
-                                    <?php echo number_format($order['total_amount']); ?>
+                                    <?php echo number_format($order['total_amount'],2); ?>
                                 </td>
                                 <td><?php echo order_status($order['order_status']); ?></td>
                                 <td align="right">

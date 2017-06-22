@@ -447,6 +447,7 @@ Thanks for beging a FSNS Thailand customer.
                         จำนวนเงิน : ' . $this->input->post('amount') . '<br>
                         วัน เวลา : ' . $this->input->post('date') . '<br>
                         ช่องทาง : ' . $this->input->post('gateway') . '<br>
+                        ข้อความ : '.nl2br($this->input->post('note')).'
                         ';
 
 

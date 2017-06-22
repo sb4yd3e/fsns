@@ -128,9 +128,8 @@
 
                                         <label for="product_online" class="control-label">Is online product</label><br>
                                         <?php echo form_dropdown('product_online', array(
-                                            '' => 'Select',
-                                            '0' => 'NO',
                                             '1' => 'YES',
+                                            '0' => 'NO'
                                         ), $product['online'], 'class="form-control" required'); ?>
                                     </div>
                                 </div>
@@ -140,9 +139,8 @@
                                         <label for="product_instock" class="control-label">Product In Stock</label><br>
 
                                         <?php echo form_dropdown('product_in_stock', array(
-                                            '' => 'Select',
-                                            '0' => 'NO',
                                             '1' => 'YES',
+                                            '0' => 'NO'
                                         ), $product['in_stock'], 'class="form-control" required'); ?>
 
                                     </div>
@@ -174,43 +172,53 @@
                             <h4>Product Attribute</h4>
                             <input type="hidden" name="type" value="<?php echo $product['att_type']; ?>" id="type"/>
                             <?php if ($product['att_type'] == "") { ?>
-                                <button type="button" class="btn btn-info btn-sm" id="add-color">Add Colors</button>
-                                <button type="button" class="btn btn-primary btn-sm" id="add-model">Add Models</button>
-                                <button type="button" class="btn btn-success btn-sm" id="add-size">Add Size</button>
-
-                                <div class="clearfix row" style="padding-right: 20px; display: none;" id="first-box">
+                                <div class="clearfix row" style="padding-right: 20px;" id="first-box">
 
                                     <div class="thumbnail clearfix ">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Code</label>
-                                                <input type="text" name="code[]" class="form-control" required/>
+                                                <input type="text" name="code[]"
+                                                       value="<?php echo $product['model_code']; ?>"
+                                                       class="form-control" required/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Price</label>
-                                                <input type="text" name="price[]" class="form-control digi" required/>
+                                                <input type="text" name="price[]"
+                                                       value="<?php echo $product['normal_price']; ?>"
+                                                       class="form-control digi" required/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Special Price</label>
-                                                <input type="text" name="sp_price[]" class="form-control digi"
+                                                <input type="text" name="sp_price[]"
+                                                       value="<?php echo $product['special_price']; ?>"
+                                                       class="form-control digi"
                                                        required/>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6" id="edit-type">
                                             <div class="form-group" id="color-boxed">
                                                 <label>Color</label>
                                                 <input type="hidden" name="color[]" value="#ffffff"
                                                        id="color-selector-0" class="form-control color-input" required/>
                                                 <div class="color-box">
                                                     <div class="color-active"></div>
-                                                    <div class="color-select color-1" data-hex="#ffffff"></div>
-                                                    <div class="color-select color-2" data-hex="#1B88CB"></div>
-                                                    <div class="color-select color-3" data-hex="#12A144"></div>
-                                                    <div class="color-select color-4" data-hex="#FDDA1A"></div>
-                                                    <div class="color-select color-5" data-hex="#0E1522"></div>
-                                                    <div class="color-select color-6" data-hex="#CD2026"></div>
-                                                    <div class="color-select color-7" data-hex="#7E2683"></div>
-                                                    <div class="color-select color-8" data-hex="#F05C21"></div>
+                                                    <div class="color-select color-1" data-hex="#ffffff"
+                                                         data-text="สีขาว"></div>
+                                                    <div class="color-select color-2" data-hex="#1B88CB"
+                                                         data-text="สีฟ้า"></div>
+                                                    <div class="color-select color-3" data-hex="#12A144"
+                                                         data-text="สีเขียว"></div>
+                                                    <div class="color-select color-4" data-hex="#FDDA1A"
+                                                         data-text="สีเหลือง"></div>
+                                                    <div class="color-select color-5" data-hex="#0E1522"
+                                                         data-text="สีดำ"></div>
+                                                    <div class="color-select color-6" data-hex="#CD2026"
+                                                         data-text="สีแดง"></div>
+                                                    <div class="color-select color-7" data-hex="#7E2683"
+                                                         data-text="สีม่วง"></div>
+                                                    <div class="color-select color-8" data-hex="#F05C21"
+                                                         data-text="สีส้ม"></div>
                                                     <div class="color-select-picker" id="color-picker-0"></div>
                                                     <div class="clearfix"></div>
                                                 </div>
@@ -223,11 +231,21 @@
                                             <div class="form-group">
                                                 <label>Product In Stock</label>
                                                 <?php echo form_dropdown('stock[]', array(
-                                                    '' => 'Select',
-                                                    '0' => 'NO',
                                                     '1' => 'YES',
+                                                    '0' => 'NO'
                                                 ), '', 'class="form-control" required'); ?>
 
+                                            </div>
+                                            <div id="box-type">
+                                                <button type="button" class="btn btn-info btn-sm" id="add-color">Add
+                                                    Colors
+                                                </button>
+                                                <button type="button" class="btn btn-primary btn-sm" id="add-model">Add
+                                                    Models
+                                                </button>
+                                                <button type="button" class="btn btn-success btn-sm" id="add-size">Add
+                                                    Size
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -236,8 +254,12 @@
 
 
                                 </div>
+                                <button type="button" class="btn btn-danger pull-right" id="reset-all"
+                                        style="display: none;"><i class="fa fa-times-circle"></i> Reset All
+                                </button>
                                 <button type="button" class="btn btn-success pull-right" id="add-at"
-                                        style="display: none;"><i class="fa fa-plus"></i> Add more
+                                        style="display: none; margin-right: 10px;">
+                                    <i class="fa fa-plus"></i> Add more
                                 </button>
                             <?php } else { ?>
                                 <div class="clearfix row" style="padding-right: 20px;">
@@ -264,9 +286,9 @@
                                                        class="form-control" required/>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6" id="edit-type">
                                             <?php if ($product['att_type'] == 'color') { ?>
-                                                <div class="form-group">
+                                                <div class="form-group" id="color-boxed">
                                                     <label>Color</label>
                                                     <input type="hidden" name="color[]"
                                                            value="<?php echo isset($product_alts[0]['color']) ? $product_alts[0]['color'] : "#FFFFFF"; ?>"
@@ -275,20 +297,28 @@
                                                     <div class="color-box">
                                                         <div class="color-active"
                                                              style="background-color: <?php echo isset($product_alts[0]['color']) ? $product_alts[0]['color'] : "#FFFFFF"; ?>"></div>
-                                                        <div class="color-select color-1" data-hex="#ffffff"></div>
-                                                        <div class="color-select color-2" data-hex="#1B88CB"></div>
-                                                        <div class="color-select color-3" data-hex="#12A144"></div>
-                                                        <div class="color-select color-4" data-hex="#FDDA1A"></div>
-                                                        <div class="color-select color-5" data-hex="#0E1522"></div>
-                                                        <div class="color-select color-6" data-hex="#CD2026"></div>
-                                                        <div class="color-select color-7" data-hex="#7E2683"></div>
-                                                        <div class="color-select color-8" data-hex="#F05C21"></div>
+                                                        <div class="color-select color-1" data-hex="#ffffff"
+                                                             data-text="สีขาว"></div>
+                                                        <div class="color-select color-2" data-hex="#1B88CB"
+                                                             data-text="สีฟ้า"></div>
+                                                        <div class="color-select color-3" data-hex="#12A144"
+                                                             data-text="สีเขียว"></div>
+                                                        <div class="color-select color-4" data-hex="#FDDA1A"
+                                                             data-text="สีเหลือง"></div>
+                                                        <div class="color-select color-5" data-hex="#0E1522"
+                                                             data-text="สีดำ"></div>
+                                                        <div class="color-select color-6" data-hex="#CD2026"
+                                                             data-text="สีแดง"></div>
+                                                        <div class="color-select color-7" data-hex="#7E2683"
+                                                             data-text="สีม่วง"></div>
+                                                        <div class="color-select color-8" data-hex="#F05C21"
+                                                             data-text="สีส้ม"></div>
                                                         <div class="color-select-picker"></div>
                                                         <div class="clearfix"></div>
                                                     </div>
                                                 </div>
                                             <?php } ?>
-                                            <div class="form-group">
+                                            <div class="form-group" id="other-boxed">
                                                 <?php if ($product['att_type'] == 'size') { ?>
                                                     <label>Size (Text)</label>
                                                 <?php } elseif ($product['att_type'] == 'model') { ?>
@@ -303,11 +333,21 @@
                                             <div class="form-group">
                                                 <label>Product In Stock</label>
                                                 <?php echo form_dropdown('stock[]', array(
-                                                    '' => 'Select',
-                                                    '0' => 'NO',
                                                     '1' => 'YES',
+                                                    '0' => 'NO'
                                                 ), isset($product_alts[0]['in_stock']) ? $product_alts[0]['in_stock'] : "", 'class="form-control" required'); ?>
 
+                                            </div>
+                                            <div id="box-type" style="display: none;">
+                                                <button type="button" class="btn btn-info btn-sm" id="add-color">Add
+                                                    Colors
+                                                </button>
+                                                <button type="button" class="btn btn-primary btn-sm" id="add-model">Add
+                                                    Models
+                                                </button>
+                                                <button type="button" class="btn btn-success btn-sm" id="add-size">Add
+                                                    Size
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -356,22 +396,22 @@
                                                             <div class="color-box">
                                                                 <div class="color-active"
                                                                      style="background-color: <?php echo isset($pa['color']) ? $pa['color'] : ""; ?>"></div>
-                                                                <div class="color-select color-1"
-                                                                     data-hex="#ffffff"></div>
-                                                                <div class="color-select color-2"
-                                                                     data-hex="#1B88CB"></div>
-                                                                <div class="color-select color-3"
-                                                                     data-hex="#12A144"></div>
-                                                                <div class="color-select color-4"
-                                                                     data-hex="#FDDA1A"></div>
-                                                                <div class="color-select color-5"
-                                                                     data-hex="#0E1522"></div>
-                                                                <div class="color-select color-6"
-                                                                     data-hex="#CD2026"></div>
-                                                                <div class="color-select color-7"
-                                                                     data-hex="#7E2683"></div>
-                                                                <div class="color-select color-8"
-                                                                     data-hex="#F05C21"></div>
+                                                                <div class="color-select color-1" data-hex="#ffffff"
+                                                                     data-text="สีขาว"></div>
+                                                                <div class="color-select color-2" data-hex="#1B88CB"
+                                                                     data-text="สีฟ้า"></div>
+                                                                <div class="color-select color-3" data-hex="#12A144"
+                                                                     data-text="สีเขียว"></div>
+                                                                <div class="color-select color-4" data-hex="#FDDA1A"
+                                                                     data-text="สีเหลือง"></div>
+                                                                <div class="color-select color-5" data-hex="#0E1522"
+                                                                     data-text="สีดำ"></div>
+                                                                <div class="color-select color-6" data-hex="#CD2026"
+                                                                     data-text="สีแดง"></div>
+                                                                <div class="color-select color-7" data-hex="#7E2683"
+                                                                     data-text="สีม่วง"></div>
+                                                                <div class="color-select color-8" data-hex="#F05C21"
+                                                                     data-text="สีส้ม"></div>
                                                                 <div class="color-select-picker"
                                                                      id="color-picker-<?php echo $k; ?>"></div>
                                                                 <div class="clearfix"></div>
@@ -394,9 +434,9 @@
                                                     <div class="form-group">
                                                         <label>Product In Stock</label>
                                                         <?php echo form_dropdown('stock[]', array(
-                                                            '' => 'Select',
-                                                            '0' => 'NO',
                                                             '1' => 'YES',
+                                                            '0' => 'NO'
+
                                                         ), isset($pa['in_stock']) ? $pa['in_stock'] : "", 'class="form-control" required'); ?>
                                                     </div>
                                                 </div>
@@ -404,8 +444,12 @@
                                         </div>
                                     <?php } ?>
                                 </div>
-                                <button type="button" class="btn btn-success pull-right" id="add-at"><i
-                                            class="fa fa-plus"></i> Add more
+                                <button type="button" class="btn btn-danger pull-right" id="reset-all"
+                                        style=""><i class="fa fa-times-circle"></i> Reset All
+                                </button>
+                                <button type="button" class="btn btn-success pull-right" id="add-at"
+                                        style=" margin-right: 10px;">
+                                    <i class="fa fa-plus"></i> Add more
                                 </button>
                             <?php } ?>
                         </div>

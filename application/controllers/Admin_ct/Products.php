@@ -246,28 +246,38 @@ class Products extends CI_Controller
             $("#add-color").click(function(){
                 $("#type").val("color");
                 attr_type = "color";
-                $("#add-color,#add-model,#add-size").remove();
+                $("#box-type").hide();
                 $("#first-box").show();
-                $("#add-at").show();
+                $("#add-at,#reset-all").show();
+                $("#color-boxed").show();
+                $("#other-boxed label").html("Value (Text)");
             });
             
             $("#add-model").click(function(){
                 $("#type").val("model");
                 attr_type = "model";
-                $("#add-color,#add-model,#add-size").remove();
+                $("#box-type").hide();
                 $("#first-box").show();
-                $("#add-at").show();
-                $("#color-boxed").remove();
+                $("#add-at,#reset-all").show();
+                $("#color-boxed").hide();
                 $("#other-boxed label").html("Model (Text)");
             });
             $("#add-size").click(function(){
                 $("#type").val("size");
                 attr_type = "size";
-                $("#add-color,#add-model,#add-size").remove();
+                $("#box-type").hide();
                 $("#first-box").show();
-                $("#add-at").show();
-                $("#color-boxed").remove();
+                $("#add-at,#reset-all").show();
+                $("#color-boxed").hide();
                 $("#other-boxed label").html("Size (Text)");
+            });
+            $("#reset-all").click(function(){
+                attr_type = "";
+                $("#box-type").show();
+                $("#more-att").html("");
+                $("#add-at,#reset-all").hide();
+                $("#color-boxed").show();
+                $("#other-boxed label").html("Value (Text)");
             });
             
             $(\'#add-at\').click(function(){
@@ -275,25 +285,25 @@ var num = $(\'.sub-alt\').length + 1;
 var html = \'<div class="clearfix row sub-alt" id="at-\'+num+\'" style="padding-right: 20px;"><div class="thumbnail clearfix ">\';
 html += \'<button type="button" class="btn btn-sm btn-danger pull-right delete-at" data-id="\'+num+\'"><i class="fa fa-times-circle"></i> </button>\';
 html += \'<div class="clearfix"></div> <div class="col-md-6"> <div class="form-group"> <label>Code</label>\';
-html += \'<input type="text" name="code[]" class="form-control" required/>\';
+html += \'<input type="text" name="code[]" value="\' + $("#product_model_code").val() + \'" class="form-control" required/>\';
 html += \'</div><div class="form-group"><label>Price</label>\';
-html += \'<input type="text" name="price[]" class="form-control digi" required/></div>\';
+html += \'<input type="text" name="price[]" value="\' + $("#product_price").val() + \'" class="form-control digi" required/></div>\';
 html += \'<div class="form-group"><label>Special Price</label>\';
-html += \'<input type="text" name="sp_price[]" class="form-control digi" required/>\';
+html += \'<input type="text" name="sp_price[]"  value="\' + $("#product_spacial_price").val() + \'" class="form-control digi" required/>\';
 html += \'</div></div><div class="col-md-6">\';
 
 if(attr_type==="color"){
 html += \'<div class="form-group"><label>Color</label>\';
 html += \'<input type="hidden" name="color[]" id="color-selector-\'+num+\'" value="#ffffff" class="form-control color-input" required/>\';
 html += \'<div class="color-box"><div class="color-active"></div>\';
-html += \'<div class="color-select color-1" data-hex="#ffffff"></div>\';
-html += \'<div class="color-select color-2" data-hex="#1B88CB"></div>\';
-html += \'<div class="color-select color-3" data-hex="#12A144"></div>\';
-html += \'<div class="color-select color-4" data-hex="#FDDA1A"></div>\';
-html += \'<div class="color-select color-5" data-hex="#0E1522"></div>\';
-html += \'<div class="color-select color-6" data-hex="#CD2026"></div>\';
-html += \'<div class="color-select color-7" data-hex="#7E2683"></div>\';
-html += \'<div class="color-select color-8" data-hex="#F05C21"></div>\';
+html += \'<div class="color-select color-1" data-hex="#ffffff" data-text="สีขาว"></div>\';
+html += \'<div class="color-select color-2" data-hex="#1B88CB" data-text="สีฟ้า"></div>\';
+html += \'<div class="color-select color-3" data-hex="#12A144" data-text="สีเขียว"></div>\';
+html += \'<div class="color-select color-4" data-hex="#FDDA1A" data-text="สีเหลือง"></div>\';
+html += \'<div class="color-select color-5" data-hex="#0E1522" data-text="สีดำ"></div>\';
+html += \'<div class="color-select color-6" data-hex="#CD2026" data-text="สีแดง"></div>\';
+html += \'<div class="color-select color-7" data-hex="#7E2683" data-text="สีม่วง"></div>\';
+html += \'<div class="color-select color-8" data-hex="#F05C21" data-text="สีส้ม"></div>\';
 html += \'<div class="color-select-picker" id="color-picker-\'+num+\'"></div><div class="clearfix"></div></div></div>\';
 html += \'<div class="form-group"><label>Value (Text)</label>\';
 }
@@ -305,7 +315,7 @@ html += \'<div class="form-group"><label>Size (Text)</label>\';
 }
 html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group">\';
 html += \'<label>Product In Stock</label><select name="stock[]" class="form-control" required>\';
-html += \'<option value="" selected="selected">Select</option><option value="0">NO</option><option value="1">YES</option>\';
+html += \'<option value="1">YES</option><option value="0">NO</option>\';
 html += \'</select></div></div></div></div>\';
 $(\'#more-att\').append(html);
 $(\'#color-picker-\'+num).ColorPicker({
@@ -347,8 +357,10 @@ $(\'#color-picker-0\').ColorPicker({
 });
 $(document).on(\'click\', \'.color-select\', function () {
   var hex = $(this).data(\'hex\');
+  var text = $(this).data("text");
   $(this).parent().find(\'.color-active\').css(\'backgroundColor\', hex);
   $(this).parent().parent().find(\'input\').val(hex);
+  $(this).parent().parent().parent().find("input[name^=value]").val(text);
 });
 $(function(){
 				CKEDITOR.replace( "info" ,{
@@ -532,53 +544,68 @@ $(function(){
             $("#add-color").click(function(){
                 $("#type").val("color");
                 attr_type = "color";
-                $("#add-color,#add-model,#add-size").remove();
+                $("#box-type").hide();
                 $("#first-box").show();
-                $("#add-at").show();
+                $("#add-at,#reset-all").show();
+                $("#color-boxed").show();
+                $("#other-boxed label").html("Value (Text)");
             });
             
             $("#add-model").click(function(){
                 $("#type").val("model");
                 attr_type = "model";
-                $("#add-color,#add-model,#add-size").remove();
+                $("#box-type").hide();
                 $("#first-box").show();
-                $("#add-at").show();
-                $("#color-boxed").remove();
+                $("#add-at,#reset-all").show();
+                $("#color-boxed").hide();
                 $("#other-boxed label").html("Model (Text)");
             });
             $("#add-size").click(function(){
                 $("#type").val("size");
                 attr_type = "size";
-                $("#add-color,#add-model,#add-size").remove();
+                $("#box-type").hide();
                 $("#first-box").show();
-                $("#add-at").show();
-                $("#color-boxed").remove();
+                $("#add-at,#reset-all").show();
+                $("#color-boxed").hide();
                 $("#other-boxed label").html("Size (Text)");
+            });
+            $("#reset-all").click(function(){
+                attr_type = "";
+                $(".delete-at").each(function(i,v){
+                if($(this).data("aid")){
+                $("#deleted-alt").val($("#deleted-alt").val()+","+$(this).data("aid"));
+                }
+                });
+                $("#box-type").show();
+                $("#more-att").html("");
+                $("#add-at,#reset-all").hide();
+                $("#color-boxed").show();
+                $("#other-boxed label").html("Value (Text)");
             });
             $(\'#add-at\').click(function(){
 var num = $(\'.sub-alt\').length + 1;
 var html = \'<div class="clearfix row sub-alt" id="at-\'+num+\'" style="padding-right: 20px;"><div class="thumbnail clearfix ">\';
 html += \'<button type="button" class="btn btn-sm btn-danger pull-right delete-at" data-id="\'+num+\'"><i class="fa fa-times-circle"></i> </button>\';
 html += \'<div class="clearfix"></div> <div class="col-md-6"> <div class="form-group"> <label>Code</label>\';
-html += \'<input type="text" name="code[]" class="form-control" required/>\';
+html += \'<input type="text" name="code[]" value="\' + $("#product_model_code").val() + \'" class="form-control" required/>\';
 html += \'</div><div class="form-group"><label>Price</label>\';
-html += \'<input type="text" name="price[]" class="form-control digi" required/></div>\';
+html += \'<input type="text" name="price[]" value="\' + $("#product_price").val() + \'" class="form-control digi" required/></div>\';
 html += \'<div class="form-group"><label>Special Price</label>\';
-html += \'<input type="text" name="sp_price[]" class="form-control digi" required/>\';
+html += \'<input type="text" name="sp_price[]"  value="\' + $("#product_spacial_price").val() + \'" class="form-control digi" required/>\';
 html += \'</div></div><div class="col-md-6">\';
 
 if(attr_type==="color"){
 html += \'<div class="form-group"><label>Color</label>\';
 html += \'<input type="hidden" name="color[]" id="color-selector-\'+num+\'" value="#ffffff" class="form-control color-input" required/>\';
 html += \'<div class="color-box"><div class="color-active"></div>\';
-html += \'<div class="color-select color-1" data-hex="#ffffff"></div>\';
-html += \'<div class="color-select color-2" data-hex="#1B88CB"></div>\';
-html += \'<div class="color-select color-3" data-hex="#12A144"></div>\';
-html += \'<div class="color-select color-4" data-hex="#FDDA1A"></div>\';
-html += \'<div class="color-select color-5" data-hex="#0E1522"></div>\';
-html += \'<div class="color-select color-6" data-hex="#CD2026"></div>\';
-html += \'<div class="color-select color-7" data-hex="#7E2683"></div>\';
-html += \'<div class="color-select color-8" data-hex="#F05C21"></div>\';
+html += \'<div class="color-select color-1" data-hex="#ffffff" data-text="สีขาว"></div>\';
+html += \'<div class="color-select color-2" data-hex="#1B88CB" data-text="สีฟ้า"></div>\';
+html += \'<div class="color-select color-3" data-hex="#12A144" data-text="สีเขียว"></div>\';
+html += \'<div class="color-select color-4" data-hex="#FDDA1A" data-text="สีเหลือง"></div>\';
+html += \'<div class="color-select color-5" data-hex="#0E1522" data-text="สีดำ"></div>\';
+html += \'<div class="color-select color-6" data-hex="#CD2026" data-text="สีแดง"></div>\';
+html += \'<div class="color-select color-7" data-hex="#7E2683" data-text="สีม่วง"></div>\';
+html += \'<div class="color-select color-8" data-hex="#F05C21" data-text="สีส้ม"></div>\';
 html += \'<div class="color-select-picker" id="color-picker-\'+num+\'"></div><div class="clearfix"></div></div></div>\';
 html += \'<div class="form-group"><label>Value (Text)</label>\';
 }
@@ -590,7 +617,7 @@ html += \'<div class="form-group"><label>Size (Text)</label>\';
 }
 html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group">\';
 html += \'<label>Product In Stock</label><select name="stock[]" class="form-control" required>\';
-html += \'<option value="" selected="selected">Select</option><option value="0">NO</option><option value="1">YES</option>\';
+html += \'<option value="1">YES</option><option value="0">NO</option>\';
 html += \'</select></div></div></div></div>\';
 $(\'#more-att\').append(html);
 $(\'#color-picker-\'+num).ColorPicker({
@@ -638,8 +665,10 @@ $(\'.color-select-picker\').ColorPicker({
 });
 $(document).on(\'click\', \'.color-select\', function () {
   var hex = $(this).data(\'hex\');
+  var text = $(this).data("text");
   $(this).parent().find(\'.color-active\').css(\'backgroundColor\', hex);
   $(this).parent().parent().find(\'input\').val(hex);
+  $(this).parent().parent().parent().find("input[name^=value]").val(text);
 });
 $(document).on("click","#remove-pdf",function(){
 $("#delete-pdf").val("true");

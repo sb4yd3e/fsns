@@ -16,7 +16,7 @@
 								<?php 
 								$admin_group_values = array(
 						'admin'=>'Admin',
-						'staff'=>'SALE Support',
+						'co-sale'=>'Sale Support',
 						'sale'=>'Sale',
 					);
 

@@ -110,12 +110,7 @@
 
                 </li>
                 <?php if (is_group(array('admin'))) { ?>
-                    <li>
-                        <a href="<?php echo site_url('admin/admin/index'); ?>">
-                            <i class="fa fa-user-md"></i> <span>Admin/Sale Management</span>
-                        </a>
 
-                    </li>
 
                     <li>
                         <a href="<?php echo site_url('admin/news/index'); ?>">
@@ -150,6 +145,12 @@
 
                 </li>
                 <?php if (is_group(array('admin'))) { ?>
+                    <li>
+                        <a href="<?php echo site_url('admin/admin/index'); ?>">
+                            <i class="fa fa-user-md"></i> <span>Admin/Sale Management</span>
+                        </a>
+
+                    </li>
                     <li>
                         <a href="<?php echo site_url('admin/banner'); ?>">
                             <i class="fa fa-picture-o"></i> <span>Popup Banner</span>

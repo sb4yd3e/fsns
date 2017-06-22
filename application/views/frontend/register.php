@@ -44,7 +44,7 @@
                         <input type="text" name="business_name" class="input" placeholder="Business Name" maxlength="200">
                     </div>
                     <div class="biz">
-                        <label>Business Number</label>
+                        <label>Business Tax ID</label>
                         <input type="text" name="business_number" class="input" placeholder="Business Number" maxlength="50">
                     </div>
                     <div class="biz">

@@ -67,6 +67,7 @@
                             <?php } ?>
                             </tbody>
                         </table>
+                        <?php if($order['order_status']!="success" && $order['order_status']!="cancel"){ ?>
                         <div id="upload-box">
                             <form method="post" action=""
                                   enctype="multipart/form-data" id="ajax-upload-document">
@@ -78,6 +79,7 @@
                                 <button type="submit" class="btn btn-success" id="add-file-btn">อัพโหลด</button>
                             </form>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>

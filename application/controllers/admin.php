@@ -21,8 +21,8 @@ class Admin extends CI_Controller
     {
         $this->config->set_item('csrf_protection', true);
         $this->load->helper('security');
-        if (is_group(array('admin', 'staff', 'sale'))) {
-            redirect('admin/dashboard');
+        if (is_group(array('admin', 'co-sale', 'sale'))) {
+            redirect('admin/orders');
             exit();
         }
         $this->load->library('form_validation');
@@ -52,7 +52,7 @@ class Admin extends CI_Controller
 //                add_log($userdata['username'],"Login to system.");
                 $this->db->where('aid', $userdata['aid'])->update('admins', array('last_login' => time()));
                 $this->session->set_userdata('fnsn', $session);
-                redirect('admin/dashboard');
+                redirect('admin/orders');
             }
         } else {
             $this->load->view('admin/login');
@@ -73,7 +73,7 @@ class Admin extends CI_Controller
 
     public function chk_online()
     {
-        if ($this->input->is_ajax_request() && is_group(array('admin', 'staff', 'sale'))) {
+        if ($this->input->is_ajax_request() && is_group(array('admin', 'co-sale', 'sale'))) {
             $userdata = $this->session->userdata('fnsn');
             $this->db->where('aid', $userdata['aid'])->update('admins', array('last_login' => time()));
         }

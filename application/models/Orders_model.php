@@ -238,6 +238,10 @@ class Orders_model extends CI_Model
     {
         $this->db->where('odid', $odid)->update('order_details', $data);
     }
+    function update_order_product_success($id)
+    {
+        $this->db->where('oid', $id)->update('order_details', array('status'=>'success'));
+    }
 
     function get_shipping_address($uid){
         return $this->db->select('shipping_name,shipping_address,shipping_province,shipping_zip')->where('uid',$uid)->get('users')->row_array();
@@ -245,5 +249,8 @@ class Orders_model extends CI_Model
 
     function list_timeline($oid){
         return $this->db->select('at_date,process_type,process_title,process_detail')->where('oid',$oid)->order_by('opid','desc')->get('order_process')->result_array();
+    }
+    function check_status_shipping($id){
+        return $this->db->select('odid')->where('oid',$id)->where('status','pending')->get('order_details')->result();
     }
 }
