@@ -57,8 +57,8 @@ $(document).ready(function () {
             $('#code').html('-');
         }else{
             var dt = $(this).val().split('|');
-            var price = dt[1];
-            var spprice = dt[3];
+            var price = parseInt(dt[1]);
+            var spprice = parseInt(dt[3]);
             var stock = dt[2];
             var code = dt[0];
             var aid = dt[4];
@@ -273,7 +273,6 @@ function showResponse_login(responseText) {
             text: obj.message,
             html: true
         });
-        grecaptcha.reset($('#re-form-login').attr('data-widget-id'));
         $('#submit-login').html('Login').removeAttr('disabled');
     }
 
@@ -304,7 +303,6 @@ function showResponse_forgot(responseText) {
             text: obj.message,
             html: true
         });
-        grecaptcha.reset($('#re-form-reset').attr('data-widget-id'));
         $('#submit-forgot').html('Reset password').removeAttr('disabled');
     }
 

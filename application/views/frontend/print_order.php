@@ -481,6 +481,7 @@
                                 $total = $total + $product['product_spacial_amount'];
                                 echo number_format(($product['product_amount'] - $product['product_spacial_amount']) * $product['product_qty'], 2);
                             }else{
+                                echo '0.00';
                                 $total = $total + $product['product_amount'];
                             }; ?></td>
                         <td class="right cart_t cart_r"><?php echo number_format($product['total_amount'], 2); ?></td>

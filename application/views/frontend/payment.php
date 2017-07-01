@@ -99,7 +99,7 @@
         for (var i in products) {
             var rs_t = 0, rs_t_no = 0;
             var html = '<div class="product wd" id="p-' + i + '"><div class="product-details wd">';
-            html += '<div class="product-title wd">' + products[i]['title'] + '</div></div><div class="product-price wd">';
+            html += '<div class="product-title wd">' + '['+products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</div></div><div class="product-price wd">';
             html += '<div class="cart-price wd">' + (products[i]['price']).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div>';
             if (products[i]['sp_price'] > 0) {
                 rs_t = products[i]['sp_price'] * products[i]['qty'];

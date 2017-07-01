@@ -8,6 +8,7 @@ class Orders extends CI_Controller
     {
         parent::__construct();
         $this->template->set_template('admin');
+        $this->load->model('members_model', 'members');
         $this->load->model('Orders_model', 'orders');
     }
 
@@ -163,6 +164,7 @@ class Orders extends CI_Controller
             $row[] = '#' . sprintf("%06d", $order->oid);
             $row[] = '<a href="#" class="ajax-user" data-uid="' . $order->uid . '" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . $order->shipping_name . '</a>';
             $row[] = order_type($order->order_type);
+            $row[] = get_sale_name($order->sale_id);
             $row[] = '<a href="#" class="ajax-product" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . number_format($order->total_product) . '</a>';
             $row[] = '<a href="#" class="ajax-status" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . order_status($order->order_status) . '</a>';
             $row[] = number_format($order->total_amount, 2);
@@ -425,7 +427,8 @@ class Orders extends CI_Controller
         $html .= '<tr><td><strong>Name : </strong></td><td>' . $order['billing_name'] . '</td></tr>';
         $html .= '<tr><td><strong>Address : </strong></td><td>' . $order['billing_address'] . '</td></tr>';
         $html .= '<tr><td><strong>Province : </strong></td><td>' . $order['billing_province'] . '</td></tr>';
-        $html .= '<tr><td><strong>Zip : </strong></td><td>' . $order['billing_zip'] . '</td></tr></table>';
+        $html .= '<tr><td><strong>Zip : </strong></td><td>' . $order['billing_zip'] . '</td></tr>';
+        $html .= '<tr><td style="color: red;"><strong>Sale : </strong></td><td style="color: red;">' . get_sale_name($order['sale_id']) . '</td></tr></table>';
 
         echo $html;
 
@@ -603,6 +606,26 @@ class Orders extends CI_Controller
                     break;
             }
             add_order_process($id, 'status', $this->input->post('status'), $this->input->post('comment'));
+
+
+            $user_data = $this->members->get_members($user['uid']);
+            $html_email = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 20px;">You order is : ' . order_status($this->input->post('status')) . '</h3>
+</div>
+<div style="margin-top:20px;">
+เรียนสมาชิก FSNS Thailand<br><br><br>
+คำสั่งซื้อ #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกเปลี่ยนสถานะเป็น  ' . order_status($this->input->post('status')) . '<br><br>
+รายละเอียด : <br>' . $this->input->post('comment') . '
+</div>
+<div>
+
+</div>
+<div style="margin-top:50px;">
+ด้วยความเคารพ<br>FSNS Thailand
+</div>';
+            send_mail($user_data['email'], get_email_sale($user_data['sale_id']), false, 'You order has change status : ' . order_status($this->input->post('status')), $html_email);
+
+
             redirect('admin/orders/edit/' . $id);
         } else {
             redirect('admin/orders/edit/' . $id);
@@ -636,8 +659,26 @@ class Orders extends CI_Controller
                 'billing_province' => $this->input->post('bil_province'),
                 'billing_zip' => $this->input->post('bil_zip')
             ));
+            $html = $this->input->post('name') . '<br>' . $this->input->post('address') . '<br>' . $this->input->post('province') . '<br>' . $this->input->post('zip');
             add_log($user['name'], "Change shipping address.", "order_" . $this->input->post('oid'));
-            add_order_process($this->input->post('oid'), 'shipping', 'แก้ไขข้อมูลที่อยู่จัดส่งสินค้า', $this->input->post('name') . '<br>' . $this->input->post('address') . '<br>' . $this->input->post('province') . '<br>' . $this->input->post('zip'));
+            add_order_process($this->input->post('oid'), 'shipping', 'แก้ไขข้อมูลที่อยู่จัดส่งสินค้า', $html);
+
+
+            $user_data = $this->members->get_members($user['uid']);
+            $html_email = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 20px;">You Shipping address has updated.</h3>
+</div>
+<div style="margin-top:20px;">
+เรียนสมาชิก FSNS Thailand<br><br><br>
+มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า 
+</div>
+<div>
+' . $html . '
+</div>
+<div style="margin-top:50px;">
+ด้วยความเคารพ<br>FSNS Thailand
+</div>';
+            send_mail($user_data['email'], get_email_sale($user_data['sale_id']), false, 'Shipping address has updated.', $html_email);
             $a = array('status' => 'success');
         } else {
             $a = array('status' => 'error');
@@ -645,23 +686,6 @@ class Orders extends CI_Controller
         echo json_encode($a);
     }
 
-    private function __sendmail($email, $title, $message)
-    {
-
-
-        //============================= send email ==============================//
-        $this->load->library('email');
-        $this->email->subject('');
-        $this->email->from($this->setting_data['email_for_contact'], $title);
-        $this->email->to($email);
-        $this->email->set_mailtype("html");
-
-        $html = '';
-        $html = str_replace(array('[title]', '[message]'), array($title, $message), $html);
-        $this->email->message($html);
-        $this->email->send(FALSE);
-        //============================= send email ==============================//
-    }
 
     public function upload_document($id)
     {
@@ -694,6 +718,27 @@ class Orders extends CI_Controller
                 $fid = $this->orders->add_document($params);
                 add_log($user['name'], "Upload document : " . $this->input->post('title'), "order_" . $id);
                 add_order_process($id, 'document', $this->input->post('title'), $fid);
+
+                $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 20px;">You have new document form order : #' . str_pad($id, 6, "0", STR_PAD_LEFT) . '</h3>
+</div>
+<div style="margin-top:20px;">
+เรียนสมาชิก FSNS Thailand<br><br><br>
+คำสั่งซื้อ #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มมีเอกสารใหม่ที่เกี่ยวข้อง. กรุณาตรวจสอบเอกสารฉบับนี้ โดยสามารถดาวน์โหลดผ่านลิงค์ด้านล่าง.
+</div>
+<div>
+<a href="' . base_url('order/document/' . $id) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">รายละเอียดเอกสาร</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเวอร์ได้<br>
+<a href="" target="_blank">
+
+</a>
+</div>
+<div style="margin-top:50px;">
+ด้วยความเคารพ<br>FSNS Thailand
+</div>';
+                $user_data = $this->members->get_members($user['uid']);
+                send_mail($user_data['email'], get_email_sale($user_data['sale_id']), false, 'You have new document : ' . $this->input->post('title'), $html);
                 $a = array('status' => 'success');
             } else {
                 $a = array('status' => 'error', 'message' => $this->upload->display_errors());
@@ -734,14 +779,14 @@ class Orders extends CI_Controller
                     );
                     $this->orders->update_order_product_status($oid, $param);
                     add_log($user['name'], "Add shipping product : " . $this->input->post('comment'), "order_" . $id);
-                    if($oid!='') {
+                    if ($oid != '') {
                         $html .= $oid . '|' . $this->input->post('comment') . ',';
 
                     }
                 }
-                if($this->orders->check_status_shipping($id)){
+                if ($this->orders->check_status_shipping($id)) {
                     $this->orders->save_status(array('status' => 'shipping', 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
-                }else{
+                } else {
                     $this->orders->save_status(array('status' => 'success', 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
                     $this->orders->update_order_product_success($id);
                 }

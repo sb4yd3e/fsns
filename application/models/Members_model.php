@@ -180,4 +180,7 @@ class Members_model extends CI_Model
         $this->db->where('uid', $uid)->update('users', array('password' => md5($pass), 'token' => time()));
         return $pass;
     }
+    function transfer_order($old_id,$new_id){
+        return $this->db->where('sale_id',$old_id)->where('order_status !=','success')->where('order_status !=','cancel')->update('orders',array('sale_id'=>$new_id));
+    }
 }

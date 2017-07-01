@@ -30,7 +30,7 @@
 }
 .container_6 .inner-wrap .product-desc {
   margin-top: 10px;
-  font-size: 20px;
+  font-size: 14px;
 }
 .container_6 .inner-wrap .product-code {
   margin-bottom: 20px;
@@ -474,7 +474,7 @@
   text-indent: -9999px;
 }
 #table-orders .product {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
 }
@@ -766,4 +766,18 @@
 }
 #nav ul li#member-no-login a:hover {
   color: #3cb9ed;
+}
+.message {
+  padding: 40px 0px;
+  font-size: 20px;
+  background: #dcfedc;
+  color: #000;
+  border-radius: 5px;
+}
+.message.danger {
+  background: rgba(255, 0, 4, 0.35);
+}
+.message a {
+  color: #00A6C7;
+  font-size: 20px;
 }

@@ -141,7 +141,7 @@ class Members extends CI_Controller {
 		$this->form_validation->set_rules('shipping_name','Shipping Name','required|max_length[200]');
 		$this->form_validation->set_rules('shipping_province','Shipping Province','required');
 		$this->form_validation->set_rules('shipping_zip','Shipping Zip','required|numeric|min_length[5]|max_length[5]');
-		$this->form_validation->set_rules('shippipng_address','Shipping Address','required');
+		$this->form_validation->set_rules('shipping_address','Shipping Address','required');
 		$this->form_validation->set_rules('is_active','Active member','required');
 
 		if($this->input->post('account_type')=='business'){
@@ -163,6 +163,10 @@ class Members extends CI_Controller {
 				'shipping_province' => $this->input->post('shipping_province'),
 				'shipping_zip' => $this->input->post('shipping_zip'),
 				'shipping_address' => $this->input->post('shipping_address'),
+                'billing_name' => $this->input->post('shipping_name'),
+                'billing_province' => $this->input->post('shipping_province'),
+                'billing_zip' => $this->input->post('shipping_zip'),
+                'billing_address' => $this->input->post('shipping_address'),
 				'business_name' => $this->input->post('business_name'),
 				'business_address' => $this->input->post('business_address'),
 				'business_number' => $this->input->post('business_number'),
@@ -277,6 +281,9 @@ class Members extends CI_Controller {
 			if(is_group('sale')){
 				$data_update['staff_id'] = $render_data['user']['aid'];
 			}
+
+			//transfer order to new sale
+            $this->members->transfer_order($content['staff_id'],$this->input->post('staff_id'));
 
 			if($this->input->post('password')){
 				$data_update['password'] = md5($this->input->post('password'));

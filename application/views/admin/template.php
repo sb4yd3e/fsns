@@ -158,6 +158,11 @@
 
                     </li>
                     <li>
+                        <a href="<?php echo site_url('admin/payment'); ?>">
+                            <i class="fa fa-credit-card"></i> <span>Payment Gateway</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="<?php echo site_url('admin/setting'); ?>">
                             <i class="fa fa-cogs"></i> <span>Settings</span>
                         </a>

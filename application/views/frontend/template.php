@@ -335,7 +335,10 @@ if ($this->banner_data['visible'] == '1' && !get_cookie('show_popup')) {
             <div class="num-text">ตะกร้าสินค้าของคุณ <span class="cart-number">0</span> สินค้า</div>
             <div class="total-amount">มูลค่าสินค้า: <span>0</span> บาท</div>
             <div class="total-vat">ยอดสุทธิ (รวมภาษีมูลค่าเพิ่ม): <span>0</span> บาท</div>
+
             <a href="<?php echo base_url('checkout/delivery-info'); ?>" class="btn-big black" id="checkout-btn">ชำระค่าสินค้า</a>
+
+            <a href="<?php echo base_url('shopping-carts'); ?>" style="margin-right: 10px;" class="btn-big btn-color" id="checkout-btn">ตะกร้าสินค้า</a>
         </div>
         <div class="clearfix"></div>
     </div>

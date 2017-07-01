@@ -71,7 +71,7 @@ class Orders_model extends CI_Model
 
     function get_user_order($uid,$id)
     {
-        return $this->db->select('oid,at_date,amount,spacial_amount,coupon_code,discount,discount_100k,shipping_amount,vat_amount,total_amount,shipping_name,shipping_address,shipping_province,shipping_zip,billing_name,billing_address,billing_province,billing_zip,order_status')->order_by('oid','desc')->get_where($this->table, array('oid' => $id,'uid'=>$uid))->row_array();
+        return $this->db->select('oid,at_date,amount,spacial_amount,coupon_code,discount,discount_100k,shipping_amount,vat_amount,total_amount,shipping_name,shipping_address,shipping_province,shipping_zip,billing_name,billing_address,billing_province,billing_zip,order_status,order_type')->order_by('oid','desc')->get_where($this->table, array('oid' => $id,'uid'=>$uid))->row_array();
     }
 
     function get_order_detail($id){
@@ -253,4 +253,5 @@ class Orders_model extends CI_Model
     function check_status_shipping($id){
         return $this->db->select('odid')->where('oid',$id)->where('status','pending')->get('order_details')->result();
     }
+
 }

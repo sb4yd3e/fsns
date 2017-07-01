@@ -3,7 +3,7 @@
         <div class="container_6">
             <div class="inner-wrap">
                 <div class="big-thumb">
-                    <img src="<?php echo base_url('timthumb.php?src=') . base_url('uploads/products/' . $product_data['cover']) . '&w=480&h=480&z=c'; ?>"
+                    <img src="<?php echo base_url('timthumb.php?src=') . base_url('uploads/products/' . $product_data['cover']) . '&w=480&h=480&zc=2'; ?>"
                          alt="<?php echo $product_data['title']; ?>">
                 </div>
                 <?php if ($product_data['pdf']) { ?>
@@ -30,15 +30,16 @@
                     <?php echo $product_data['title']; ?>
                 </div>
                 <div class="product-desc">
-                    <?php echo $product_data['info']; ?>
+                    <?php echo $product_data['body']; ?>
+
                 </div>
-                <?php if ($product_data['online'] == '1') { ?>
+                <?php //if ($product_data['online'] == '1') { ?>
                     <div class="product-code">
 
                         CODE : <span id="code"><?php echo $product_attr[0]['code']; ?></span>
                     </div>
                     <?php if ($product_data['att_type'] == "color") { ?>
-                        <?php if (is_login()) { ?>
+                        <?php if (is_login() && $product_data['online']==1) { ?>
                             <strong>เลือกสี : </strong><br>
                         <?php } else { ?>
                             <strong>สี : </strong><br>
@@ -47,9 +48,9 @@
 
                             <div class="color-wrap">
                                 <?php foreach ($product_attr as $k => $attr) { ?>
-                                    <div class="select-color <?php if (!is_login()) { ?>disabled<?php } ?>"
+                                    <div class="select-color <?php if (!is_login() || $product_data['online']!=1) { ?>disabled<?php } ?>"
                                          data-code="<?php echo $attr['code']; ?>"
-                                         data-price="<?php echo $attr['normal_price']; ?>"
+                                         data-price="<?php echo is_login()?$attr['normal_price']:"0.00"; ?>"
                                          data-stock="<?php echo $attr['in_stock']; ?>"
                                          data-spprice="<?php echo $attr['special_price']; ?>"
                                          data-aid="<?php echo $attr['pa_id']; ?>"
@@ -61,7 +62,7 @@
                         </div>
                     <?php } ?>
                     <?php if ($product_data['att_type'] == "size") { ?>
-                        <?php if (is_login()) { ?>
+                        <?php if (is_login() && $product_data['online']==1) { ?>
                             <strong>เลือกขนาด : </strong><br>
                             <select id="select-size">
                                 <option value="">--- Size ---</option>
@@ -79,7 +80,7 @@
                         <?php } ?>
                     <?php } ?>
                     <?php if ($product_data['att_type'] == "model") { ?>
-                        <?php if (is_login()) { ?>
+                        <?php if (is_login() && $product_data['online']==1) { ?>
                             <strong>เลือกรุ่น : </strong><br>
                             <select id="select-size">
                                 <option value="">--- Model ---</option>
@@ -98,10 +99,10 @@
                             </div>
                         <?php } ?>
                     <?php } ?>
-                <?php } ?>
+                <?php //} ?>
                 <div class="product-price">
 
-                    <?php if (is_login()) { ?>
+                    <?php if (is_login() && $product_data['online']==1) { ?>
                         ราคา :
                         <?php if ($product_data['special_price'] > 0) { ?>
                             <span class="default-price"><s><?php echo $product_data['normal_price']; ?></s></span>
@@ -121,13 +122,15 @@
                     <div class="product-addcart">
                         <button id="add-to-cart" class="btn-big black">ADD TO CART</button>
                     </div>
+                <?php }else{ ?>
+                    <div>กรุณาเข้าสู่ระบบ เพื่อสั่งซื้อสินค้าหรือดูรายละเอียดราคา</div>
                 <?php } ?>
             </div>
         </div>
         <div class="clearfix"></div>
         <div id="product-content">
             <div class="inner-wrap">
-                <?php echo $product_data['body']; ?>
+                <?php echo $product_data['info']; ?>
             </div>
         </div>
     </section>
