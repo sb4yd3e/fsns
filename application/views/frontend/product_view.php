@@ -36,7 +36,7 @@
                 <?php //if ($product_data['online'] == '1') { ?>
                     <div class="product-code">
 
-                        CODE : <span id="code"><?php echo $product_attr[0]['code']; ?></span>
+                        CODE : <span id="code"><?php echo ($product_attr)?$product_attr[0]['code']:'-'; ?></span>
                     </div>
                     <?php if ($product_data['att_type'] == "color") { ?>
                         <?php if (is_login() && $product_data['online']==1) { ?>

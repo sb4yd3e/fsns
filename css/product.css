@@ -781,3 +781,23 @@
   color: #00A6C7;
   font-size: 20px;
 }
+.message_payment {
+  padding: 40px 0px;
+  font-size: 18px;
+  background: #eeeeee;
+  color: #000;
+  border-radius: 5px;
+}
+.message_payment a {
+  color: #00A6C7;
+  font-size: 20px;
+}
+.message_payment .bank-info {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  line-height: 27px;
+  color: #484848;
+}

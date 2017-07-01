@@ -40,9 +40,8 @@
                     </fieldset>
                     <fieldset>
                         <label>ช่องทางการชำระเงิน</label>
-                        <select name="gateway" class="wpcf7-text" style="width: calc(100% - 40px);" required>
-                            <option value="bank1">โอนเงินผ่านธนาคารอะไรซักอย่าง</option>
-                        </select>
+                        <?php echo form_dropdown('gateway',$payments,'','class="wpcf7-text" style="width: calc(100% - 40px);" required'); ?>
+
                     </fieldset>
                     <fieldset>
                         <label>หลักฐานการชำระ</label>

@@ -108,13 +108,13 @@ class Member extends CI_Controller
 <div>
 <a href="' . base_url('reset-password/' . $d) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
 margin-top: 20px;">ขอรหัสผ่านใหม่</a><br>
-หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเวอร์ได้<br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
 <a href="' . base_url('reset-password/' . $d) . '" target="_blank">
 ' . base_url('reset-password/' . $d) . '
 </a>
 </div>
 <div style="margin-top:50px;">
-ด้วยความเคารพ<br>FSNS Thailand
+FSNS Thailand
 </div>';
 
                 send_mail($this->input->post('email'), $this->setting_data['email_for_member'], false, 'Please reset your password.', $html);
@@ -152,7 +152,7 @@ margin-top: 20px;">รหัสผ่านใหม่คือ : ' . $newpass 
 
 </div>
 <div style="margin-top:50px;">
-ด้วยความเคารพ<br>FSNS Thailand
+FSNS Thailand
 </div>';
 
             send_mail($this->input->post('email'), $this->setting_data['email_for_member'], false, 'Your new password.', $html);
@@ -268,20 +268,20 @@ margin-top: 20px;">รหัสผ่านใหม่คือ : ' . $newpass 
 </div>
 
 <div style="margin-top:20px;">
-Dear FSNS Thailand Customer,<br><br><br>
-We noticed that you need to verify your email address. To do so,simply click the button below.<br>
-You will not be asked to log in to your FSNS Account - we are simply verifying ownership of this email address.
+เรียนสมาชิก FSNS Thailand<br><br><br>
+ขอขอบคุณที่สมัครเป็นสมาชิกกับ FSNS Thailand<br>
+เพื่อเป็นการยืนยันและเปิดใช้งานบัญชี กรุณายืนยันอีเมลโดยคลิกปุ่มด้านล่าง
 </div>
 <div>
 <a href="' . base_url('verify-email/' . $data_create['token']) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
-margin-top: 20px;">Verify your email address</a><br>
-If you can\'t click the button,Please copy link to open in your browser address.<br>
+margin-top: 20px;">ยืนยันอีเมล</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
 <a href="' . base_url('verify-email/' . $data_create['token']) . '" target="_blank">
 ' . base_url('verify-email/' . $data_create['token']) . '
 </a>
 </div>
 <div style="margin-top:50px;">
-ด้วยความเคารพ<br>FSNS Thailand
+FSNS Thailand
 </div>';
 
                 send_mail($this->input->post('email'), $this->setting_data['email_for_member'], false, 'Please verify your email address.', $html);

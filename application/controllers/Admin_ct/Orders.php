@@ -607,23 +607,23 @@ class Orders extends CI_Controller
             }
             add_order_process($id, 'status', $this->input->post('status'), $this->input->post('comment'));
 
+            $user_data = $this->orders->get_member_by_order($id);
 
-            $user_data = $this->members->get_members($user['uid']);
             $html_email = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
-	<h3 style="margin:0px; font-size: 20px;">You order is : ' . order_status($this->input->post('status')) . '</h3>
+	<h3 style="margin:0px; font-size: 20px;">คำสั่งซื้อสินค้าอัพเดท : ' . order_status($this->input->post('status')) . '</h3>
 </div>
 <div style="margin-top:20px;">
-เรียนสมาชิก FSNS Thailand<br><br><br>
-คำสั่งซื้อ #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกเปลี่ยนสถานะเป็น  ' . order_status($this->input->post('status')) . '<br><br>
+เรียนคุณ ' . $user_data['name'].'<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกเปลี่ยนสถานะเป็น  ' . order_status($this->input->post('status')) . '<br><br>
 รายละเอียด : <br>' . $this->input->post('comment') . '
 </div>
 <div>
 
 </div>
 <div style="margin-top:50px;">
-ด้วยความเคารพ<br>FSNS Thailand
+FSNS Thailand
 </div>';
-            send_mail($user_data['email'], get_email_sale($user_data['sale_id']), false, 'You order has change status : ' . order_status($this->input->post('status')), $html_email);
+            send_mail($user_data['email'], get_email_sale($user_data['staff_id']), false, 'คำสั่งซื้อสินค้าอัพเดท : ' . order_status($this->input->post('status')), $html_email);
 
 
             redirect('admin/orders/edit/' . $id);
@@ -664,21 +664,22 @@ class Orders extends CI_Controller
             add_order_process($this->input->post('oid'), 'shipping', 'แก้ไขข้อมูลที่อยู่จัดส่งสินค้า', $html);
 
 
-            $user_data = $this->members->get_members($user['uid']);
+            $user_data = $this->orders->get_member_by_order($this->input->post('oid'));
             $html_email = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
-	<h3 style="margin:0px; font-size: 20px;">You Shipping address has updated.</h3>
+	<h3 style="margin:0px; font-size: 20px;">มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า</h3>
 </div>
 <div style="margin-top:20px;">
-เรียนสมาชิก FSNS Thailand<br><br><br>
+เรียนคุณ ' . $user_data['name'].'<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($this->input->post('oid'), 6, "0", STR_PAD_LEFT) . '
 มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า 
 </div>
 <div>
 ' . $html . '
 </div>
 <div style="margin-top:50px;">
-ด้วยความเคารพ<br>FSNS Thailand
+FSNS Thailand
 </div>';
-            send_mail($user_data['email'], get_email_sale($user_data['sale_id']), false, 'Shipping address has updated.', $html_email);
+            send_mail($user_data['email'], get_email_sale($user_data['staff_id']), false, 'มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า', $html_email);
             $a = array('status' => 'success');
         } else {
             $a = array('status' => 'error');
@@ -693,6 +694,7 @@ class Orders extends CI_Controller
             exit('No direct script access allowed');
         }
         $user = $this->session->userdata('fnsn');
+        $user_data = $this->orders->get_member_by_order($id);
         if (!empty($_FILES['file']['name'])) {
             $this->load->library('upload');
             $path_parts = pathinfo($_FILES["file"]["name"]);
@@ -720,25 +722,25 @@ class Orders extends CI_Controller
                 add_order_process($id, 'document', $this->input->post('title'), $fid);
 
                 $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
-	<h3 style="margin:0px; font-size: 20px;">You have new document form order : #' . str_pad($id, 6, "0", STR_PAD_LEFT) . '</h3>
+	<h3 style="margin:0px; font-size: 20px;">คุณมีเอกสารใหม่ที่ต้องตรวจสอบ คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . '</h3>
 </div>
 <div style="margin-top:20px;">
-เรียนสมาชิก FSNS Thailand<br><br><br>
-คำสั่งซื้อ #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มมีเอกสารใหม่ที่เกี่ยวข้อง. กรุณาตรวจสอบเอกสารฉบับนี้ โดยสามารถดาวน์โหลดผ่านลิงค์ด้านล่าง.
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . '  มีเอกสารใหม่ที่เกี่ยวข้อง. กรุณาตรวจสอบเอกสารฉบับนี้ โดยสามารถดาวน์โหลดผ่านลิงค์ด้านล่าง.
 </div>
 <div>
 <a href="' . base_url('order/document/' . $id) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
 margin-top: 20px;">รายละเอียดเอกสาร</a><br>
-หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเวอร์ได้<br>
-<a href="" target="_blank">
-
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('order/document/' . $id) . '" target="_blank">
+' . base_url('order/document/' . $id) . '
 </a>
 </div>
 <div style="margin-top:50px;">
-ด้วยความเคารพ<br>FSNS Thailand
+FSNS Thailand
 </div>';
-                $user_data = $this->members->get_members($user['uid']);
-                send_mail($user_data['email'], get_email_sale($user_data['sale_id']), false, 'You have new document : ' . $this->input->post('title'), $html);
+
+                send_mail($user_data['email'], get_email_sale($user_data['staff_id']), false, 'You have new document : ' . $this->input->post('title'), $html);
                 $a = array('status' => 'success');
             } else {
                 $a = array('status' => 'error', 'message' => $this->upload->display_errors());
@@ -757,6 +759,7 @@ margin-top: 20px;">รายละเอียดเอกสาร</a><br>
             exit('No direct script access allowed');
         }
         $user = $this->session->userdata('fnsn');
+        $user_data = $this->orders->get_member_by_order($id);
         $odid = explode(',', $this->input->post('ids-product'));
         array_unique($odid);
         if ($this->input->post('type')) {
@@ -770,8 +773,42 @@ margin-top: 20px;">รายละเอียดเอกสาร</a><br>
                 add_log($user['name'], "Add shipping all product : " . $this->input->post('comment'), "order_" . $id);
                 add_order_process($id, 'shipping_all', 'จัดส่งสินค้าทิ้งหมดแล้ว', $this->input->post('comment'));
 
+                $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 20px;">คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง</h3>
+</div>
+<div style="margin-top:20px;">
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ได้มีการจัดส่งสินค้าทั้งหมดแล้ว
+</div>
+<div style="margin-top:20px;">
+<strong>รายละเอียดการจัดส่ง:</strong><br>
+<strong style="font-size: 20px; color: red;">' . $this->input->post('comment') . '</strong>
+</div>
+<div>
+<a href="' . base_url('order/view/' . $id) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">รายละเอียดการสั่งซื้อสินค้า</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('order/view/' . $id) . '" target="_blank">
+' . base_url('order/view/' . $id) . '
+</a>
+</div>
+<div style="margin-top:50px;">
+FSNS Thailand
+</div>';
+                send_mail($user_data['email'], get_email_sale($user_data['staff_id']), false, 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง', $html);
+
             } else {
                 $html = '';
+                $html_email = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 20px;">คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง</h3>
+</div>
+<div style="margin-top:20px;">
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ได้มีการจัดส่งสินค้าแล้ว
+</div>
+<div style="margin-top:20px;">
+<strong>รายละเอียดพัสดุ:</strong><br>
+<table width="100%" border="1">';
                 foreach ($odid as $oid) {
                     $param = array(
                         'status' => 'shipping',
@@ -783,6 +820,9 @@ margin-top: 20px;">รายละเอียดเอกสาร</a><br>
                         $html .= $oid . '|' . $this->input->post('comment') . ',';
 
                     }
+                    $product = $this->orders->get_order_detail($oid);
+                    $html_email .= '<tr><td><a href="' . base_url('product/' . $product['pid'] . '/' . url_title($product['product_title'])) . '" target="_blank">[' . $product['product_code'] . '] ' . $product['product_title'] . ' - ' . $product['product_value'] . '</a><br>จำนวน : ' . $product['product_qty'] . '<br> <strong>[' . $this->input->post('comment') . ']</strong></td><td>' . $product['product_spacial_amount'] . '฿</td></tr>';
+
                 }
                 if ($this->orders->check_status_shipping($id)) {
                     $this->orders->save_status(array('status' => 'shipping', 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
@@ -791,6 +831,21 @@ margin-top: 20px;">รายละเอียดเอกสาร</a><br>
                     $this->orders->update_order_product_success($id);
                 }
                 add_order_process($id, 'shipping_list', 'จัดส่งสินค้าแล้ว', $html);
+
+                $html_email .= '</table></div>
+<div>
+<a href="' . base_url('order/view/' . $id) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">รายละเอียดการสั่งซื้อสินค้า</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('order/view/' . $id) . '" target="_blank">
+' . base_url('order/view/' . $id) . '
+</a>
+</div>
+<div style="margin-top:50px;">
+FSNS Thailand
+</div>';
+                send_mail($user_data['email'], get_email_sale($user_data['staff_id']), false, 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง', $html);
+
             }
         }
         redirect('admin/orders/edit/' . $id);

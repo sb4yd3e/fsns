@@ -298,8 +298,8 @@ class Orders extends CI_Controller
 </div>
 
 <div style="margin-top:10px;margin-bottom:10px;">
-เรียนสมาชิก FSNS Thailand<br><br><br>
-รายการสั่งซื้อ #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกสร้างขึ้น. <br>สมาชิกจะได้รับอีเมลแจ้งเตือนเมื่อเมื่อคำสั่งซื้อได้รับการยืนยัน
+เรียนคุณ ' . $user_data['name'].'<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกสร้างขึ้น. <br>สมาชิกจะได้รับอีเมลแจ้งเตือนเมื่อเมื่อคำสั่งซื้อได้รับการยืนยัน
 </div>
 <div>
 <table style="border:1px solid #e0e0e0;margin: 0px;width: 100%;" border="1">
@@ -345,7 +345,7 @@ class Orders extends CI_Controller
 </table>
 </div>
 <div style="margin-top:50px;">
-    ด้วยความเคารพ<br>FSNS Thailand
+    FSNS Thailand
 </div>';
             add_order_process($id, 'status', 'pending', '');
             $this->db->trans_complete();
@@ -372,6 +372,7 @@ class Orders extends CI_Controller
             $this->session->unset_userdata('timestamp');
             $this->render_data['type'] = $user_data['account_type'];
             $this->render_data['web_title'] = 'Confirmed order success.';
+            $this->render_data['payments'] = $this->order->show_payment_gateway();
             $this->template->write_view('content', 'frontend/confirm_order', $this->render_data);
             $this->template->render();
         }
@@ -442,7 +443,7 @@ class Orders extends CI_Controller
                 </div>
                 
                 <div style="margin-top:10px;margin-bottom:10px;">
-                เรียนสมาชิก FSNS Thailand<br><br><br>
+                เรียนคุณ ' . $user_data['name'].'<br><br><br>
                 คุณได้อัพโหลดเอกสารที่เกี่ยวกับคำสั่งซื้อ #' . str_pad($oid, 6, "0", STR_PAD_LEFT) . '.
                 <br>สมาชิกสามารถตรวจสอบรายละเอียดที่เมนู My Orders
                 </div>
@@ -450,7 +451,7 @@ class Orders extends CI_Controller
                 
                 </div>
                 <div style="margin-top:50px;">
-                    ด้วยความเคารพ<br>FSNS Thailand
+                    FSNS Thailand
                 </div>';
                     send_mail($email_to, $this->setting_data['email_for_contact'], false, 'You uploaded new document.', $html_email);
 
@@ -460,8 +461,8 @@ class Orders extends CI_Controller
                 </div>
                 
                 <div style="margin-top:10px;margin-bottom:10px;">
-                เรียนสมาชิก FSNS Thailand<br><br><br>
-                คำสั่งซื้อ #' . str_pad($oid, 6, "0", STR_PAD_LEFT) . '.
+                เรียนคุณ ' . $user_data['name'].'<br><br><br>
+                คำสั่งซื้อสินค้าหมายเลข #' . str_pad($oid, 6, "0", STR_PAD_LEFT) . '.
                 <br>คุณสามารถดาวน์โหลดไฟล์ได้จากลิงค์ด้านล่าง
                 </div>
                 <div>
@@ -469,7 +470,7 @@ class Orders extends CI_Controller
 margin-top: 20px;">Download file</a><br>
                 </div>
                 <div style="margin-top:50px;">
-                    ด้วยความเคารพ<br>FSNS Thailand
+                    FSNS Thailand
                 </div>';
                         send_mail($email_to, $this->setting_data['email_for_contact'], $this->setting_data['email_for_order'], 'You uploaded new document.', $html_email);
                     }
@@ -537,7 +538,8 @@ margin-top: 20px;">Download file</a><br>
         $user = $this->session->userdata('fnsn');
         if ($render_data['order'] = $this->order->get_user_order($user['uid'], $oid)) {
             $render_data['products'] = $this->order->list_products($oid);
-            $this->load->view('frontend/print_order', $render_data);
+            $render_data['payments'] = $this->order->show_payment_gateway();
+                $this->load->view('frontend/print_order', $render_data);
 
         } else {
             redirect('');
@@ -566,12 +568,13 @@ margin-top: 20px;">Download file</a><br>
             $this->form_validation->set_rules('gateway', 'Payment gateway', 'required');
             if ($this->form_validation->run() && $this->input->is_ajax_request()) {
 //confirm payment
-                $html = 'ชื่อ : ' . $this->input->post('name') . '<br>
+                $gateway = explode('|' , $this->input->post('gateway'));
+                $html = 'Name : ' . $this->input->post('name') . '<br>
 Email : ' . $this->input->post('email') . '<br>
 Phone : ' . $this->input->post('phone') . '<br>
 Amount : ' . $this->input->post('amount') . '<br>
 Date : ' . $this->input->post('date') . '<br>
-Gateway : ' . $this->input->post('gateway') . '<br>
+Gateway : ' . payment_list()[$gateway[0]] . ' - ' . $gateway[1] . '<br>
 Message : ' . nl2br($this->input->post('note')) . '
 ';
 
@@ -587,7 +590,7 @@ Message : ' . nl2br($this->input->post('note')) . '
                     $config['allowed_types'] = 'pdf|doc|jpg|png';
                     $config['encrypt_name'] = true;
                     $params = array(
-                        'file_title' => 'Proof of payment',
+                        'file_title' => 'หลักฐานการชำระเงิน',
                         'file_date' => date('Y-m-d H:i:s'),
                         'file_size' => ($_FILES['slip']['size'] / 1024),
                         'file_type' => $extension,
@@ -622,15 +625,15 @@ Message : ' . nl2br($this->input->post('note')) . '
                 </div>
                 
                 <div style="margin-top:10px;margin-bottom:10px;">
-                เรียนสมาชิก FSNS Thailand<br><br><br>
-                คำสั่งซื้อ #' . str_pad($oid, 6, "0", STR_PAD_LEFT) . ' ได้รับคำสั่งแจ้งยืนยันการชำระเงินแล้ว. <br>
+                เรียนคุณ ' . $user_data['name'].'<br><br><br>
+                คำสั่งซื้อสินค้าหมายเลข #' . str_pad($oid, 6, "0", STR_PAD_LEFT) . ' ได้รับคำสั่งแจ้งยืนยันการชำระเงินแล้ว. <br>
                 สมาชิกจะได้รับอีเมล์ยืนยันการแจ้งชำระเงินอีครั้งเมื่อได้รับการตรวจสอบ
                 </div>
                 <div>
                 ' . $html . '
                 </div>
                 <div style="margin-top:50px;">
-                    ด้วยความเคารพ<br>FSNS Thailand
+                   FSNS Thailand
                 </div>';
                 send_mail($email_to, $this->setting_data['email_for_contact'], $this->setting_data['email_for_order'], 'Your order is confirmed payment.', $html_email);
 
@@ -640,6 +643,7 @@ Message : ' . nl2br($this->input->post('note')) . '
                     echo json_encode(array('status' => 'error', 'message' => validation_errors()));
                     exit();
                 }
+                $this->render_data['payments'] = $this->order->list_payment_gateway();
                 $user_data = $this->members->get_members($user['uid']);
                 $this->render_data['user_data'] = $user_data;
                 $this->render_data['web_title'] = 'แจ้งชำระค่าสินค้า #' . str_pad($oid, 6, "0", STR_PAD_LEFT);
