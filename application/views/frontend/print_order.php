@@ -350,6 +350,22 @@
            }
         }
 
+        .reset-this ul{
+            margin-left:20px !important;
+        }
+        .reset-this ol {
+             margin-left:0px !important;
+         }
+
+        .reset-this ul li {
+            list-style: disc  !important;
+        }
+        .reset-this ol li {
+             list-style: decimal  !important;
+         }
+        .reset-this ul li:first-child,.reset-this ol li:first-child{
+            font-size: inherit !important;
+        }
     </style>
 
 </head>
@@ -539,22 +555,36 @@
                             </div>
                             <div style="font-size:15px;font-weight:bold;margin-top:15px; margin-bottom: 15px;">
                                 <table style="border:1px solid #e0e0e0;margin: 0px; width: 100%">
+                                    <?php if ($order['order_type'] == 'personal') { ?>
+                                        <thead>
+                                        <tr>
+                                            <th align="left" style="padding: 5px;background: #eeeeee;">ธนาคาร</th>
+                                            <th align="left" style="padding: 5px;background: #eeeeee;">เลขที่บัญชี</th>
+                                            <th align="left" style="padding: 5px;background: #eeeeee;">สาขา</th>
+                                            <th align="left" style="padding: 5px;background: #eeeeee;">ประเภทบัญชี</th>
+                                        </tr>
+                                        </thead>
+                                    <?php } ?>
                                     <?php
                                     foreach ($payments as $pv) {
                                         if ($order['order_type'] == 'business' && $pv['type'] == 'business') {
-                                            echo '<tr><td>' . $pv['detail'] . '</td></tr>';
+                                            echo '<tr><td style="padding: 5px;" class="reset-this">' . $pv['detail'] . '</td></tr>';
                                         } else if ($order['order_type'] == 'personal' && $pv['type'] == 'personal') { ?>
 
                                             <tr>
-                                                <td style="padding: 5px"><?php echo payment_list()[$pv['bank_name']]; ?></td>
-                                                <td style="padding: 5px">เลขที่ : <?php echo $pv['bank_acc']; ?></td>
-                                                <td style="padding: 5px">สาขา : <?php echo $pv['bank_branch']; ?></td>
-                                                <td style="padding: 5px">ประเภท : <?php echo $pv['bank_type']; ?></td>
+                                                <td style="padding: 5px; font-weight: normal;"><?php
+                                                    $pay = payment_list();
+                                                    echo $pay[$pv['bank_name']]; ?></td>
+                                                <td style="padding: 5px; font-weight: normal;"><?php echo $pv['bank_acc']; ?></td>
+                                                <td style="padding: 5px; font-weight: normal;"><?php echo $pv['bank_branch']; ?></td>
+                                                <td style="padding: 5px; font-weight: normal;"><?php echo $pv['bank_type']; ?></td>
                                             </tr>
 
                                         <?php }
                                     } ?>
                                 </table>
+                                <div style="margin-top: 20px; font-weight: normal;">หากชำระค่าสินค้าแล้วสามารถกดแจ้งได้ที่ เมนู Member ->
+                                    <a href="<?php echo base_url('my-orders'); ?>">My Orders</a></div>
                             </div>
                             <div>
 

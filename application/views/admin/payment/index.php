@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">Payment Listing</h3>
+                <h3 class="box-title">Payment Information Listing</h3>
             	<div class="box-tools">
                     <a href="<?php echo site_url('admin/payment/add'); ?>" class="btn btn-success btn-sm">Add new gateway</a>
                 </div>
@@ -21,7 +21,7 @@
                     <?php foreach($payments as $u){ ?>
                     <tr>
 						<td><?php echo $u['title']; ?></td>
-						<td><?php echo ($u['bank_name'])?payment_list()[$u['bank_name']]:''; ?></td>
+						<td><?php $pay = payment_list(); echo ($u['bank_name'])?$pay[$u['bank_name']]:''; ?></td>
 						<td><?php echo $u['bank_acc']; ?></td>
 						<td><?php echo $u['bank_branch']; ?></td>
 						<td><?php echo $u['bank_type']; ?></td>

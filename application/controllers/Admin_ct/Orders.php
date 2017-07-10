@@ -212,7 +212,7 @@ class Orders extends CI_Controller
             $products = json_decode($this->input->post('products'));
             $coupon = $this->input->post('coupon');
             $shipping = $this->input->post('shipping');
-
+            $product_html = '';
             $total_normal = 0;
             $total_sp_discount = 0;
             $total_amount = 0;
@@ -236,7 +236,7 @@ class Orders extends CI_Controller
             } else {
                 $coupon = '';
             }
-
+            $k = 0;
             //cal order
             foreach ($products as $key => $product) {
                 $paid = str_replace('p', '', $key);
@@ -248,6 +248,7 @@ class Orders extends CI_Controller
                 }
                 $total_qty = $total_qty + $product->qty;
                 $total_product++;
+
 
                 if ($this->orders->get_order_product($id, $paid)) {
                     //save product order
@@ -275,7 +276,31 @@ class Orders extends CI_Controller
 
                 }
 
+                $product_html .= '<tr><td>' . ($k + 1) . '</td>
+    <td>' . $product_data['code'] . '</td>
+    <td>' . $product->title . ' - ' . $product_data['p_value'] . '</td>
+    <td style="font-weight: bold;">
+        ' . number_format($product->qty) . '
+    </td>
+    <td>' . number_format($product_data['normal_price'], 2) . '</td>
+    <td>';
+                $total_sub = 0;
+                if ($product_data['special_price'] > 0) {
+                    $total_sub = $total_sub + $product_data['special_price'];
+                    $product_html .= number_format(($product_data['normal_price'] - $product_data['special_price']) * $product->qty, 2);
+                } else {
+                    $product_html .= 0;
+                    $total_sub = $total_sub + $product_data['normal_price'];
+                };
+                $product_html .= '
+    </td>
+    <td>' . number_format($total_sub, 2) . '</td>
+</tr>';
+
+
+                $k++;
             }
+
             $tmp_10k = 0;
             $tmp_discount = 0;
             $total_amount = $total_normal - $total_sp_discount;
@@ -328,6 +353,65 @@ class Orders extends CI_Controller
             $user = $this->session->userdata('fnsn');
             add_log($user['name'], 'Update order.', 'order_' . $id);
             add_order_process($id, 'edit_order', 'แก้ไขข้อมูลการสั่งซื้อสินค้า', '');
+
+            $user_data = $this->orders->get_member_by_order($id);
+            $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin: 0px; font-size: 20px;">คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง</h3>
+</div>
+
+<div style="margin-top:10px;margin-bottom:10px;">
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง. <br>รายการสั่งซื้อสินค้าของคุณได้ถูกเปลี่ยนแปลงโดยมีรายละเอียดดังนี้
+</div>
+<div>
+<table style="border:1px solid #e0e0e0;margin: 0px;width: 100%;" border="1">
+                <tr style="background-color:#e0e0e0;font-weight: bold;text-align: center">
+                    <td width=\'50\' class="cart_t cart_r cart_l">ลำดับ</td>
+                    <td width=\'100\' class="cart_t cart_r cart_l">รหัสสินค้า</td>
+                    <td class="cart_t cart_r">รายการสินค้า</td>
+                    <td width=\'50\' class="cart_t cart_r">จำนวน</td>
+                    <td width=\'120\' class="cart_t cart_r">ราคา / หน่วย</td>
+                    <td width=\'50\' class="cart_t cart_r">ส่วนลด</td>
+                    <td width=\'100\' class="cart_t cart_r">จำนวนเงินรวม</td>
+                </tr>' . $product_html;
+            $html .= '
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="5" class="right font_bold cart_t cart_r cart_l cart_b" style="text-align:right">
+        รวมราคาสินค้า (บาท)
+    </td>
+    <td class="right font_bold font_discount cart_t  cart_b">' . number_format($total_sp_discount, 2) . '</td>
+    <td class="right font_bold font_total cart_t cart_r cart_l cart_b">' . number_format($total_amount, 2) . '</td>
+</tr>
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="4"></td>
+    <td colspan="2" class="line_under right font_bold">คูปองส่วนลด (บาท)</td>
+    <td class="right line_under font_bold">' . number_format($total_discount, 2) . '
+    </td>
+</tr>
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="4"></td>
+    <td colspan="2" class="line_under right font_bold">ภาษีมูลค่าเพิ่ม 7% (บาท)</td>
+    <td class="right line_under font_bold">' . number_format($total_vat, 2) . '</td>
+</tr>
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="4"></td>
+    <td colspan="2" class="line_under right font_bold">ค่าจัดส่ง (บาท)</td>
+    <td class="right line_under font_bold">' . number_format($shipping, 2) . '</td>
+</tr>
+
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="4"></td>
+    <td colspan="2" class="line_under right font_bold">รวมเป็นเงินทั้งสิ้น</td>
+    <td class="right font_total line_under font_underline font_bold">' . number_format($total, 2) . '</td>
+</tr>
+</table>
+</div>
+<div style="margin-top:50px;">
+    FSNS Thailand
+</div>';
+            send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง.', $html);
+
+
             echo json_encode(array('status' => 'success', 'debug' => $total_sp_discount));
         } else {
             if ($this->input->is_ajax_request()) {
@@ -411,12 +495,15 @@ class Orders extends CI_Controller
         $order = $this->orders->get_order($this->input->post('oid'));
         $html = '<table class="table table-bordered"><tr><td><strong>Name : </strong></td><td>' . $member['name'] . '</td></tr>';
         $html .= '<tr><td><strong>Account type : </strong></td><td>' . order_type($member['account_type']) . '</td></tr>';
-        $html .= '<tr><td><strong>Email ; </strong></td><td><a href="mailto:' . $member['email'] . '">' . $member['email'] . '</a></td></tr>';
+        $html .= '<tr><td><strong>Email : </strong></td><td><a href="mailto:' . $member['email'] . '">' . $member['email'] . '</a></td></tr>';
         $html .= '<tr><td><strong>Phone : </strong></td><td><a href="tel:' . $member['phone'] . '">' . $member['phone'] . '</a></td></tr>';
         if ($member['account_type'] == 'business') {
-            $html .= '<tr><td><strong>Business ACC : </strong></td><td>' . $member['business_number'] . '</td></tr>';
-            $html .= '<tr><td><strong>Business Name : </strong></td><td>' . $member['business_name'] . '</td></tr>';
-            $html .= '<tr><td><strong>Business Address : </strong></td><td>' . $member['business_address'] . '</td></tr>';
+            $html .= '<tr><td><strong>TAX ID : </strong></td><td>' . $member['business_number'] . '</td></tr>';
+            $html .= '<tr><td><strong>Name : </strong></td><td>' . $member['business_name'] . '</td></tr>';
+            $html .= '<tr><td><strong>Branch : </strong></td><td>' . $member['business_branch'] . '</td></tr>';
+            $html .= '<tr><td><strong>Address : </strong></td><td>' . $member['business_address'] . '</td></tr>';
+            $html .= '<tr><td><strong>Province : </strong></td><td>' . $member['business_province'] . '</td></tr>';
+            $html .= '<tr><td><strong>Note : </strong></td><td>' . $member['business_note'] . '</td></tr>';
         }
         $html .= '<tr><td colspan="2"><strong>Shipping Address</strong></td></tr>';
         $html .= '<tr><td><strong>Name : </strong></td><td>' . $order['shipping_name'] . '</td></tr>';
@@ -613,7 +700,7 @@ class Orders extends CI_Controller
 	<h3 style="margin:0px; font-size: 20px;">คำสั่งซื้อสินค้าอัพเดท : ' . order_status($this->input->post('status')) . '</h3>
 </div>
 <div style="margin-top:20px;">
-เรียนคุณ ' . $user_data['name'].'<br><br><br>
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกเปลี่ยนสถานะเป็น  ' . order_status($this->input->post('status')) . '<br><br>
 รายละเอียด : <br>' . $this->input->post('comment') . '
 </div>
@@ -623,7 +710,7 @@ class Orders extends CI_Controller
 <div style="margin-top:50px;">
 FSNS Thailand
 </div>';
-            send_mail($user_data['email'], get_email_sale($user_data['staff_id']), false, 'คำสั่งซื้อสินค้าอัพเดท : ' . order_status($this->input->post('status')), $html_email);
+            send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าอัพเดท : ' . order_status($this->input->post('status')), $html_email);
 
 
             redirect('admin/orders/edit/' . $id);
@@ -669,7 +756,7 @@ FSNS Thailand
 	<h3 style="margin:0px; font-size: 20px;">มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า</h3>
 </div>
 <div style="margin-top:20px;">
-เรียนคุณ ' . $user_data['name'].'<br><br><br>
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($this->input->post('oid'), 6, "0", STR_PAD_LEFT) . '
 มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า 
 </div>
@@ -679,7 +766,7 @@ FSNS Thailand
 <div style="margin-top:50px;">
 FSNS Thailand
 </div>';
-            send_mail($user_data['email'], get_email_sale($user_data['staff_id']), false, 'มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า', $html_email);
+            send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า', $html_email);
             $a = array('status' => 'success');
         } else {
             $a = array('status' => 'error');
@@ -740,7 +827,7 @@ margin-top: 20px;">รายละเอียดเอกสาร</a><br>
 FSNS Thailand
 </div>';
 
-                send_mail($user_data['email'], get_email_sale($user_data['staff_id']), false, 'You have new document : ' . $this->input->post('title'), $html);
+                send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'You have new document : ' . $this->input->post('title'), $html);
                 $a = array('status' => 'success');
             } else {
                 $a = array('status' => 'error', 'message' => $this->upload->display_errors());
@@ -795,7 +882,7 @@ margin-top: 20px;">รายละเอียดการสั่งซื้�
 <div style="margin-top:50px;">
 FSNS Thailand
 </div>';
-                send_mail($user_data['email'], get_email_sale($user_data['staff_id']), false, 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง', $html);
+                send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง', $html);
 
             } else {
                 $html = '';
@@ -844,7 +931,7 @@ margin-top: 20px;">รายละเอียดการสั่งซื้�
 <div style="margin-top:50px;">
 FSNS Thailand
 </div>';
-                send_mail($user_data['email'], get_email_sale($user_data['staff_id']), false, 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง', $html);
+                send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง', $html);
 
             }
         }

@@ -9,7 +9,7 @@ $(document).ready(function () {
     var select_attr = false;
 
     $('.select-color').click(function () {
-        if($(this).hasClass('disabled')){
+        if ($(this).hasClass('disabled')) {
             return false;
         }
         $('.select-color').removeClass('active');
@@ -20,12 +20,14 @@ $(document).ready(function () {
         var code = $(this).data('code');
         var aid = $(this).data('aid');
         var value = $(this).data('value');
+        var cover = $(this).data('cover');
 
         $('#product_paid').val(aid);
         $('#product_code').val(code);
         $('#product_value').val(value);
         $('#product_price').val(price);
         $('#product_spprice').val(spprice);
+        $('#product_instock').val(stock);
 
         if (parseInt(spprice) > 0) {
             $('.default-price').html('<s>' + parseInt(price).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s>');
@@ -34,7 +36,22 @@ $(document).ready(function () {
             $('.default-price').html(parseInt(price).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
             $('.special-price').html('');
         }
+        if (cover && cover !== "") {
+            var image = new Image();
+            var newSrc = '/timthumb.php?src=/uploads/products/' + cover + '&w=480&h=480&zc=2';
+            image.onload = function() {
+                    $('.big-thumb img').attr("src", newSrc);
+            };
+            image.src = newSrc;
 
+        }else{
+            var image = new Image();
+            var newSrc = '/timthumb.php?src=/uploads/products/' + $('#hidden-thumb').val() + '&w=480&h=480&zc=2';
+            image.onload = function() {
+                $('.big-thumb img').attr("src", newSrc);
+            };
+            image.src = newSrc;
+        }
         if (parseInt(stock) > 0) {
             $('#add-to-cart').html('ADD TO CART').removeAttr('disabled');
         } else {
@@ -44,18 +61,19 @@ $(document).ready(function () {
         select_attr = true;
     });
 
-    $('#select-size,#select-model').change(function(){
-        if($(this).val()==""){
+    $('#select-size,#select-model').change(function () {
+        if ($(this).val() == "") {
             select_attr = false;
             $('#product_paid').val('');
             $('#product_code').val('');
             $('#product_value').val('');
             $('#product_price').val('');
             $('#product_spprice').val('');
+            $('#product_instock').val('');
             $('.default-price').html('-');
             $('.special-price').html('');
             $('#code').html('-');
-        }else{
+        } else {
             var dt = $(this).val().split('|');
             var price = parseInt(dt[1]);
             var spprice = parseInt(dt[3]);
@@ -63,11 +81,13 @@ $(document).ready(function () {
             var code = dt[0];
             var aid = dt[4];
             var value = dt[5];
+            var cover = dt[6];
             $('#product_paid').val(aid);
             $('#product_code').val(code);
             $('#product_value').val(value);
             $('#product_price').val(price);
             $('#product_spprice').val(spprice);
+            $('#product_instock').val(stock);
 
             if (parseInt(spprice) > 0) {
                 $('.default-price').html('<s>' + price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s>');
@@ -75,6 +95,22 @@ $(document).ready(function () {
             } else {
                 $('.default-price').html(price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                 $('.special-price').html('');
+            }
+            if (cover && cover !== "") {
+                var image = new Image();
+                var newSrc = '/timthumb.php?src=/uploads/products/' + cover + '&w=480&h=480&zc=2';
+                image.onload = function() {
+                    $('.big-thumb img').attr("src", newSrc);
+                };
+                image.src = newSrc;
+
+            }else{
+                var image = new Image();
+                var newSrc = '/timthumb.php?src=/uploads/products/' + $('#hidden-thumb').val() + '&w=480&h=480&zc=2';
+                image.onload = function() {
+                    $('.big-thumb img').attr("src", newSrc);
+                };
+                image.src = newSrc;
             }
 
             if (parseInt(stock) > 0) {
@@ -126,11 +162,19 @@ $(document).ready(function () {
     $('#link-forgot-password').click(function () {
         $('#div-forgot').show();
         $('#div-login').hide();
+        $('#div-register').hide();
         return false;
     });
-    $('#link-login').click(function () {
+    $('.link-login').click(function () {
         $('#div-forgot').hide();
         $('#div-login').show();
+        $('#div-register').hide();
+        return false;
+    });
+    $('#link-register').click(function () {
+        $('#div-forgot').hide();
+        $('#div-login').hide();
+        $('#div-register').show();
         return false;
     });
 
@@ -139,7 +183,7 @@ $(document).ready(function () {
         if (!select_attr) {
             swal({
                 title: "ผิดพลาด!",
-                text: "กรุณาเลือกตัวเลือกสินค้า!",
+                text: "กรุณาเลือก (สี/ขนาด/รุ่น)",
                 type: "warning",
                 confirmButtonText: "ตกลง"
             });
@@ -153,8 +197,18 @@ $(document).ready(function () {
             var product_price = parseInt($('#product_price').val());
             var product_spprice = parseInt($('#product_spprice').val());
             var product_qty = parseInt($('#qty').val());
+            var product_stock = parseInt($('#product_instock').val());
             if (product_qty <= 0) {
                 product_qty = 1;
+            }
+            if(product_stock<=0){
+                swal({
+                    title: "ผิดพลาด!",
+                    text: "สินค้านี้ไม่มีในสต๊อก",
+                    type: "warning",
+                    confirmButtonText: "ตกลง"
+                });
+                return false;
             }
             update_product('add', product_paid, null, [product_paid, product_pid, product_title, product_code, product_value, product_price, product_spprice, product_qty, product_image]);
 
@@ -233,10 +287,10 @@ function showResponse_register(responseText) {
 
         swal({
                 title: "Register success",
-                text: "สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบเพื่อใช้งาน",
+                text: "กรุณาตรวจสอบ email ของท่าน และกดยืนยันการสมัครสมาชิกผ่านทาง email \n(Please check your email and verify member via your email)",
                 type: "success",
                 showCancelButton: false,
-                confirmButtonText: "ตกลง",
+                confirmButtonText: "Login",
                 closeOnConfirm: false,
                 closeOnCancel: false
             },
@@ -265,7 +319,7 @@ function showRequest_login() {
 function showResponse_login(responseText) {
     var obj = jQuery.parseJSON(responseText);
     if (obj.status === 'success') {
-        window.location = '/';
+        window.location = document.referrer;
     } else {
         swal({
             title: "Error",
@@ -303,9 +357,9 @@ function showResponse_forgot(responseText) {
             text: obj.message,
             html: true
         });
-        $('#submit-forgot').html('Reset password').removeAttr('disabled');
-    }
 
+    }
+    $('#submit-forgot').html('Reset password').removeAttr('disabled');
 }
 
 function showRequest_profile() {

@@ -265,8 +265,9 @@ class Orders_model extends CI_Model
     {
         $rs = $this->db->select('title,bank_name,bank_type,bank_acc,bank_branch')->where('type', 'personal')->get('payment_gateway')->result_array();
         $data = array();
+        $pay = payment_list();
         foreach ($rs as $val) {
-            $data[$val['bank_name'] . '|' . $val['bank_acc']] = payment_list()[$val['bank_name']] . ' [' . $val['bank_acc'] . ']';
+            $data[$val['bank_name'] . '|' . $val['bank_acc']] = $pay[$val['bank_name']] . ' [' . $val['bank_acc'] . ']';
         }
         return $data;
     }

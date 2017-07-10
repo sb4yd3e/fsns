@@ -33,7 +33,7 @@
 
                                     <div class="form-group">
                                         <label for="product_spacial_price" class="control-label">Product Model
-                                            Code</label>
+                                            Code*:</label>
                                         <input type="text" name="model_code"
                                                value="<?php echo set_value('title', $product['model_code']) ?>"
                                                class="form-control" id="product_model_code" required/>
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Specification PDF:</label><br>
+                                        <label>Specification PDF (Maximum 3 MB):</label><br>
                                         <div class="input-group">
                                             <input type="file" name="pdf" size="20"
                                                    class="form-control"/>
@@ -126,7 +126,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
 
-                                        <label for="product_online" class="control-label">Is online product</label><br>
+                                        <label for="product_online" class="control-label">Is Shopping Online*:</label><br>
                                         <?php echo form_dropdown('product_online', array(
                                             '1' => 'YES',
                                             '0' => 'NO'
@@ -136,7 +136,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
 
-                                        <label for="product_instock" class="control-label">Product In Stock</label><br>
+                                        <label for="product_instock" class="control-label">Product In
+                                            Stock*:</label><br>
 
                                         <?php echo form_dropdown('product_in_stock', array(
                                             '1' => 'YES',
@@ -148,7 +149,7 @@
 
                                 <div class="col-md-6">
                                     <label for="product_price" class="control-label">Default Display
-                                        Price(Baht)</label>
+                                        Price(Baht)*:</label>
                                     <div class="form-group">
                                         <input type="number" name="product_price"
                                                value="<?php echo set_value('product_price', $product['normal_price']) ?>"
@@ -157,7 +158,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="product_spacial_price" class="control-label">Default Special Display
-                                        Price(Baht)</label>
+                                        Price(Baht)*:</label>
                                     <div class="form-group">
                                         <input type="number" name="product_spacial_price"
                                                value="<?php echo set_value('product_spacial_price', $product['special_price']) ?>"
@@ -177,28 +178,37 @@
                                     <div class="thumbnail clearfix ">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Code</label>
+                                                <label>Code*:</label>
                                                 <input type="text" name="code[]"
                                                        value="<?php echo $product['model_code']; ?>"
                                                        class="form-control" required/>
                                             </div>
                                             <div class="form-group">
-                                                <label>Price</label>
-                                                <input type="text" name="price[]"
-                                                       value="<?php echo $product['normal_price']; ?>"
-                                                       class="form-control digi" required/>
+                                                <label>Photo</label>
+                                                <input type="file" name="photo[]" class="form-control"/>
                                             </div>
-                                            <div class="form-group">
-                                                <label>Special Price</label>
-                                                <input type="text" name="sp_price[]"
-                                                       value="<?php echo $product['special_price']; ?>"
-                                                       class="form-control digi"
-                                                       required/>
+                                            <div class="col-md-6 no-padding">
+                                                <div class="form-group">
+                                                    <label>Price*:</label>
+                                                    <input type="text" name="price[]"
+                                                           value="<?php echo $product['normal_price']; ?>"
+                                                           class="form-control digi" required/>
+                                                </div>
                                             </div>
+                                            <div class="col-md-6 no-padding">
+                                                <div class="form-group">
+                                                    <label>Special Price*:</label>
+                                                    <input type="text" name="sp_price[]"
+                                                           value="<?php echo $product['special_price']; ?>"
+                                                           class="form-control digi"
+                                                           required/>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
                                         </div>
                                         <div class="col-md-6" id="edit-type">
                                             <div class="form-group" id="color-boxed">
-                                                <label>Color</label>
+                                                <label>Color*:</label>
                                                 <input type="hidden" name="color[]" value="#ffffff"
                                                        id="color-selector-0" class="form-control color-input" required/>
                                                 <div class="color-box">
@@ -225,11 +235,11 @@
                                             </div>
 
                                             <div class="form-group" id="other-boxed">
-                                                <label>Value (Text)</label>
+                                                <label>Color (Text)*:</label>
                                                 <input type="text" name="value[]" class="form-control" required/>
                                             </div>
                                             <div class="form-group">
-                                                <label>Product In Stock</label>
+                                                <label>Product In Stock*:</label>
                                                 <?php echo form_dropdown('stock[]', array(
                                                     '1' => 'YES',
                                                     '0' => 'NO'
@@ -268,70 +278,87 @@
                                             <input type="hidden" name="at-id[]"
                                                    value="<?php echo isset($product_alts[0]['pa_id']) ? $product_alts[0]['pa_id'] : ""; ?>">
                                             <div class="form-group">
-                                                <label>Code</label>
+                                                <label>Code*:</label>
                                                 <input type="text" name="code[]"
                                                        value="<?php echo isset($product_alts[0]['code']) ? $product_alts[0]['code'] : ""; ?>"
                                                        class="form-control" required/>
                                             </div>
+                                            <?php if ($product_alts[0]['p_cover']) { ?>
+                                                <div class="form-groupg thumb-attr">
+                                                    <img src="<?php echo base_url() ?>timthumb.php?src=<?php echo base_url() . PRODUCT_PATH . '/' . $product_alts[0]['p_cover'] ?>&w=50"
+                                                         style="border:2px solid #eee" class="thumbnail"/>
+                                                </div>
+                                            <?php } ?>
                                             <div class="form-group">
-                                                <label>Price</label>
-                                                <input type="number" name="price[]"
-                                                       value="<?php echo isset($product_alts[0]['normal_price']) ? $product_alts[0]['normal_price'] : "0"; ?>"
-                                                       class="form-control" required/>
+                                                <label>Photo</label>
+                                                <input type="file" name="photo[]" class="form-control"/>
                                             </div>
-                                            <div class="form-group">
-                                                <label>Special Price</label>
-                                                <input type="number" name="sp_price[]"
-                                                       value="<?php echo isset($product_alts[0]['special_price']) ? $product_alts[0]['special_price'] : "0"; ?>"
-                                                       class="form-control" required/>
+
+                                            <div class="col-md-6 no-padding">
+                                                <div class="form-group">
+                                                    <label>Price*:</label>
+                                                    <input type="number" name="price[]"
+                                                           value="<?php echo isset($product_alts[0]['normal_price']) ? $product_alts[0]['normal_price'] : "0"; ?>"
+                                                           class="form-control" required/>
+                                                </div>
                                             </div>
+                                            <div class="col-md-6 no-padding">
+                                                <div class="form-group">
+                                                    <label>Special Price*:</label>
+                                                    <input type="number" name="sp_price[]"
+                                                           value="<?php echo isset($product_alts[0]['special_price']) ? $product_alts[0]['special_price'] : "0"; ?>"
+                                                           class="form-control" required/>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
                                         </div>
                                         <div class="col-md-6" id="edit-type">
 
-                                                <div class="form-group" id="color-boxed"  <?php if ($product['att_type'] != 'color') { ?> style="display: none;" <?php } ?>>
-                                                    <label>Color</label>
-                                                    <input type="hidden" name="color[]"
-                                                           value="<?php echo isset($product_alts[0]['color']) ? $product_alts[0]['color'] : "#FFFFFF"; ?>"
-                                                           id="color-selector-0"
-                                                           class="form-control color-input" required/>
-                                                    <div class="color-box">
-                                                        <div class="color-active"
-                                                             style="background-color: <?php echo isset($product_alts[0]['color']) ? $product_alts[0]['color'] : "#FFFFFF"; ?>"></div>
-                                                        <div class="color-select color-1" data-hex="#ffffff"
-                                                             data-text="สีขาว"></div>
-                                                        <div class="color-select color-2" data-hex="#1B88CB"
-                                                             data-text="สีฟ้า"></div>
-                                                        <div class="color-select color-3" data-hex="#12A144"
-                                                             data-text="สีเขียว"></div>
-                                                        <div class="color-select color-4" data-hex="#FDDA1A"
-                                                             data-text="สีเหลือง"></div>
-                                                        <div class="color-select color-5" data-hex="#0E1522"
-                                                             data-text="สีดำ"></div>
-                                                        <div class="color-select color-6" data-hex="#CD2026"
-                                                             data-text="สีแดง"></div>
-                                                        <div class="color-select color-7" data-hex="#7E2683"
-                                                             data-text="สีม่วง"></div>
-                                                        <div class="color-select color-8" data-hex="#F05C21"
-                                                             data-text="สีส้ม"></div>
-                                                        <div class="color-select-picker"></div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
+                                            <div class="form-group"
+                                                 id="color-boxed" <?php if ($product['att_type'] != 'color') { ?> style="display: none;" <?php } ?>>
+                                                <label>Color*:</label>
+                                                <input type="hidden" name="color[]"
+                                                       value="<?php echo isset($product_alts[0]['color']) ? $product_alts[0]['color'] : "#FFFFFF"; ?>"
+                                                       id="color-selector-0"
+                                                       class="form-control color-input" required/>
+                                                <div class="color-box">
+                                                    <div class="color-active"
+                                                         style="background-color: <?php echo isset($product_alts[0]['color']) ? $product_alts[0]['color'] : "#FFFFFF"; ?>"></div>
+                                                    <div class="color-select color-1" data-hex="#ffffff"
+                                                         data-text="สีขาว"></div>
+                                                    <div class="color-select color-2" data-hex="#1B88CB"
+                                                         data-text="สีฟ้า"></div>
+                                                    <div class="color-select color-3" data-hex="#12A144"
+                                                         data-text="สีเขียว"></div>
+                                                    <div class="color-select color-4" data-hex="#FDDA1A"
+                                                         data-text="สีเหลือง"></div>
+                                                    <div class="color-select color-5" data-hex="#0E1522"
+                                                         data-text="สีดำ"></div>
+                                                    <div class="color-select color-6" data-hex="#CD2026"
+                                                         data-text="สีแดง"></div>
+                                                    <div class="color-select color-7" data-hex="#7E2683"
+                                                         data-text="สีม่วง"></div>
+                                                    <div class="color-select color-8" data-hex="#F05C21"
+                                                         data-text="สีส้ม"></div>
+                                                    <div class="color-select-picker"></div>
+                                                    <div class="clearfix"></div>
                                                 </div>
+                                            </div>
 
                                             <div class="form-group" id="other-boxed">
                                                 <?php if ($product['att_type'] == 'size') { ?>
-                                                    <label>Size (Text)</label>
+                                                    <label>Size (Text)*:</label>
                                                 <?php } elseif ($product['att_type'] == 'model') { ?>
-                                                    <label>Model (Text)</label>
+                                                    <label>Model (Text)*:</label>
                                                 <?php } else { ?>
-                                                    <label>Value (Text)</label>
+                                                    <label>Color (Text)*:</label>
                                                 <?php } ?>
                                                 <input type="text" name="value[]"
                                                        value="<?php echo isset($product_alts[0]['p_value']) ? $product_alts[0]['p_value'] : ""; ?>"
                                                        class="form-control" required/>
                                             </div>
                                             <div class="form-group">
-                                                <label>Product In Stock</label>
+                                                <label>Product In Stock*:</label>
                                                 <?php echo form_dropdown('stock[]', array(
                                                     '1' => 'YES',
                                                     '0' => 'NO'
@@ -368,26 +395,42 @@
                                                 <input type="hidden" name="at-id[]"
                                                        value="<?php echo isset($pa['pa_id']) ? $pa['pa_id'] : ""; ?>">
                                                 <div class="col-md-6">
-                                                    <div class="form-group"><label>Code</label>
+                                                    <div class="form-group"><label>Code*:</label>
                                                         <input type="text" name="code[]" class="form-control"
                                                                value="<?php echo isset($pa['code']) ? $pa['code'] : ""; ?>"
                                                                required/>
                                                     </div>
-                                                    <div class="form-group"><label>Price</label>
-                                                        <input type="number" name="price[]" class="form-control"
-                                                               value="<?php echo isset($pa['normal_price']) ? $pa['normal_price'] : ""; ?>"
-                                                               required/>
+                                                    <?php if ($pa['p_cover']) { ?>
+                                                        <div class="form-group thumb-attr">
+                                                            <img src="<?php echo base_url() ?>timthumb.php?src=<?php echo base_url() . PRODUCT_PATH . '/' . $pa['p_cover'] ?>&w=50"
+                                                                 style="border:2px solid #eee" class="thumbnail"/>
+                                                        </div>
+                                                    <?php } ?>
+                                                    <div class="form-group">
+                                                        <label>Photo</label>
+                                                        <input type="file" name="photo[]" class="form-control"/>
                                                     </div>
-                                                    <div class="form-group"><label>Special Price</label>
-                                                        <input type="number" name="sp_price[]"
-                                                               value="<?php echo isset($pa['special_price']) ? $pa['special_price'] : ""; ?>"
-                                                               class="form-control"
-                                                               required/>
+
+                                                    <div class="col-md-6 no-padding">
+                                                        <div class="form-group"><label>Price*:</label>
+                                                            <input type="number" name="price[]" class="form-control"
+                                                                   value="<?php echo isset($pa['normal_price']) ? $pa['normal_price'] : ""; ?>"
+                                                                   required/>
+                                                        </div>
                                                     </div>
+                                                    <div class="col-md-6 no-padding">
+                                                        <div class="form-group"><label>Special Price*:</label>
+                                                            <input type="number" name="sp_price[]"
+                                                                   value="<?php echo isset($pa['special_price']) ? $pa['special_price'] : ""; ?>"
+                                                                   class="form-control"
+                                                                   required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <?php if ($product['att_type'] == 'color') { ?>
-                                                        <div class="form-group"><label>Color</label>
+                                                        <div class="form-group"><label>Color*:</label>
                                                             <input type="hidden" name="color[]"
                                                                    id="color-selector-<?php echo $k; ?>"
                                                                    class="form-control color-input"
@@ -421,18 +464,18 @@
 
                                                     <div class="form-group">
                                                         <?php if ($product['att_type'] == 'size') { ?>
-                                                            <label>Size (Text)</label>
+                                                            <label>Size (Text)*:</label>
                                                         <?php } elseif ($product['att_type'] == 'model') { ?>
-                                                            <label>Model (Text)</label>
+                                                            <label>Model (Text)*:</label>
                                                         <?php } else { ?>
-                                                            <label>Value (Text)</label>
+                                                            <label>Color (Text)*:</label>
                                                         <?php } ?>
                                                         <input type="text" name="value[]" class="form-control"
                                                                value="<?php echo isset($pa['p_value']) ? $pa['p_value'] : ""; ?>"
                                                                required/>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label>Product In Stock</label>
+                                                        <label>Product In Stock*:</label>
                                                         <?php echo form_dropdown('stock[]', array(
                                                             '1' => 'YES',
                                                             '0' => 'NO'

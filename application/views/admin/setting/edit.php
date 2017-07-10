@@ -41,6 +41,14 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <label for="phone_for_contact" class="control-label">Phone for contact</label>
+                    <div class="form-group">
+                        <input type="text" name="phone_for_contact"
+                               value="<?php echo($this->input->post('phone_for_contact') ? $this->input->post('phone_for_contact') : $setting['phone']); ?>"
+                               class="form-control" id="phone_for_contact" required/>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <label for="email_for_order" class="control-label">Email for Order system</label>
                     <div class="form-group">
                         <input type="text" name="email_for_order"

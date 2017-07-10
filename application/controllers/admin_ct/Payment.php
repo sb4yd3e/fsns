@@ -24,7 +24,7 @@ class Payment extends CI_Controller
         $render_data['payments'] = $this->payment->get_all_payments();
         //******* Defalut ********//
         $render_data['user'] = $this->session->userdata('fnsn');
-        $this->template->write('title', 'Payment gateway setting');
+        $this->template->write('title', 'Payment Information');
         $this->template->write('user_id', $render_data['user']['aid']);
         $this->template->write('user_name', $render_data['user']['name']);
         $this->template->write('user_group', $render_data['user']['group']);
@@ -85,7 +85,7 @@ class Payment extends CI_Controller
             $this->template->write('js', $js);
             //******* Defalut ********//
             $render_data['user'] = $this->session->userdata('fnsn');
-            $this->template->write('title', 'Payment gateway setting');
+            $this->template->write('title', 'Payment Information');
             $this->template->write('user_id', $render_data['user']['aid']);
             $this->template->write('user_name', $render_data['user']['name']);
             $this->template->write('user_group', $render_data['user']['group']);
@@ -150,7 +150,7 @@ class Payment extends CI_Controller
                 $this->template->write('js', $js);
                 //******* Defalut ********//
                 $render_data['user'] = $this->session->userdata('fnsn');
-                $this->template->write('title', 'Payment gateway setting');
+                $this->template->write('title', 'Payment Information');
                 $this->template->write('user_id', $render_data['user']['aid']);
                 $this->template->write('user_name', $render_data['user']['name']);
                 $this->template->write('user_group', $render_data['user']['group']);

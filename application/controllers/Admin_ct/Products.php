@@ -102,8 +102,8 @@ class Products extends CI_Controller
         foreach ($list as $products) {
             $no++;
             $row = array();
-            $row[] = '<img src="' . base_url('timthumb.php?src=') . base_url('uploads/products/' . $products->cover) . '&w=150&h=150&z=c" target="_blank" style="width:150px; height:auto;">';
-            $row[] = '<a href="' . base_url('product/' . $products->id . '/' . url_title($products->title)) . '" target="_blank">' . $products->title . '</a>';
+            $row[] = '<a href="' . base_url('product/' . $products->id . '/' . url_title($products->title)) . '" target="_blank"><img src="' . base_url('timthumb.php?src=') . base_url('uploads/products/' . $products->cover) . '&w=150&h=150&z=c" target="_blank" style="width:150px; height:auto;"></a>';
+            $row[] = '<a href="' . base_url('admin/products/edit/'. $products->id) . '">' . $products->title . '</a>';
             $row[] = $products->model_code;
             $row[] = $products->group;
             $row[] = is_online($products->online);
@@ -196,7 +196,27 @@ class Products extends CI_Controller
                     } else {
                         $color = '';
                     }
+                    $p_cover = '';
+                    if (!empty($_FILES['photo']['tmp_name'][$k])) {
 
+                        $config = array();
+                        $config['upload_path'] = './' . PRODUCT_PATH . '/';
+                        $config['allowed_types'] = 'gif|jpg|png';
+                        $config['encrypt_name'] = true;
+                        $this->upload->initialize($config);
+
+                        $_FILES['images[]']['name']= $_FILES['photo']['name'][$k];
+                        $_FILES['images[]']['type']= $_FILES['photo']['type'][$k];
+                        $_FILES['images[]']['tmp_name']= $_FILES['photo']['tmp_name'][$k];
+                        $_FILES['images[]']['error']= $_FILES['photo']['error'][$k];
+                        $_FILES['images[]']['size']= $_FILES['photo']['size'][$k];
+
+
+                        if ($this->upload->do_upload('images[]')) {
+                            $upload_data = $this->upload->data();
+                            $p_cover = $upload_data['file_name'];
+                        }
+                    }
 
                     $param_alt = array(
                         'pid' => $iid,
@@ -206,6 +226,7 @@ class Products extends CI_Controller
                         'special_price' => $_POST['sp_price'][$k],
                         'p_value' => $_POST['value'][$k],
                         'color' => $color,
+                        'p_cover' => $p_cover,
                         'in_stock' => $_POST['stock'][$k]
                     );
                     $this->products->add_product_alt($param_alt);
@@ -250,7 +271,7 @@ class Products extends CI_Controller
                 $("#first-box").show();
                 $("#add-at,#reset-all").show();
                 $("#color-boxed").show();
-                $("#other-boxed label").html("Value (Text)");
+                $("#other-boxed label").html("Color (Text)*:");
             });
             
             $("#add-model").click(function(){
@@ -260,7 +281,7 @@ class Products extends CI_Controller
                 $("#first-box").show();
                 $("#add-at,#reset-all").show();
                 $("#color-boxed").hide();
-                $("#other-boxed label").html("Model (Text)");
+                $("#other-boxed label").html("Model (Text)*:");
             });
             $("#add-size").click(function(){
                 $("#type").val("size");
@@ -269,7 +290,7 @@ class Products extends CI_Controller
                 $("#first-box").show();
                 $("#add-at,#reset-all").show();
                 $("#color-boxed").hide();
-                $("#other-boxed label").html("Size (Text)");
+                $("#other-boxed label").html("Size (Text)*:");
             });
             $("#reset-all").click(function(){
                 attr_type = "";
@@ -277,23 +298,23 @@ class Products extends CI_Controller
                 $("#more-att").html("");
                 $("#add-at,#reset-all").hide();
                 $("#color-boxed").show();
-                $("#other-boxed label").html("Value (Text)");
+                $("#other-boxed label").html("Color (Text)*:");
             });
             
             $(\'#add-at\').click(function(){
 var num = $(\'.sub-alt\').length + 1;
 var html = \'<div class="clearfix row sub-alt" id="at-\'+num+\'" style="padding-right: 20px;"><div class="thumbnail clearfix ">\';
 html += \'<button type="button" class="btn btn-sm btn-danger pull-right delete-at" data-id="\'+num+\'"><i class="fa fa-times-circle"></i> </button>\';
-html += \'<div class="clearfix"></div> <div class="col-md-6"> <div class="form-group"> <label>Code</label>\';
+html += \'<div class="clearfix"></div> <div class="col-md-6"> <div class="form-group"> <label>Code*:</label>\';
 html += \'<input type="text" name="code[]" value="\' + $("#product_model_code").val() + \'" class="form-control" required/>\';
-html += \'</div><div class="form-group"><label>Price</label>\';
-html += \'<input type="text" name="price[]" value="\' + $("#product_price").val() + \'" class="form-control digi" required/></div>\';
-html += \'<div class="form-group"><label>Special Price</label>\';
+html += \'</div><div class="form-group"><label>Photo</label><input type="file" name="photo[]" class="form-control"/></div><div class="col-md-6 no-padding"><div class="form-group"><label>Price*:</label>\';
+html += \'<input type="text" name="price[]" value="\' + $("#product_price").val() + \'" class="form-control digi" required/></div></div><div class="col-md-6 no-padding">\';
+html += \'<div class="form-group"><label>Special Price*:</label>\';
 html += \'<input type="text" name="sp_price[]"  value="\' + $("#product_spacial_price").val() + \'" class="form-control digi" required/>\';
-html += \'</div></div><div class="col-md-6">\';
+html += \'</div></div></div><div class="col-md-6">\';
 
 if(attr_type==="color"){
-html += \'<div class="form-group"><label>Color</label>\';
+html += \'<div class="form-group"><label>Color*:</label>\';
 html += \'<input type="hidden" name="color[]" id="color-selector-\'+num+\'" value="#ffffff" class="form-control color-input" required/>\';
 html += \'<div class="color-box"><div class="color-active"></div>\';
 html += \'<div class="color-select color-1" data-hex="#ffffff" data-text="สีขาว"></div>\';
@@ -305,16 +326,16 @@ html += \'<div class="color-select color-6" data-hex="#CD2026" data-text="สี
 html += \'<div class="color-select color-7" data-hex="#7E2683" data-text="สีม่วง"></div>\';
 html += \'<div class="color-select color-8" data-hex="#F05C21" data-text="สีส้ม"></div>\';
 html += \'<div class="color-select-picker" id="color-picker-\'+num+\'"></div><div class="clearfix"></div></div></div>\';
-html += \'<div class="form-group"><label>Value (Text)</label>\';
+html += \'<div class="form-group"><label>Color (Text)*:</label>\';
 }
 if(attr_type==="model"){
-html += \'<div class="form-group"><label>Model (Text)</label>\';
+html += \'<div class="form-group"><label>Model (Text)*:</label>\';
 }
 if(attr_type==="size"){
-html += \'<div class="form-group"><label>Size (Text)</label>\';
+html += \'<div class="form-group"><label>Size (Text)*:</label>\';
 }
 html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group">\';
-html += \'<label>Product In Stock</label><select name="stock[]" class="form-control" required>\';
+html += \'<label>Product In Stock*:</label><select name="stock[]" class="form-control" required>\';
 html += \'<option value="1">YES</option><option value="0">NO</option>\';
 html += \'</select></div></div></div></div>\';
 $(\'#more-att\').append(html);
@@ -499,6 +520,30 @@ $(function(){
                         'color' => $color,
                         'in_stock' => $_POST['stock'][$k]
                     );
+
+                    $p_cover = '';
+                    if (!empty($_FILES['photo']['tmp_name'][$k])) {
+
+                        $config = array();
+                        $config['upload_path'] = './' . PRODUCT_PATH . '/';
+                        $config['allowed_types'] = 'gif|jpg|png';
+                        $config['encrypt_name'] = true;
+                        $this->upload->initialize($config);
+
+                        $_FILES['images[]']['name']= $_FILES['photo']['name'][$k];
+                        $_FILES['images[]']['type']= $_FILES['photo']['type'][$k];
+                        $_FILES['images[]']['tmp_name']= $_FILES['photo']['tmp_name'][$k];
+                        $_FILES['images[]']['error']= $_FILES['photo']['error'][$k];
+                        $_FILES['images[]']['size']= $_FILES['photo']['size'][$k];
+
+
+                        if ($this->upload->do_upload('images[]')) {
+                            $upload_data = $this->upload->data();
+                            $param_alt['p_cover'] = $upload_data['file_name'];
+                        }
+                    }
+
+
                     if (isset($_POST['at-id'][$k]) && $_POST['at-id'][$k] != "") {
                         $this->products->save_product_alt($_POST['at-id'][$k], $param_alt);
                     } else {
@@ -548,7 +593,7 @@ $(function(){
                 $("#first-box").show();
                 $("#add-at,#reset-all").show();
                 $("#color-boxed").show();
-                $("#other-boxed label").html("Value (Text)");
+                $("#other-boxed label").html("Color (Text)*:");
             });
             
             $("#add-model").click(function(){
@@ -558,7 +603,7 @@ $(function(){
                 $("#first-box").show();
                 $("#add-at,#reset-all").show();
                 $("#color-boxed").hide();
-                $("#other-boxed label").html("Model (Text)");
+                $("#other-boxed label").html("Model (Text)*:");
             });
             $("#add-size").click(function(){
                 $("#type").val("size");
@@ -567,7 +612,7 @@ $(function(){
                 $("#first-box").show();
                 $("#add-at,#reset-all").show();
                 $("#color-boxed").hide();
-                $("#other-boxed label").html("Size (Text)");
+                $("#other-boxed label").html("Size (Text)*:");
             });
             $("#reset-all").click(function(){
                 attr_type = "";
@@ -576,11 +621,12 @@ $(function(){
                 $("#deleted-alt").val($("#deleted-alt").val()+","+$(this).data("aid"));
                 }
                 });
+                $(".thumb-attr").remove();
                 $("#box-type").show();
                 $("#more-att").html("");
                 $("#add-at,#reset-all").hide();
                 $("#color-boxed").show();
-                $("#other-boxed label").html("Value (Text)");
+                $("#other-boxed label").html("Color (Text)*:");
             });
             $(\'#add-at\').click(function(){
 var num = $(\'.sub-alt\').length + 1;
@@ -588,14 +634,14 @@ var html = \'<div class="clearfix row sub-alt" id="at-\'+num+\'" style="padding-
 html += \'<button type="button" class="btn btn-sm btn-danger pull-right delete-at" data-id="\'+num+\'"><i class="fa fa-times-circle"></i> </button>\';
 html += \'<div class="clearfix"></div> <div class="col-md-6"> <div class="form-group"> <label>Code</label>\';
 html += \'<input type="text" name="code[]" value="\' + $("#product_model_code").val() + \'" class="form-control" required/>\';
-html += \'</div><div class="form-group"><label>Price</label>\';
-html += \'<input type="text" name="price[]" value="\' + $("#product_price").val() + \'" class="form-control digi" required/></div>\';
-html += \'<div class="form-group"><label>Special Price</label>\';
+html += \'</div><div class="form-group"><label>Photo</label><input type="file" name="photo[]" class="form-control"/></div><div class="col-md-6 no-padding"><div class="form-group"><label>Price*:</label>\';
+html += \'<input type="text" name="price[]" value="\' + $("#product_price").val() + \'" class="form-control digi" required/></div></div>\';
+html += \'<div class="col-md-6 no-padding"><div class="form-group"><label>Special Price*:</label>\';
 html += \'<input type="text" name="sp_price[]"  value="\' + $("#product_spacial_price").val() + \'" class="form-control digi" required/>\';
-html += \'</div></div><div class="col-md-6">\';
+html += \'</div></div></div><div class="col-md-6">\';
 
 if(attr_type==="color"){
-html += \'<div class="form-group"><label>Color</label>\';
+html += \'<div class="form-group"><label>Color*:</label>\';
 html += \'<input type="hidden" name="color[]" id="color-selector-\'+num+\'" value="#ffffff" class="form-control color-input" required/>\';
 html += \'<div class="color-box"><div class="color-active"></div>\';
 html += \'<div class="color-select color-1" data-hex="#ffffff" data-text="สีขาว"></div>\';
@@ -607,13 +653,13 @@ html += \'<div class="color-select color-6" data-hex="#CD2026" data-text="สี
 html += \'<div class="color-select color-7" data-hex="#7E2683" data-text="สีม่วง"></div>\';
 html += \'<div class="color-select color-8" data-hex="#F05C21" data-text="สีส้ม"></div>\';
 html += \'<div class="color-select-picker" id="color-picker-\'+num+\'"></div><div class="clearfix"></div></div></div>\';
-html += \'<div class="form-group"><label>Value (Text)</label>\';
+html += \'<div class="form-group"><label>Color (Text)*:</label>\';
 }
 if(attr_type==="model"){
-html += \'<div class="form-group"><label>Model (Text)</label>\';
+html += \'<div class="form-group"><label>Model (Text)*:</label>\';
 }
 if(attr_type==="size"){
-html += \'<div class="form-group"><label>Size (Text)</label>\';
+html += \'<div class="form-group"><label>Size (Text)*:</label>\';
 }
 html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group">\';
 html += \'<label>Product In Stock</label><select name="stock[]" class="form-control" required>\';

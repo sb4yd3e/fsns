@@ -36,10 +36,13 @@ class Member extends CI_Controller
 
         $this->form_validation->set_rules('name', 'Name', 'required|max_length[100]');
         $this->form_validation->set_rules('phone', 'Phone', 'required|max_length[20]');
+        $this->form_validation->set_rules('fax', 'Fax', 'max_length[20]');
+
         $this->form_validation->set_rules('shipping_name', 'Shipping Name', 'required|max_length[200]');
         $this->form_validation->set_rules('shipping_province', 'Shipping Province', 'required');
         $this->form_validation->set_rules('shipping_zip', 'Shipping Zip', 'required|numeric|min_length[5]|max_length[5]');
         $this->form_validation->set_rules('shipping_address', 'Shipping Address', 'required');
+
         $this->form_validation->set_rules('billing_name', 'Billing Name', 'required|max_length[200]');
         $this->form_validation->set_rules('billing_province', 'Billing Province', 'required');
         $this->form_validation->set_rules('billing_zip', 'Billing Zip', 'required|numeric|min_length[5]|max_length[5]');
@@ -49,12 +52,16 @@ class Member extends CI_Controller
         if ($this->render_data['user']['account_type'] == 'business') {
             $this->form_validation->set_rules('business_name', 'Business Name', 'required|max_length[200]');
             $this->form_validation->set_rules('business_address', 'Business Address', 'required');
-            $this->form_validation->set_rules('business_number', 'Business Tax ID', 'required|max_length[30]');
+            $this->form_validation->set_rules('business_number', 'Business Tax ID', 'required|max_length[13]|min_length[13]|callback_checkid');
+            $this->form_validation->set_rules('business_province', 'Business Province', 'required|max_length[30]');
+            $this->form_validation->set_rules('business_branch', 'Business Branch', 'required|max_length[5]|min_length[5]');
+            $this->form_validation->set_rules('business_note', 'Business Note', 'max_length[200]');
         }
         if ($this->form_validation->run()) {
             $data_create = array(
                 'name' => $this->input->post('name'),
                 'phone' => $this->input->post('phone'),
+                'fax' => $this->input->post('fax'),
                 'shipping_name' => $this->input->post('shipping_name'),
                 'shipping_province' => $this->input->post('shipping_province'),
                 'shipping_zip' => $this->input->post('shipping_zip'),
@@ -62,6 +69,9 @@ class Member extends CI_Controller
                 'business_name' => $this->input->post('business_name'),
                 'business_address' => $this->input->post('business_address'),
                 'business_number' => $this->input->post('business_number'),
+                'business_branch' => $this->input->post('business_branch'),
+                'business_note' => $this->input->post('business_note'),
+                'business_province' => $this->input->post('business_province'),
                 'billing_name' => $this->input->post('billing_name'),
                 'billing_province' => $this->input->post('billing_province'),
                 'billing_zip' => $this->input->post('billing_zip'),
@@ -132,10 +142,10 @@ FSNS Thailand
     function reset_password($token = '')
     {
         if ($token == '' || !$dt = $this->members->get_user_by_token_forgot($token)) {
-            $html = 'Your link is invalid or expired.';
+            $html = 'ลิงค์ยืนยันการเปลี่ยนรหัสผ่านไม่ถูกต้องกรุณาลองใหม่';
             $status = 'danger';
         } else {
-            $newpass = $this->members->reset_password($dt);
+            $newpass = $this->members->reset_password($dt['uid']);
             $status = 'success';
             $html = '<div style="margin-top:10px;background: #013A93;padding:18px;color:#fff;">
 	<h3 style="margin:0px; font-size: 20px;">รหัสผ่านใหม่</h3>
@@ -155,8 +165,8 @@ margin-top: 20px;">รหัสผ่านใหม่คือ : ' . $newpass 
 FSNS Thailand
 </div>';
 
-            send_mail($this->input->post('email'), $this->setting_data['email_for_member'], false, 'Your new password.', $html);
-            $html = 'Your new password has send to your email success.';
+            send_mail($dt['email'], $this->setting_data['email_for_member'], false, 'Your new password.', $html);
+            $html = 'รหัสผ่านใหม่ถูกสร้างขึ้นแล้ว กรุณาตรวจสอบอีเมลเพื่อรับรหัสผ่านใหม่';
         }
         $this->render_data['status'] = $status;
         $this->render_data['html'] = $html;
@@ -187,6 +197,7 @@ FSNS Thailand
                     'type' => $userdata['account_type'],
                     'group' => 'user',
                     'name' => $userdata['name'],
+                    'business_name' => $userdata['business_name'],
                     'phone' => $userdata['phone'],
                     'staff_id' => $userdata['staff_id'],
                     'email' => $userdata['email']
@@ -203,7 +214,7 @@ FSNS Thailand
                 echo json_encode(array('status' => 'error', 'message' => validation_errors()));
                 exit();
             }
-            $this->render_data['web_title'] = 'Login';
+            $this->render_data['web_title'] = 'Member';
             $this->template->write_view('content', 'frontend/login', $this->render_data);
             $this->template->render();
         }
@@ -224,16 +235,27 @@ FSNS Thailand
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[users.email]');
         $this->form_validation->set_rules('name', 'Name', 'required|max_length[100]');
         $this->form_validation->set_rules('phone', 'Phone', 'required|max_length[20]');
+        $this->form_validation->set_rules('fax', 'Fax', 'max_length[20]');
+
         $this->form_validation->set_rules('shipping_name', 'Shipping Name', 'required|max_length[200]');
         $this->form_validation->set_rules('shipping_province', 'Shipping Province', 'required');
         $this->form_validation->set_rules('shipping_zip', 'Shipping Zip', 'required|numeric|min_length[5]|max_length[5]');
         $this->form_validation->set_rules('shipping_address', 'Shipping Address', 'required');
+
+        $this->form_validation->set_rules('billing_name', 'Billing Name', 'required|max_length[200]');
+        $this->form_validation->set_rules('billing_province', 'Billing Province', 'required');
+        $this->form_validation->set_rules('billing_zip', 'Billing Zip', 'required|numeric|min_length[5]|max_length[5]');
+        $this->form_validation->set_rules('billing_address', 'Billing Address', 'required');
+
         $this->form_validation->set_rules('g-recaptcha-response', 'Verify recaptcha', 'required|callback_captcha');
 
         if ($this->input->post('type') == 'business') {
             $this->form_validation->set_rules('business_name', 'Business Name', 'required|max_length[200]');
             $this->form_validation->set_rules('business_address', 'Business Address', 'required');
-            $this->form_validation->set_rules('business_number', 'Business Tax ID', 'required|max_length[30]');
+            $this->form_validation->set_rules('business_number', 'Business Tax ID', 'required|max_length[13]|min_length[13]|callback_checkid');
+            $this->form_validation->set_rules('business_province', 'Business Province', 'required|max_length[30]');
+            $this->form_validation->set_rules('business_branch', 'Business Branch', 'required|max_length[5]|min_length[5]');
+            $this->form_validation->set_rules('business_note', 'Business Note', 'max_length[200]');
         }
         if ($this->form_validation->run()) {
 
@@ -245,6 +267,7 @@ FSNS Thailand
                 'name' => $this->input->post('name'),
                 'is_active' => 0,
                 'phone' => $this->input->post('phone'),
+                'fax' => $this->input->post('fax'),
                 'shipping_name' => $this->input->post('shipping_name'),
                 'shipping_province' => $this->input->post('shipping_province'),
                 'shipping_zip' => $this->input->post('shipping_zip'),
@@ -252,10 +275,13 @@ FSNS Thailand
                 'business_name' => $this->input->post('business_name'),
                 'business_address' => $this->input->post('business_address'),
                 'business_number' => $this->input->post('business_number'),
-                'billing_name' => $this->input->post('shipping_name'),
-                'billing_province' => $this->input->post('shipping_province'),
-                'billing_zip' => $this->input->post('shipping_zip'),
-                'billing_address' => $this->input->post('shipping_address'),
+                'business_branch' => $this->input->post('business_branch'),
+                'business_note' => $this->input->post('business_note'),
+                'business_province' => $this->input->post('business_province'),
+                'billing_name' => $this->input->post('billing_name'),
+                'billing_province' => $this->input->post('billing_province'),
+                'billing_zip' => $this->input->post('billing_zip'),
+                'billing_address' => $this->input->post('billing_address'),
                 'register_ip' => $this->input->ip_address(),
                 'register_date' => time(),
                 'token' => md5($this->input->post('email') . time()),
@@ -311,19 +337,34 @@ FSNS Thailand
         }
     }
 
+    function checkid($id)
+    {
+        if (strlen($id) != 13) {
+            $this->form_validation->set_message('checkid', 'Please enter tax identification fill 13 digits.');
+            return false;
+        }
+        for ($i = 0, $sum = 0; $i < 12; $i++)
+            $sum += (int)($id{$i}) * (13 - $i);
+        if ((11 - ($sum % 11)) % 10 == (int)($id{12})) {
+            return true;
+        } else {
+            $this->form_validation->set_message('checkid', 'Invalid tax identification number');
+            return false;
+        }
+    }
 
     function verify_email($token = '')
     {
         if ($token == '' || !$dt = $this->members->get_user_by_token($token)) {
-            $html = 'Your link is invalid or expired.';
+            $html = 'การยืนยันอีเมล์ไม่ถูกต้องหรือเคยยืนยันแล้ว';
             $status = 'danger';
         } else {
-            $html = 'Your account is verify success. <br>Please <a href="' . base_url('login') . '">click here</a> to login.';
+            $html = 'ยืนยันอีเมลสำเร็จ. <br>กรุณา <a href="' . base_url('login') . '">คลิกที่นี่</a> เพื่อเข้าสู่ระบบ';
             $status = 'success';
         }
         $this->render_data['html'] = $html;
         $this->render_data['status'] = $status;
-        $this->render_data['web_title'] = 'Verify email address.';
+        $this->render_data['web_title'] = 'ยืนยันอีเมล';
         $this->template->write_view('content', 'frontend/verify_email', $this->render_data);
         $this->template->render();
     }

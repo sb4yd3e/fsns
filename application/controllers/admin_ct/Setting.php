@@ -27,7 +27,7 @@ class Setting extends CI_Controller
             $this->form_validation->set_rules('site_keyword', 'Site keyword', 'required');
             $this->form_validation->set_rules('site_description', 'Site description', 'required');
             $this->form_validation->set_rules('email_for_contact', 'Email for contact', 'required');
-
+            $this->form_validation->set_rules('phone_for_contact', 'Phone for contact', 'required');
             if ($this->form_validation->run()) {
                 $params = array(
                     'site_title' => $this->input->post('site_title'),
@@ -41,7 +41,8 @@ class Setting extends CI_Controller
                     'shipping_zip' => $this->input->post('shipping_zip'),
                     'shipping_inarea' => $this->input->post('shipping_inarea'),
                     'shipping_outarea' => $this->input->post('shipping_outarea'),
-                    'email_for_member' => $this->input->post('email_for_member')
+                    'email_for_member' => $this->input->post('email_for_member'),
+                    'phone' => $this->input->post('phone_for_contact')
                 );
 
                 $this->setting->update_setting($params);

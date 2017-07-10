@@ -156,8 +156,8 @@ class Members_model extends CI_Model
 
     function get_user_by_token_forgot($token)
     {
-        if ($d = $this->db->select('uid')->where('token', $token)->get('users')->row_array()) {
-            return $d['uid'];
+        if ($d = $this->db->select('uid,email')->where('token', $token)->get('users')->row_array()) {
+            return $d;
         } else {
             return false;
         }

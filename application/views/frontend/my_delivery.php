@@ -2,34 +2,34 @@
     <section class="container_12 clearfix" id="product-detail">
 
         <div id="membber-form">
-            <div align="center"><h2>My Shipping Information</h2></div>
-            <div id="empty">
-                There are no items in this cart.
-            </div>
+            <div align="center"><h2>ข้อมูลการจัดส่งสินค้า</h2></div>
+            <section class="infobox" id="empty">
+                <p>ไม่มีสินค้าในรถเข็น</p>
+            </section>
             <div id="shiping_address" class="wpcf7">
                 <div class="col-6">
                     <a href="<?php echo base_url('shopping-carts'); ?>" id="back-btn">< Back to carts</a>
                     <form method="post" action="<?php echo base_url('checkout/delivery-info'); ?>" id="shipping-form">
                         <div class="box-border">
-                            <h5>Default Shipping Address</h5>
+                            <h5>ที่อยู่สำหรับจัดส่งสินค้า(Shipping information)</h5>
                             <fieldset>
-                                <label> Name</label>
+                                <label> ชื่อ-นามสกุล(Shipping Name)<span class="required-star">*</span></label>
                                 <input type="text" name="shipping_name" class="wpcf7-text"
                                        maxlength="200" value="<?php echo $shipping['shipping_name']; ?>" required>
                             </fieldset>
 
                             <fieldset>
-                                <label> Address</label>
+                                <label> ที่อยู่(Shipping Address)<span class="required-star">*</span></label>
                                 <textarea name="shipping_address" class="wpcf7-text"
                                           rows="4"
                                           required><?php echo $shipping['shipping_address']; ?></textarea>
                             </fieldset>
                             <fieldset>
-                                <label> Province</label>
+                                <label> จังหวัด(Shipping Province)<span class="required-star">*</span></label>
                                 <?php echo form_dropdown('shipping_province', list_province(), $shipping['shipping_province'], 'class="wpcf7-text"required'); ?>
                             </fieldset>
                             <fieldset>
-                                <label> Zip</label>
+                                <label> รหัสไปรษณ์(Shipping Zip)<span class="required-star">*</span></label>
                                 <input type="text" name="shipping_zip" id="shipping_zip" class="wpcf7-text number"
                                        placeholder="Zip code"
                                        maxlength="5"
@@ -37,25 +37,25 @@
                             </fieldset>
                         </div>
                         <div class="box-border">
-                            <h5>Default Billing Address</h5>
+                            <h5>ที่อยู่สำหรับจัดส่งใบเสร็จรับเงิน(Billing Address)</h5>
                             <fieldset>
-                                <label> Name</label>
+                                <label> ชื่อ-นามสกุล(Billing Name)<span class="required-star">*</span></label>
                                 <input type="text" name="billing_name" class="wpcf7-text"
                                        maxlength="200" value="<?php echo $shipping['billing_name']?$shipping['billing_name']:$shipping['shipping_name']; ?>" required>
                             </fieldset>
 
                             <fieldset>
-                                <label> Address</label>
+                                <label> ที่อยู่(Billing Address)<span class="required-star">*</span></label>
                                 <textarea name="billing_address" class="wpcf7-text"
                                           rows="4"
                                           required><?php echo $shipping['billing_address']?$shipping['billing_address']:$shipping['shipping_address']; ?></textarea>
                             </fieldset>
                             <fieldset>
-                                <label> Province</label>
+                                <label> จังหวัด(Billing Province)<span class="required-star">*</span></label>
                                 <?php echo form_dropdown('billing_province', list_province(), ($shipping['billing_province']?$shipping['billing_province']:$shipping['shipping_province']), 'class="wpcf7-text"required'); ?>
                             </fieldset>
                             <fieldset>
-                                <label> Zip</label>
+                                <label> รหัสไปรษณ์(Billing Zip)<span class="required-star">*</span></label>
                                 <input type="text" name="billing_zip" id="billing_zip" class="wpcf7-text number"
                                        placeholder="Zip code"
                                        maxlength="5"
@@ -149,7 +149,7 @@
                 var html = '';
                 html += '';
                 if (products[i]['sp_price'] > 0) {
-                    html += '<tr><td>' + '[' + products[i]['code'] + '] ' + products[i]['title'] + ' ' + products[i]['value'] + '</td><td>' + products[i]['qty'] + '</td><td><s>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s><br>' + products[i]['sp_price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</td></tr>';
+                    html += '<tr><td>' + '[' + products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</td><td>' + products[i]['qty'] + '</td><td><s>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s><br>' + products[i]['sp_price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</td></tr>';
                     t = products[i]['sp_price'] * products[i]['qty'];
                     summery = summery + t;
                 } else {

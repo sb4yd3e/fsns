@@ -357,7 +357,7 @@ class Orders extends CI_Controller
                     $email_to = $user_data['email'];
                 }
                 send_mail($email_to, $this->setting_data['email_for_contact'], $this->setting_data['email_for_order'], 'Your order is pending.', $html);
-                echo json_encode(array('status' => 'success'));
+                echo json_encode(array('status' => 'success','id'=>$id));
             } else {
                 echo json_encode(array('status' => 'error'));
             }
@@ -568,13 +568,14 @@ margin-top: 20px;">Download file</a><br>
             $this->form_validation->set_rules('gateway', 'Payment gateway', 'required');
             if ($this->form_validation->run() && $this->input->is_ajax_request()) {
 //confirm payment
+                $pay = payment_list();
                 $gateway = explode('|' , $this->input->post('gateway'));
                 $html = 'Name : ' . $this->input->post('name') . '<br>
 Email : ' . $this->input->post('email') . '<br>
 Phone : ' . $this->input->post('phone') . '<br>
 Amount : ' . $this->input->post('amount') . '<br>
 Date : ' . $this->input->post('date') . '<br>
-Gateway : ' . payment_list()[$gateway[0]] . ' - ' . $gateway[1] . '<br>
+Gateway : ' . $pay[$gateway[0]] . ' - ' . $gateway[1] . '<br>
 Message : ' . nl2br($this->input->post('note')) . '
 ';
 

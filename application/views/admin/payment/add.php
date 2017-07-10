@@ -2,7 +2,7 @@
     <div class="col-md-8">
         <div class="box box-info">
             <div class="box-header with-border">
-                <h3 class="box-title">Add new payment gateway</h3>
+                <h3 class="box-title">Add New Payment Information</h3>
             </div>
             <?php echo form_open('admin/payment/add'); ?>
             <div class="box-body">

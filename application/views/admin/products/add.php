@@ -31,7 +31,7 @@
 
                                     <div class="form-group">
                                         <label for="product_spacial_price" class="control-label">Product Model
-                                            Code</label>
+                                            Code*:</label>
                                         <input type="text" name="model_code"
                                                value="<?php echo $this->input->post('model_code'); ?>"
                                                class="form-control" id="product_model_code" required/>
@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Specification PDF:</label><br>
+                                        <label>Specification PDF  (Maximum 3 MB):</label><br>
                                         <input type="file" name="pdf" size="20" class="form-control"/>
                                     </div>
                                 </div>
@@ -101,7 +101,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
 
-                                        <label for="product_online" class="control-label">Is online product</label><br>
+                                        <label for="product_online" class="control-label">Is Shopping Online*:</label><br>
                                         <?php echo form_dropdown('product_online', array(
                                             '1' => 'YES',
                                             '0' => 'NO'
@@ -111,7 +111,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
 
-                                        <label for="product_instock" class="control-label">Product In Stock</label><br>
+                                        <label for="product_instock" class="control-label">Product In Stock*:</label><br>
 
                                         <?php echo form_dropdown('product_in_stock', array(
                                             '1' => 'YES',
@@ -123,19 +123,19 @@
 
                                 <div class="col-md-6">
                                     <label for="product_price" class="control-label">Default Display
-                                        Price(Baht)</label>
+                                        Price(Baht)*:</label>
                                     <div class="form-group">
                                         <input type="text" name="product_price"
-                                               value="<?php echo $this->input->post('product_price'); ?>"
+                                               value="<?php echo ($this->input->post('product_price')?$this->input->post('product_price'):0); ?>"
                                                class="form-control digi" id="product_price" required/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="product_spacial_price" class="control-label">Default Special Display
-                                        Price(Baht)</label>
+                                        Price(Baht)*:</label>
                                     <div class="form-group">
                                         <input type="text" name="product_spacial_price"
-                                               value="<?php echo $this->input->post('product_spacial_price'); ?>"
+                                               value="<?php echo ($this->input->post('product_spacial_price'))?$this->input->post('product_spacial_price'):0; ?>"
                                                class="form-control digi" id="product_spacial_price" required/>
                                     </div>
                                 </div>
@@ -151,23 +151,32 @@
                                 <div class="thumbnail clearfix ">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Code</label>
+                                            <label>Code*:</label>
                                             <input type="text" name="code[]" class="form-control" required/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Price</label>
-                                            <input type="text" name="price[]" value="0" class="form-control digi"
-                                                   required/>
+                                            <label>Photo</label>
+                                            <input type="file" name="photo[]" class="form-control"/>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Special Price</label>
-                                            <input type="text" name="sp_price[]" value="0" class="form-control digi"
-                                                   required/>
+                                        <div class="col-md-6 no-padding">
+                                            <div class="form-group">
+                                                <label>Price*:</label>
+                                                <input type="text" name="price[]" value="0" class="form-control digi"
+                                                       required/>
+                                            </div>
                                         </div>
+                                        <div class="col-md-6 no-padding">
+                                            <div class="form-group">
+                                                <label>Special Price*:</label>
+                                                <input type="text" name="sp_price[]" value="0" class="form-control digi"
+                                                       required/>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
                                     </div>
                                     <div class="col-md-6" id="edit-type">
                                         <div class="form-group" id="color-boxed">
-                                            <label>Color</label>
+                                            <label>Color*:</label>
                                             <input type="hidden" name="color[]" value="#ffffff" id="color-selector-0"
                                                    class="form-control color-input" required/>
                                             <div class="color-box">
@@ -194,11 +203,11 @@
                                         </div>
 
                                         <div class="form-group" id="other-boxed">
-                                            <label>Value (Text)</label>
+                                            <label>Color (Text)*:</label>
                                             <input type="text" name="value[]" class="form-control" required/>
                                         </div>
                                         <div class="form-group">
-                                            <label>Product In Stock</label>
+                                            <label>Product In Stock*:</label>
                                             <?php echo form_dropdown('stock[]', array(
                                                 '1' => 'YES',
                                                 '0' => 'NO',
@@ -226,7 +235,8 @@
                             <button type="button" class="btn btn-danger pull-right" id="reset-all"
                                     style="display: none;"><i class="fa fa-times-circle"></i> Reset All
                             </button>
-                            <button type="button" class="btn btn-success pull-right" id="add-at" style="display: none; margin-right: 10px;">
+                            <button type="button" class="btn btn-success pull-right" id="add-at"
+                                    style="display: none; margin-right: 10px;">
                                 <i class="fa fa-plus"></i> Add more
                             </button>
 

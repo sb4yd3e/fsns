@@ -69,7 +69,11 @@
 									<div class="form-group">
 										<input type="text" name="phone" value="<?php echo ($this->input->post('phone') ? $this->input->post('phone') : $content['phone']); ?>" class="form-control" id="phone" required />
 									</div>
-									<label for="phone" class="control-label">Active user</label>
+                                    <label for="fax" class="control-label">Fax</label>
+                                    <div class="form-group">
+                                        <input type="text" name="fax" autocomplete="off" value="<?php echo ($this->input->post('fax') ? $this->input->post('fax') : $content['fax']); ?>" class="form-control" id="fax" />
+                                    </div>
+									<label for="is_active" class="control-label">Active user</label>
 									<div class="form-group">
 										<?php echo form_dropdown('is_active',array(0=>'Inactive',1=>'Active'),$content['is_active'],'class="form-control"  required'); ?>
 									</div>
@@ -108,6 +112,18 @@
 								<div class="form-group">
 									<input type="text" name="business_number" value="<?php echo ($this->input->post('business_number') ? $this->input->post('business_number') : $content['business_number']); ?>" class="form-control" id="business_number" autocomplete="off" />
 								</div>
+                                <label for="business_branch" class="control-label">Business Branch</label>
+                                <div class="form-group">
+                                    <input type="text" name="business_branch" value="<?php echo ($this->input->post('business_branch') ? $this->input->post('business_branch') : $content['business_branch']); ?>" class="form-control" id="business_branch" autocomplete="off" />
+                                </div>
+                                <label for="business_province" class="control-label">Business Province</label>
+                                <div class="form-group">
+                                    <?php echo form_dropdown('business_province',list_province(),($this->input->post('business_province') ? $this->input->post('business_province') : $content['business_province']),'class="form-control" autocomplete="off" required'); ?>
+                                </div>
+                                <label for="business_note" class="control-label">Business Note</label>
+                                <div class="form-group">
+                                    <textarea name="business_note" class="form-control" id="business_note" autocomplete="off" required><?php echo ($this->input->post('business_note') ? $this->input->post('business_note') : $content['business_note']); ?></textarea>
+                                </div>
 							</div>
 							<div role="tabpanel" class="tab-pane fade" id="logs">
 								<table class="table table-striped table-bordered">

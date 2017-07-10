@@ -148,7 +148,7 @@ materials and processes.</br></br></br></br></br></br></br>
             <h3>News</h3>
             <?php foreach ($news_list as $news): ?>
                 <!-- News Item -->
-                <li class="grid_4 omega blog-post format-standard clearfix" style="border-bottom:0">  
+                <li class="grid_4 omega blog-post format-standard" style="border-bottom:0">
                     <a href="./news/<?php echo $news['id'] ?>/<?php echo url_title($news['title']) ?>" class="post-image" title="<?php echo $news['title'] ?>">
                         <img src="./<?php echo NEWS_PATH ?>/<?php echo $news['cover'] ?>" alt="blog post with image" width="300">
                     </a>

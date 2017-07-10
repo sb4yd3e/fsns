@@ -154,7 +154,7 @@
 
   #membber-form {
     .col-6 {
-      width: 100% !important;
+      width: calc(~"100%" - 20px) !important;
       float: none !important;
       &#div-login, &#div-forgot {
         margin-bottom: 20px;
@@ -316,7 +316,7 @@
   .wpcf7-text {
     width: calc(~"100%" - 20px);
   }
-  #link-forgot-password, #link-login {
+  #link-forgot-password, .link-login {
     float: right;
   }
   .input {
@@ -373,12 +373,6 @@
 }
 
 /* ====== cart =====*/
-#empty {
-  text-align: center;
-  color: #001f3f;
-  font-size: 20px;
-  min-height: 400px;
-}
 
 #table-orders {
   .product-image {
@@ -481,7 +475,7 @@
     line-height: 1.4em;
   }
   .product .product-quantity input {
-    width: 40px;
+    width: 60px;
   }
   .product .remove-product {
     border: 0;
@@ -629,8 +623,8 @@
     font-weight: bold;
     font-size: 16px;
     padding: 9px 0px 4px 10px;
-    background: #8bbbbb;
-    color: #000;
+    background: #3a3a3a;
+    color: #ddd;
     overflow: hidden;
   }
   table {
@@ -827,7 +821,7 @@
   background: #dcfedc;
   color: #000;
   border-radius: 5px;
-  &.danger{
+  &.danger {
     background: rgba(255, 0, 4, 0.35);
   }
   a {
@@ -835,6 +829,7 @@
     font-size: 20px;
   }
 }
+
 .message_payment {
 
   padding: 40px 0px;
@@ -847,7 +842,7 @@
     color: #00A6C7;
     font-size: 20px;
   }
-  .bank-info{
+  .bank-info {
     background: #ffffff;
     padding: 20px;
     border-radius: 5px;
@@ -857,4 +852,37 @@
     color: #484848;
 
   }
+}
+
+#login-text{
+  color: #00A6C7;
+  a{
+    color: #00A6C7;
+    text-decoration: underline;
+  }
+}
+#login-text-red{
+  color: #ff0100;
+  a{
+    color: #ff0100;
+    text-decoration: underline;
+  }
+}
+#member-menu{
+  max-width: 100px;
+}
+#div-register{
+  display: none;
+  max-width: 950px;
+  margin: 0 auto;
+}
+.required-star{
+  color: #ff0100;
+}
+.span-info-text{
+  font-size: 10px;
+  color: #8c8e8e;
+}
+#partner-logo a{
+  background: #ffffff !important;
 }

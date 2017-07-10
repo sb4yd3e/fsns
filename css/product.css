@@ -136,7 +136,7 @@
     float: none;
   }
   #membber-form .col-6 {
-    width: 100% !important;
+    width: calc(100% - 20px) !important;
     float: none !important;
   }
   #membber-form .col-6#div-login,
@@ -325,7 +325,7 @@
   width: calc(100% - 20px);
 }
 #membber-form #link-forgot-password,
-#membber-form #link-login {
+#membber-form .link-login {
   float: right;
 }
 #membber-form .input {
@@ -378,12 +378,6 @@
   width: 100%;
 }
 /* ====== cart =====*/
-#empty {
-  text-align: center;
-  color: #001f3f;
-  font-size: 20px;
-  min-height: 400px;
-}
 #table-orders {
   /* This is used as the traditional .clearfix class */
   /* Column headers */
@@ -492,7 +486,7 @@
   line-height: 1.4em;
 }
 #table-orders .product .product-quantity input {
-  width: 40px;
+  width: 60px;
 }
 #table-orders .product .remove-product {
   border: 0;
@@ -616,8 +610,8 @@
   font-weight: bold;
   font-size: 16px;
   padding: 9px 0px 4px 10px;
-  background: #8bbbbb;
-  color: #000;
+  background: #3a3a3a;
+  color: #ddd;
   overflow: hidden;
 }
 #shoping-detail table th {
@@ -800,4 +794,36 @@
   font-size: 16px;
   line-height: 27px;
   color: #484848;
+}
+#login-text {
+  color: #00A6C7;
+}
+#login-text a {
+  color: #00A6C7;
+  text-decoration: underline;
+}
+#login-text-red {
+  color: #ff0100;
+}
+#login-text-red a {
+  color: #ff0100;
+  text-decoration: underline;
+}
+#member-menu {
+  max-width: 100px;
+}
+#div-register {
+  display: none;
+  max-width: 950px;
+  margin: 0 auto;
+}
+.required-star {
+  color: #ff0100;
+}
+.span-info-text {
+  font-size: 10px;
+  color: #8c8e8e;
+}
+#partner-logo a {
+  background: #ffffff !important;
 }

@@ -1,13 +1,11 @@
 <section id="content-wrapper">
     <section class="container_12 clearfix" id="product-detail">
 
-        <div id="membber-form">
-            <div align="center"><h2>My Shopping Carts</h2></div>
-            <div id="empty">
-                ไม่มีสินค้าในรถเข็น
-            </div>
-
-
+        <div id="membber-form" style="min-height: 400px;">
+            <div align="center"><h2>ตะกร้าสินค้า</h2></div>
+              <section class="infobox" id="empty">
+                <p>ไม่มีสินค้าในรถเข็น</p>
+            </section>
             <div class="shopping-cart" id="table-orders">
 
                 <div class="column-labels">
@@ -24,7 +22,7 @@
                 </div>
                 <div class="totals">
                     <div class="totals-item">
-                        <span>จำนวนทั้งหมดโดยประมาณ<br>(รวมภาษีมูลค่าเพิ่ม)</span>
+                        <span>ราคารวมภาษีมูลค่าเพิ่ม</span>
                         <div class="totals-value" id="total-simple">0</div>
                     </div>
                 </div>

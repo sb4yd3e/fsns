@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿<?php
+$user = $this->session->userdata('fnsn'); ?>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -92,13 +94,14 @@
 
                                 <li>
                                     <a href="javascript:void(0)"><?php echo strip_tags($category['title']) ?></a>
-                                        <ul>
-                                <?php foreach ($category['children'] as $subcategory): ?>
-                                    <li>
-                                        <a href="<?php echo base_url('catalog/' . $category['term_id']); ?>/<?php echo url_title($category['title']) ?>/<?php echo $subcategory['term_id'] ?>/<?php echo url_title($subcategory['title']) ?>"><?php echo $subcategory['title'] ?></a>
-                                    </li>
-                                <?php endforeach ?>
-                                    </ul></li>
+                                    <ul>
+                                        <?php foreach ($category['children'] as $subcategory): ?>
+                                            <li>
+                                                <a href="<?php echo base_url('catalog/' . $category['term_id']); ?>/<?php echo url_title($category['title']) ?>/<?php echo $subcategory['term_id'] ?>/<?php echo url_title($subcategory['title']) ?>"><?php echo $subcategory['title'] ?></a>
+                                            </li>
+                                        <?php endforeach ?>
+                                    </ul>
+                                </li>
 
 
                             <?php endforeach ?>
@@ -124,20 +127,26 @@
                     <li class="<?php echo $active_menu === 'contact' ? 'current-menu-item' : '' ?>"><a
                                 href="<?php echo base_url('contact'); ?>">Contact</a>
                     </li>
-                    <li class="<?php echo $active_menu === 'cart' ? 'current-menu-item' : '' ?>"><a href="<?php echo base_url('shopping-carts'); ?>">My Carts <span
+                    <li class="<?php echo $active_menu === 'cart' ? 'current-menu-item' : '' ?>"><a
+                                href="<?php echo base_url('shopping-carts'); ?>">My Carts <span
                                     class="cart-number"></span></a></li>
                     <?php if (is_login()) { ?>
-                    <li class="has-sub <?php echo $active_menu === 'member' ? 'current-menu-item' : '' ?>">
-                        <a href="javascript:void(0)">Member</a>
-                        <ul style="visibility: hidden; display: block; width: 200px;">
-                                                        <li><a href="<?php echo base_url('profile'); ?>">Profile</a></li>
+                        <li class="has-sub <?php echo $active_menu === 'member' ? 'current-menu-item' : '' ?>"
+                            id="member-menu">
+                            <a href="javascript:void(0)"><?php
+                                $user_name = explode(' ', $user['name']);
+                                echo $user['business_name'] ? $user['business_name'] : $user_name[0];
+                                ?></a>
+                            <ul style="visibility: hidden; display: block; width: 200px;">
+                                <li><a href="<?php echo base_url('profile'); ?>">Profile</a></li>
                                 <li><a href="<?php echo base_url('my-orders'); ?>">My Orders</a></li>
                                 <li><a href="<?php echo base_url('logout'); ?>">Logout</a></li>
 
-                        </ul>
-                    </li>
+                            </ul>
+                        </li>
                     <?php } else { ?>
-                        <li id="member-no-login"><a href="<?php echo base_url('login'); ?>">Login</a> / <a href="<?php echo base_url('register'); ?>">Register</a></li>
+                        <li id="member-no-login"><a href="<?php echo base_url('login#login'); ?>">Login</a> / <a
+                                    href="<?php echo base_url('login#register'); ?>">Register</a></li>
                     <?php } ?>
 
                 </ul>
@@ -167,18 +176,22 @@
                 <option value="contact" <?php echo $active_menu === 'contact' ? 'selected="selected"' : '' ?>>
                     Contact
                 </option>
-                <optgroup label="Member">
-                    <option value="<?php echo base_url('shopping-carts'); ?>">My Carts</option>
-                    <?php if (is_login()) { ?>
-                        <option value="<?php echo base_url('profile'); ?>">Profile</option>
-                        <option value=<?php echo base_url('my-orders'); ?>"">My Orders></option>
-                        <option value="<?php echo base_url('logout'); ?>">Logout</option>
-                    <?php } else { ?>
-                        <option value="<?php echo base_url('register'); ?>">Register</option>
-                        <option value="<?php echo base_url('login'); ?>">Login</option>
-                    <?php } ?>
+                <?php if ($user){ ?>
+                <optgroup label="<?php echo $user['business_name'] ? $user['business_name'] : $user_name[0]; ?>">
+                    <?php }else{ ?>
+                    <optgroup label="Member">
+                        <?php } ?>
+                        <option value="<?php echo base_url('shopping-carts'); ?>">My Carts</option>
+                        <?php if (is_login()) { ?>
+                            <option value="<?php echo base_url('profile'); ?>">Profile</option>
+                            <option value="<?php echo base_url('my-orders'); ?>">My Orders</option>
+                            <option value="<?php echo base_url('logout'); ?>">Logout</option>
+                        <?php } else { ?>
+                            <option value="<?php echo base_url('login#register'); ?>">Register</option>
+                            <option value="<?php echo base_url('login#login'); ?>">Login</option>
+                        <?php } ?>
 
-                </optgroup>
+                    </optgroup>
             </select><!-- responsive navigation end -->
 
         </section><!-- #nav-container end -->
@@ -214,7 +227,7 @@
         <!-- .footer-widget-container start -->
         <ul class="footer-widget-container grid_6" style="margin-bottom:0">
             <!-- .widget_tag_cloud start -->
-            <li class="widget widget_tag_cloud">
+            <li class="widget widget_tag_cloud" id="partner-logo">
                 <div class="title">
                     <h5>OUR PARTNERS</h5>
                 </div>
@@ -338,7 +351,8 @@ if ($this->banner_data['visible'] == '1' && !get_cookie('show_popup')) {
 
             <a href="<?php echo base_url('checkout/delivery-info'); ?>" class="btn-big black" id="checkout-btn">ชำระค่าสินค้า</a>
 
-            <a href="<?php echo base_url('shopping-carts'); ?>" style="margin-right: 10px;" class="btn-big btn-color" id="checkout-btn">ตะกร้าสินค้า</a>
+            <a href="<?php echo base_url('shopping-carts'); ?>" style="margin-right: 10px;" class="btn-big btn-color"
+               id="checkout-btn">ตะกร้าสินค้า</a>
         </div>
         <div class="clearfix"></div>
     </div>

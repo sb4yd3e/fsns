@@ -4,9 +4,10 @@
         <div id="membber-form">
 
             <div class="message_payment">
-                <div align="center"><strong>ขอบคุณที่สั่งซื้อสินค้ากับเรา</strong></div>
+                <div align="center"><strong>ขอขอบคุณสำหรับคำสั่งซื้อสินค้า</strong></div>
                 <div align="center" style="margin-top: 20px;">
-                    คุณจะได้รับอีเมล์ยืนยันการสั่งซื้อพร้อมมรายละเอียดการสั่งซื้อสินค้า
+                     หมายเลขการสั่งซื้อสินค้าของท่านคือ #<?php echo str_pad($this->input->get('id'), 6, "0", STR_PAD_LEFT); ?> ท่านสามารถตรวจสอบรายละเอียดการสั่งซื้อได้ที่ Email ที่ลงทะเบียนไว้<br>
+                    หรือดูรายละเอียดการสั่งซื้อของท่านได้ที่เมนู Member -> My Orders (<a href="<?php echo base_url('my-orders'); ?>">หรือกดที่นี่</a>)
                 </div>
                 <div style="padding: 20px;" align="left">
                     <?php if ($type == 'business') {
@@ -26,7 +27,9 @@
                             if ($type == 'personal' && $pv['type'] == 'personal') { ?>
 
                                 <div class="bank-info">
-                                    <?php echo payment_list()[$pv['bank_name']]; ?><br>
+                                    <?php
+                                    $pay = payment_list();
+                                    echo $pay[$pv['bank_name']]; ?><br>
                                     ชื่อบัญชี : <?php echo $pv['title']; ?><br>
                                     เลขที่บัญชี : <?php echo $pv['bank_acc']; ?><br>
                                     ประเภท : <?php echo $pv['bank_type']; ?><br>

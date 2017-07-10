@@ -159,7 +159,7 @@ class Product_category_model extends CI_Model
                         foreach ($row2['children'] as $key3 => $row3) {
                             $tmp3_array[$key3] = $row3['weight'];
                         }
-                        arsort($tmp3_array);
+                        asort($tmp3_array);
 
                         foreach ($tmp3_array as $tmpkey => $tmprow) {
                             $back3_array[] = $terms_array[$key]['children'][$key2]['children'][$tmpkey];
@@ -167,7 +167,7 @@ class Product_category_model extends CI_Model
                         $terms_array[$key]['children'][$key2]['children'] = $back3_array;
                     }
                 }
-                arsort($tmp2_array);
+                asort($tmp2_array);
                 foreach ($tmp2_array as $tmpkey => $tmprow) {
                     $back2_array[] = $terms_array[$key]['children'][$tmpkey];
                 }
@@ -175,7 +175,7 @@ class Product_category_model extends CI_Model
             }
         }
 
-        arsort($tmp_array);
+        asort($tmp_array);
         foreach ($tmp_array as $key => $row) {
             $back_array[] = $terms_array[$key];
         }
