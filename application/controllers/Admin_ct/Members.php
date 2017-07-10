@@ -17,7 +17,7 @@ class Members extends CI_Controller {
 
 
 	public function index() {
-		if(!is_group(array('admin','staff','sale'))){
+		if(!is_group(array('admin','co-sale','sale'))){
 			redirect('admin');
 			exit();
 		}
@@ -94,7 +94,7 @@ class Members extends CI_Controller {
 	}
 
 	public function ajax(){
-		if (!$this->input->is_ajax_request() || !is_group(array('admin','staff','sale'))) {
+		if (!$this->input->is_ajax_request() || !is_group(array('admin','co-sale','sale'))) {
 			exit('No direct script access allowed');
 		}
 
@@ -127,7 +127,7 @@ class Members extends CI_Controller {
 	function add()
 	{   
 		$this->load->library('form_validation');
-		if(!is_group(array('admin','staff','sale'))){
+		if(!is_group(array('admin','co-sale','sale'))){
 			redirect('admin');
 			exit();
 		}
@@ -138,16 +138,20 @@ class Members extends CI_Controller {
 		$this->form_validation->set_rules('email','Email','required|valid_email|is_unique[users.email]');
 		$this->form_validation->set_rules('name','Name','required|max_length[100]');
 		$this->form_validation->set_rules('phone','Phone','required|max_length[20]');
+        $this->form_validation->set_rules('fax', 'Fax', 'max_length[20]');
 		$this->form_validation->set_rules('shipping_name','Shipping Name','required|max_length[200]');
 		$this->form_validation->set_rules('shipping_province','Shipping Province','required');
 		$this->form_validation->set_rules('shipping_zip','Shipping Zip','required|numeric|min_length[5]|max_length[5]');
-		$this->form_validation->set_rules('shippipng_address','Shipping Address','required');
+		$this->form_validation->set_rules('shipping_address','Shipping Address','required');
 		$this->form_validation->set_rules('is_active','Active member','required');
 
 		if($this->input->post('account_type')=='business'){
-			$this->form_validation->set_rules('business_name','Business Name','required|max_length[200]');
-			$this->form_validation->set_rules('business_address','Business Address','required');
-			$this->form_validation->set_rules('business_number','Federal tax identification number','required|max_length[30]');
+            $this->form_validation->set_rules('business_name', 'Business Name', 'required|max_length[200]');
+            $this->form_validation->set_rules('business_address', 'Business Address', 'required');
+            $this->form_validation->set_rules('business_number', 'Business Tax ID', 'required|max_length[13]|min_length[13]|callback_checkid');
+            $this->form_validation->set_rules('business_province', 'Business Province', 'required|max_length[30]');
+            $this->form_validation->set_rules('business_branch', 'Business Branch', 'required|max_length[5]|min_length[5]');
+            $this->form_validation->set_rules('business_note', 'Business Note', 'max_length[200]');
 		}
 		if($this->form_validation->run())     
 		{   
@@ -159,20 +163,28 @@ class Members extends CI_Controller {
 				'name' => $this->input->post('name'),
 				'is_active' => $this->input->post('is_active'),
 				'phone' => $this->input->post('phone'),
+                'fax' => $this->input->post('fax'),
 				'shipping_name' => $this->input->post('shipping_name'),
 				'shipping_province' => $this->input->post('shipping_province'),
 				'shipping_zip' => $this->input->post('shipping_zip'),
 				'shipping_address' => $this->input->post('shipping_address'),
+                'billing_name' => $this->input->post('shipping_name'),
+                'billing_province' => $this->input->post('shipping_province'),
+                'billing_zip' => $this->input->post('shipping_zip'),
+                'billing_address' => $this->input->post('shipping_address'),
 				'business_name' => $this->input->post('business_name'),
 				'business_address' => $this->input->post('business_address'),
 				'business_number' => $this->input->post('business_number'),
+                'business_branch' => $this->input->post('business_branch'),
+                'business_note' => $this->input->post('business_note'),
+                'business_province' => $this->input->post('business_province'),
 				'register_ip' => $this->input->ip_address(),
 				'register_date' => time(),
 				'token' => md5($this->input->post('email').time()),
 				);
 
 			//for Seller
-			if(is_group('sale') && $this->input->post('staff_id')!="0"){
+			if(is_group('sale')){
 				$data_create['staff_id'] = $render_data['user']['aid'];
 			}
 
@@ -227,7 +239,7 @@ class Members extends CI_Controller {
 		$content = $this->members->get_members($id);
 		$render_data['content'] = $content;
 		
-		if(!is_group(array('admin','staff','sale')) || !$content){
+		if(!is_group(array('admin','co-sale','sale')) || !$content){
 			redirect('admin');
 			exit();
 		}
@@ -239,15 +251,19 @@ class Members extends CI_Controller {
 		
 		$this->form_validation->set_rules('name','Name','required|max_length[100]');
 		$this->form_validation->set_rules('phone','Phone','required|max_length[20]');
+        $this->form_validation->set_rules('fax', 'Fax', 'max_length[20]');
 		$this->form_validation->set_rules('shipping_name','Shipping Name','required|max_length[200]');
 		$this->form_validation->set_rules('shipping_province','Shipping Province','required');
 		$this->form_validation->set_rules('shipping_zip','Shipping Zip','required|numeric|min_length[5]|max_length[5]');
 		$this->form_validation->set_rules('shipping_address','Shipping Address','required');
 		$this->form_validation->set_rules('is_active','Active member','required');
 		if($this->input->post('account_type')=='business'){
-			$this->form_validation->set_rules('business_name','Business Name','required|max_length[200]');
-			$this->form_validation->set_rules('business_address','Business Address','required');
-			$this->form_validation->set_rules('business_number','Federal tax identification number','required|max_length[30]');
+            $this->form_validation->set_rules('business_name', 'Business Name', 'required|max_length[200]');
+            $this->form_validation->set_rules('business_address', 'Business Address', 'required');
+            $this->form_validation->set_rules('business_number', 'Business Tax ID', 'required|max_length[13]|min_length[13]|callback_checkid');
+            $this->form_validation->set_rules('business_province', 'Business Province', 'required|max_length[30]');
+            $this->form_validation->set_rules('business_branch', 'Business Branch', 'required|max_length[5]|min_length[5]');
+            $this->form_validation->set_rules('business_note', 'Business Note', 'max_length[200]');
 		}
 		if($this->input->post('password')){
 			$this->form_validation->set_rules('password','Password','required|min_length[6]|max_length[50]');
@@ -264,19 +280,26 @@ class Members extends CI_Controller {
 				'name' => $this->input->post('name'),
 				'is_active' => $this->input->post('is_active'),
 				'phone' => $this->input->post('phone'),
+                'fax' => $this->input->post('fax'),
 				'shipping_name' => $this->input->post('shipping_name'),
 				'shipping_province' => $this->input->post('shipping_province'),
 				'shipping_zip' => $this->input->post('shipping_zip'),
 				'business_name' => $this->input->post('business_name'),
 				'business_address' => $this->input->post('business_address'),
 				'business_number' => $this->input->post('business_number'),
-				'shipping_address' => $this->input->post('shipping_address')
+				'shipping_address' => $this->input->post('shipping_address'),
+                'business_branch' => $this->input->post('business_branch'),
+                'business_note' => $this->input->post('business_note'),
+                'business_province' => $this->input->post('business_province')
 				);
 
 			//for Seller
-			if(is_group('sale') && $this->input->post('staff_id')!="0"){
+			if(is_group('sale')){
 				$data_update['staff_id'] = $render_data['user']['aid'];
 			}
+
+			//transfer order to new sale
+            $this->members->transfer_order($content['staff_id'],$this->input->post('staff_id'));
 
 			if($this->input->post('password')){
 				$data_update['password'] = md5($this->input->post('password'));
@@ -332,21 +355,21 @@ class Members extends CI_Controller {
 	}
 
 
-	// function delete($id){
-	// 	if(!is_group(array('admin'))){
-	// 		redirect('admin');
-	// 		exit();
-	// 	}
-	// 	$news = $this->news->get_news($id);
-	// 	if(isset($news['id']))
-	// 	{
-	// 		$this->news->delete_news($id);
-	// 		redirect('admin/news?delete=true');
-	// 	}
-	// 	else{
-	// 		show_error('The admin you are trying to delete does not exist.');
-	// 	}
-	// }
+    function checkid($id)
+    {
+        if (strlen($id) != 13) {
+            $this->form_validation->set_message('checkid', 'Please enter tax identification fill 13 digits.');
+            return false;
+        }
+        for ($i = 0, $sum = 0; $i < 12; $i++)
+            $sum += (int)($id{$i}) * (13 - $i);
+        if ((11 - ($sum % 11)) % 10 == (int)($id{12})) {
+            return true;
+        } else {
+            $this->form_validation->set_message('checkid', 'Invalid tax identification number');
+            return false;
+        }
+    }
 
 }
 

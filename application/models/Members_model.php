@@ -137,7 +137,7 @@ class Members_model extends CI_Model
 
     function get_all_admins()
     {
-        return $this->db->get('admins')->result_array();
+        return $this->db->where('admin_group','sale')->get('admins')->result_array();
     }
 
     function get_list_members()
@@ -156,8 +156,8 @@ class Members_model extends CI_Model
 
     function get_user_by_token_forgot($token)
     {
-        if ($d = $this->db->select('uid')->where('token', $token)->get('users')->row_array()) {
-            return $d['uid'];
+        if ($d = $this->db->select('uid,email')->where('token', $token)->get('users')->row_array()) {
+            return $d;
         } else {
             return false;
         }
@@ -179,5 +179,8 @@ class Members_model extends CI_Model
         $pass = rand(100000, 10000000);
         $this->db->where('uid', $uid)->update('users', array('password' => md5($pass), 'token' => time()));
         return $pass;
+    }
+    function transfer_order($old_id,$new_id){
+        return $this->db->where('sale_id',$old_id)->where('order_status !=','success')->where('order_status !=','cancel')->update('orders',array('sale_id'=>$new_id));
     }
 }

@@ -37,10 +37,12 @@
 											?>
 										</select>
 									</div>
-									<label for="staf_id" class="control-label">Seller Staff</label>
+									<label for="staff_id" class="control-label">Sale</label>
 									<div class="form-group">
 										<select name="staff_id" autocomplete="off" class="form-control">
-											<option value="0">No Seller Staff</option>
+                                            <?php if(!is_group('sale')){ ?>
+                                                <option value="0">No Sale</option>
+                                            <?php } ?>
 											<?php 
 											foreach($all_admins as $admin)
 											{
@@ -67,6 +69,10 @@
 									<div class="form-group">
 										<input type="text" name="phone" autocomplete="off" value="<?php echo $this->input->post('phone'); ?>" class="form-control" id="phone" required />
 									</div>
+                                    <label for="phone" class="control-label">Fax</label>
+                                    <div class="form-group">
+                                        <input type="text" name="fax" autocomplete="off" value="<?php echo $this->input->post('fax'); ?>" class="form-control" id="fax" />
+                                    </div>
 									<label for="phone" class="control-label">Active user</label>
 									<div class="form-group">
 										<?php echo form_dropdown('is_active',array(0=>'Inactive',1=>'Active'),$this->input->post('is_active'),'class="form-control" autocomplete="off" required'); ?>
@@ -102,10 +108,22 @@
 								<div class="form-group">
 									<textarea name="business_address" class="form-control" id="business_address" autocomplete="off"><?php echo $this->input->post('business_address'); ?></textarea>
 								</div>
-								<label for="business_number" class="control-label">Federal tax identification number</label>
+								<label for="business_number" class="control-label">Business Tax ID</label>
 								<div class="form-group">
 									<input type="text" name="business_number" value="<?php echo $this->input->post('business_number'); ?>" class="form-control" id="business_number" autocomplete="off" />
 								</div>
+                                <label for="business_branch" class="control-label">Business Branch</label>
+                                <div class="form-group">
+                                    <input type="text" name="business_branch" value="<?php echo $this->input->post('business_branch'); ?>" class="form-control" id="business_branch" autocomplete="off" />
+                                </div>
+                                <label for="business_province" class="control-label">Business Province</label>
+                                <div class="form-group">
+                                    <?php echo form_dropdown('business_province',list_province(),$this->input->post('business_province'),'class="form-control" autocomplete="off" required'); ?>
+                                </div>
+                                <label for="business_note" class="control-label">Business Note</label>
+                                <div class="form-group">
+                                    <textarea name="business_note" class="form-control" id="business_note" autocomplete="off" required><?php echo $this->input->post('business_note'); ?></textarea>
+                                </div>
 							</div>
 						</div>
 

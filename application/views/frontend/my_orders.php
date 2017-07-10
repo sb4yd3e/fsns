@@ -1,11 +1,13 @@
 <section id="content-wrapper">
     <section class="container_12 clearfix" id="product-detail">
 
-        <div id="membber-form">
+        <div id="membber-form" style="min-height: 400px;">
+            <div align="center"><h2>รายการสั่งซื้อสินค้าของฉัน</h2></div>
             <?php if (!$orders) { ?>
-                <div id="empty">
-                    No order history
-                </div>
+
+                <section class="infobox" id="empty">
+                    <p>ไม่มีรายการสั่งซื้อสินค้า</p>
+                </section>
             <?php } else { ?>
                 <div id="shiping_address">
                     <table class="table" id="table-history">
@@ -14,7 +16,7 @@
                             <th>วันที่</th>
                             <th>การสั่งซื้อ</th>
                             <th>จำนวน</th>
-                            <th>ยอดชำระ</th>
+                            <th>ยอดชำระ(บาท)</th>
                             <th>สถานะ</th>
                             <th></th>
                         </tr>
@@ -28,7 +30,7 @@
                                 </td>
                                 <td><?php echo number_format($order['total_qty']); ?></td>
                                 <td>
-                                    <?php echo number_format($order['total_amount']); ?>
+                                    <?php echo number_format($order['total_amount'],2); ?>
                                 </td>
                                 <td><?php echo order_status($order['order_status']); ?></td>
                                 <td align="right">
@@ -40,8 +42,9 @@
                                         href="<?php echo base_url('order/document/' . $order['oid']); ?>">
                                             [เอกสาร] </a>
                                     <?php } ?>
-                                    <a href="<?php echo base_url('order/view/' . $order['oid']); ?>" target="_blank">[รายละเอียด]</a>
                                     <a href="<?php echo base_url('order/print/' . $order['oid']); ?>" target="_blank">[ใบสั่งซื้อ]</a>
+                                    <a href="<?php echo base_url('order/view/' . $order['oid']); ?>" target="_blank">[ประวัติ]</a>
+
                                 </td>
                             </tr>
                         <?php } ?>

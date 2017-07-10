@@ -14,7 +14,7 @@
 
             <?php foreach ($news_list as $news): ?>
                 <!-- News Item -->
-                <li class="grid_4 omega blog-post format-standard clearfix">  
+                <li class="grid_4 omega blog-post format-standard">
                     <a href="./news/<?php echo $news['id'] ?>/<?php echo url_title($news['title']) ?>" class="post-image" title="<?php echo $news['title'] ?>">
                         <img src="./<?php echo NEWS_PATH ?>/<?php echo $news['cover'] ?>" alt="blog post with image" width="300">
                     </a>

@@ -32,10 +32,10 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label>Seller Staff</label>
-                    <select name="staf_id" id="staff_id" aria-controls="table" autocomplete="off" class="form-control input-sm">
+                    <label>Sale Support</label>
+                    <select name="staff_id" id="staff_id" aria-controls="table" autocomplete="off" class="form-control input-sm">
                         <option value="">All</option>
-                        <option value="0">No Seller Staff</option>
+                        <option value="0">No Sale Support</option>
                         <?php 
                         foreach($all_admins as $admin)
                         {
@@ -65,7 +65,7 @@
                         <th>Email</th>
                         <th>Name</th>
                         <th>Account Type</th>
-                        <th>Seller Staff</th>
+                        <th>Sale Support</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>

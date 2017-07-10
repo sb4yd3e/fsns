@@ -8,12 +8,13 @@ class Orders extends CI_Controller
     {
         parent::__construct();
         $this->template->set_template('admin');
+        $this->load->model('members_model', 'members');
         $this->load->model('Orders_model', 'orders');
     }
 
     public function index()
     {
-        if (!is_group(array('admin', 'staff', 'sale'))) {
+        if (!is_group(array('admin', 'co-sale', 'sale'))) {
             redirect('admin');
             exit();
         }
@@ -40,7 +41,6 @@ class Orders extends CI_Controller
                     data:function(data){
                         data.status = $("#status").val();
                         data.order_type = $("#order_type").val();
-                        data.uid = $("#uid").val();
                     }
                 },
 				"columnDefs": [
@@ -62,7 +62,8 @@ class Orders extends CI_Controller
             $("#status").change(function(){
                 var table = $("#table").DataTable();
                 table.ajax.reload();
-            });$("#ordet_type").change(function(){
+            });
+            $("#order_type").change(function(){
                 var table = $("#table").DataTable();
                 table.ajax.reload();
             });$("#uid").change(function(){
@@ -141,12 +142,7 @@ class Orders extends CI_Controller
             $js .= '$.notify("Save order success.", "success");';
         }
         $this->load->model("Members_model", "members");
-        $members = $this->members->get_list_members();
-        $arr_member = array('' => 'Show All');
-        foreach ($members as $member) {
-            $arr_member[$member['uid']] = $member['name'];
-        }
-        $render_data['members'] = $arr_member;
+
         $this->template->write('js', $js);
         $this->template->write_view('content', 'admin/orders/index', $render_data);
         $this->template->render();
@@ -154,7 +150,7 @@ class Orders extends CI_Controller
 
     public function ajax()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
 
@@ -168,10 +164,11 @@ class Orders extends CI_Controller
             $row[] = '#' . sprintf("%06d", $order->oid);
             $row[] = '<a href="#" class="ajax-user" data-uid="' . $order->uid . '" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . $order->shipping_name . '</a>';
             $row[] = order_type($order->order_type);
+            $row[] = get_sale_name($order->sale_id);
             $row[] = '<a href="#" class="ajax-product" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . number_format($order->total_product) . '</a>';
             $row[] = '<a href="#" class="ajax-status" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal">' . order_status($order->order_status) . '</a>';
             $row[] = number_format($order->total_amount, 2);
-            if (is_group(array('admin', 'staff'))) {
+            if (is_group(array('admin', 'co-sale'))) {
                 $row[] = '<a href="#" class="label label-info ajax-file" data-uid="' . $order->uid . '" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal"><i class="fa fa-download"></i> ดาวน์โหลดเอกสารลูกค้า</a> 
             <a href="' . base_url('admin/orders/edit/' . $order->oid) . '" class="label label-warning"><i class="fa fa-pencil"></i> แก้ไขคำสั่งซื้อ</a> 
             ';
@@ -194,7 +191,7 @@ class Orders extends CI_Controller
     function edit($id = '')
     {
         $this->load->library('form_validation');
-        if (!is_group(array('admin', 'staff', 'sale'))) {
+        if (!is_group(array('admin', 'co-sale', 'sale'))) {
             redirect('admin');
             exit();
         }
@@ -215,7 +212,7 @@ class Orders extends CI_Controller
             $products = json_decode($this->input->post('products'));
             $coupon = $this->input->post('coupon');
             $shipping = $this->input->post('shipping');
-
+            $product_html = '';
             $total_normal = 0;
             $total_sp_discount = 0;
             $total_amount = 0;
@@ -239,7 +236,7 @@ class Orders extends CI_Controller
             } else {
                 $coupon = '';
             }
-
+            $k = 0;
             //cal order
             foreach ($products as $key => $product) {
                 $paid = str_replace('p', '', $key);
@@ -251,6 +248,7 @@ class Orders extends CI_Controller
                 }
                 $total_qty = $total_qty + $product->qty;
                 $total_product++;
+
 
                 if ($this->orders->get_order_product($id, $paid)) {
                     //save product order
@@ -278,7 +276,31 @@ class Orders extends CI_Controller
 
                 }
 
+                $product_html .= '<tr><td>' . ($k + 1) . '</td>
+    <td>' . $product_data['code'] . '</td>
+    <td>' . $product->title . ' - ' . $product_data['p_value'] . '</td>
+    <td style="font-weight: bold;">
+        ' . number_format($product->qty) . '
+    </td>
+    <td>' . number_format($product_data['normal_price'], 2) . '</td>
+    <td>';
+                $total_sub = 0;
+                if ($product_data['special_price'] > 0) {
+                    $total_sub = $total_sub + $product_data['special_price'];
+                    $product_html .= number_format(($product_data['normal_price'] - $product_data['special_price']) * $product->qty, 2);
+                } else {
+                    $product_html .= 0;
+                    $total_sub = $total_sub + $product_data['normal_price'];
+                };
+                $product_html .= '
+    </td>
+    <td>' . number_format($total_sub, 2) . '</td>
+</tr>';
+
+
+                $k++;
             }
+
             $tmp_10k = 0;
             $tmp_discount = 0;
             $total_amount = $total_normal - $total_sp_discount;
@@ -331,6 +353,65 @@ class Orders extends CI_Controller
             $user = $this->session->userdata('fnsn');
             add_log($user['name'], 'Update order.', 'order_' . $id);
             add_order_process($id, 'edit_order', 'แก้ไขข้อมูลการสั่งซื้อสินค้า', '');
+
+            $user_data = $this->orders->get_member_by_order($id);
+            $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin: 0px; font-size: 20px;">คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง</h3>
+</div>
+
+<div style="margin-top:10px;margin-bottom:10px;">
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง. <br>รายการสั่งซื้อสินค้าของคุณได้ถูกเปลี่ยนแปลงโดยมีรายละเอียดดังนี้
+</div>
+<div>
+<table style="border:1px solid #e0e0e0;margin: 0px;width: 100%;" border="1">
+                <tr style="background-color:#e0e0e0;font-weight: bold;text-align: center">
+                    <td width=\'50\' class="cart_t cart_r cart_l">ลำดับ</td>
+                    <td width=\'100\' class="cart_t cart_r cart_l">รหัสสินค้า</td>
+                    <td class="cart_t cart_r">รายการสินค้า</td>
+                    <td width=\'50\' class="cart_t cart_r">จำนวน</td>
+                    <td width=\'120\' class="cart_t cart_r">ราคา / หน่วย</td>
+                    <td width=\'50\' class="cart_t cart_r">ส่วนลด</td>
+                    <td width=\'100\' class="cart_t cart_r">จำนวนเงินรวม</td>
+                </tr>' . $product_html;
+            $html .= '
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="5" class="right font_bold cart_t cart_r cart_l cart_b" style="text-align:right">
+        รวมราคาสินค้า (บาท)
+    </td>
+    <td class="right font_bold font_discount cart_t  cart_b">' . number_format($total_sp_discount, 2) . '</td>
+    <td class="right font_bold font_total cart_t cart_r cart_l cart_b">' . number_format($total_amount, 2) . '</td>
+</tr>
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="4"></td>
+    <td colspan="2" class="line_under right font_bold">คูปองส่วนลด (บาท)</td>
+    <td class="right line_under font_bold">' . number_format($total_discount, 2) . '
+    </td>
+</tr>
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="4"></td>
+    <td colspan="2" class="line_under right font_bold">ภาษีมูลค่าเพิ่ม 7% (บาท)</td>
+    <td class="right line_under font_bold">' . number_format($total_vat, 2) . '</td>
+</tr>
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="4"></td>
+    <td colspan="2" class="line_under right font_bold">ค่าจัดส่ง (บาท)</td>
+    <td class="right line_under font_bold">' . number_format($shipping, 2) . '</td>
+</tr>
+
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="4"></td>
+    <td colspan="2" class="line_under right font_bold">รวมเป็นเงินทั้งสิ้น</td>
+    <td class="right font_total line_under font_underline font_bold">' . number_format($total, 2) . '</td>
+</tr>
+</table>
+</div>
+<div style="margin-top:50px;">
+    FSNS Thailand
+</div>';
+            send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง.', $html);
+
+
             echo json_encode(array('status' => 'success', 'debug' => $total_sp_discount));
         } else {
             if ($this->input->is_ajax_request()) {
@@ -406,7 +487,7 @@ class Orders extends CI_Controller
 
     public function ajax_user()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $this->load->model("Members_model", "members");
@@ -414,18 +495,27 @@ class Orders extends CI_Controller
         $order = $this->orders->get_order($this->input->post('oid'));
         $html = '<table class="table table-bordered"><tr><td><strong>Name : </strong></td><td>' . $member['name'] . '</td></tr>';
         $html .= '<tr><td><strong>Account type : </strong></td><td>' . order_type($member['account_type']) . '</td></tr>';
-        $html .= '<tr><td><strong>Email ; </strong></td><td><a href="mailto:' . $member['email'] . '">' . $member['email'] . '</a></td></tr>';
+        $html .= '<tr><td><strong>Email : </strong></td><td><a href="mailto:' . $member['email'] . '">' . $member['email'] . '</a></td></tr>';
         $html .= '<tr><td><strong>Phone : </strong></td><td><a href="tel:' . $member['phone'] . '">' . $member['phone'] . '</a></td></tr>';
         if ($member['account_type'] == 'business') {
-            $html .= '<tr><td><strong>Business ACC : </strong></td><td>' . $member['business_number'] . '</td></tr>';
-            $html .= '<tr><td><strong>Business Name : </strong></td><td>' . $member['business_name'] . '</td></tr>';
-            $html .= '<tr><td><strong>Business Address : </strong></td><td>' . $member['business_address'] . '</td></tr>';
+            $html .= '<tr><td><strong>TAX ID : </strong></td><td>' . $member['business_number'] . '</td></tr>';
+            $html .= '<tr><td><strong>Name : </strong></td><td>' . $member['business_name'] . '</td></tr>';
+            $html .= '<tr><td><strong>Branch : </strong></td><td>' . $member['business_branch'] . '</td></tr>';
+            $html .= '<tr><td><strong>Address : </strong></td><td>' . $member['business_address'] . '</td></tr>';
+            $html .= '<tr><td><strong>Province : </strong></td><td>' . $member['business_province'] . '</td></tr>';
+            $html .= '<tr><td><strong>Note : </strong></td><td>' . $member['business_note'] . '</td></tr>';
         }
-        $html .= '<tr><td colspan="2"><strong>Shipping Detail</strong></td></tr>';
+        $html .= '<tr><td colspan="2"><strong>Shipping Address</strong></td></tr>';
         $html .= '<tr><td><strong>Name : </strong></td><td>' . $order['shipping_name'] . '</td></tr>';
         $html .= '<tr><td><strong>Address : </strong></td><td>' . $order['shipping_address'] . '</td></tr>';
         $html .= '<tr><td><strong>Province : </strong></td><td>' . $order['shipping_province'] . '</td></tr>';
-        $html .= '<tr><td><strong>Zip : </strong></td><td>' . $order['shipping_zip'] . '</td></tr></table>';
+        $html .= '<tr><td><strong>Zip : </strong></td><td>' . $order['shipping_zip'] . '</td></tr>';
+        $html .= '<tr><td colspan="2"><strong>Billing Address</strong></td></tr>';
+        $html .= '<tr><td><strong>Name : </strong></td><td>' . $order['billing_name'] . '</td></tr>';
+        $html .= '<tr><td><strong>Address : </strong></td><td>' . $order['billing_address'] . '</td></tr>';
+        $html .= '<tr><td><strong>Province : </strong></td><td>' . $order['billing_province'] . '</td></tr>';
+        $html .= '<tr><td><strong>Zip : </strong></td><td>' . $order['billing_zip'] . '</td></tr>';
+        $html .= '<tr><td style="color: red;"><strong>Sale : </strong></td><td style="color: red;">' . get_sale_name($order['sale_id']) . '</td></tr></table>';
 
         echo $html;
 
@@ -433,7 +523,7 @@ class Orders extends CI_Controller
 
     public function ajax_product()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $oid = $this->input->post('oid');
@@ -451,7 +541,7 @@ class Orders extends CI_Controller
 
     public function ajax_status()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $oid = $this->input->post('oid');
@@ -472,7 +562,7 @@ class Orders extends CI_Controller
 
     public function ajax_file()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $oid = $this->input->post('oid');
@@ -492,7 +582,7 @@ class Orders extends CI_Controller
 
     public function ajax_file_list()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $oid = $this->input->post('oid');
@@ -521,7 +611,7 @@ class Orders extends CI_Controller
 
     public function ajax_get_attribute()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff', 'sale'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $pid = $this->input->post('pid');
@@ -544,7 +634,7 @@ class Orders extends CI_Controller
 
     public function ajax_get_coupon()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $code = strtolower($this->input->post('code'));
@@ -561,7 +651,7 @@ class Orders extends CI_Controller
 
     function download_file($fid)
     {
-        if (!is_group(array('admin', 'staff', 'sale'))) {
+        if (!is_group(array('admin', 'co-sale', 'sale'))) {
             exit('No direct script access allowed');
         }
         $file = $this->orders->get_file($fid);
@@ -570,7 +660,7 @@ class Orders extends CI_Controller
 
     function ajax_delete_file()
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $fid = $this->input->post('fid');
@@ -580,7 +670,7 @@ class Orders extends CI_Controller
 
     function save_status($id)
     {
-        if (!is_group(array('admin', 'staff'))) {
+        if (!is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $this->load->library('form_validation');
@@ -603,6 +693,26 @@ class Orders extends CI_Controller
                     break;
             }
             add_order_process($id, 'status', $this->input->post('status'), $this->input->post('comment'));
+
+            $user_data = $this->orders->get_member_by_order($id);
+
+            $html_email = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 20px;">คำสั่งซื้อสินค้าอัพเดท : ' . order_status($this->input->post('status')) . '</h3>
+</div>
+<div style="margin-top:20px;">
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกเปลี่ยนสถานะเป็น  ' . order_status($this->input->post('status')) . '<br><br>
+รายละเอียด : <br>' . $this->input->post('comment') . '
+</div>
+<div>
+
+</div>
+<div style="margin-top:50px;">
+FSNS Thailand
+</div>';
+            send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าอัพเดท : ' . order_status($this->input->post('status')), $html_email);
+
+
             redirect('admin/orders/edit/' . $id);
         } else {
             redirect('admin/orders/edit/' . $id);
@@ -611,7 +721,7 @@ class Orders extends CI_Controller
 
     function save_shipping()
     {
-        if (!is_group(array('admin', 'staff'))) {
+        if (!is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $this->load->library('form_validation');
@@ -619,6 +729,10 @@ class Orders extends CI_Controller
         $this->form_validation->set_rules('address', 'address', 'required');
         $this->form_validation->set_rules('province', 'province', 'required');
         $this->form_validation->set_rules('zip', 'zip', 'required');
+        $this->form_validation->set_rules('bil_name', 'billing name', 'required');
+        $this->form_validation->set_rules('bil_address', 'billing address', 'required');
+        $this->form_validation->set_rules('bil_province', 'billing province', 'required');
+        $this->form_validation->set_rules('bil_zip', 'billing zip', 'required');
         $this->form_validation->set_rules('oid', 'oid', 'required');
         if ($this->form_validation->run()) {
             $user = $this->session->userdata('fnsn');
@@ -626,10 +740,33 @@ class Orders extends CI_Controller
                 'shipping_name' => $this->input->post('name'),
                 'shipping_address' => $this->input->post('address'),
                 'shipping_province' => $this->input->post('province'),
-                'shipping_zip' => $this->input->post('zip')
+                'shipping_zip' => $this->input->post('zip'),
+                'billing_name' => $this->input->post('bil_name'),
+                'billing_address' => $this->input->post('bil_address'),
+                'billing_province' => $this->input->post('bil_province'),
+                'billing_zip' => $this->input->post('bil_zip')
             ));
+            $html = $this->input->post('name') . '<br>' . $this->input->post('address') . '<br>' . $this->input->post('province') . '<br>' . $this->input->post('zip');
             add_log($user['name'], "Change shipping address.", "order_" . $this->input->post('oid'));
-            add_order_process($this->input->post('oid'), 'shipping', 'แก้ไขข้อมูลที่อยู่จัดส่งสินค้า', $this->input->post('name') . '<br>' . $this->input->post('address') . '<br>' . $this->input->post('province') . '<br>' . $this->input->post('zip'));
+            add_order_process($this->input->post('oid'), 'shipping', 'แก้ไขข้อมูลที่อยู่จัดส่งสินค้า', $html);
+
+
+            $user_data = $this->orders->get_member_by_order($this->input->post('oid'));
+            $html_email = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 20px;">มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า</h3>
+</div>
+<div style="margin-top:20px;">
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($this->input->post('oid'), 6, "0", STR_PAD_LEFT) . '
+มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า 
+</div>
+<div>
+' . $html . '
+</div>
+<div style="margin-top:50px;">
+FSNS Thailand
+</div>';
+            send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า', $html_email);
             $a = array('status' => 'success');
         } else {
             $a = array('status' => 'error');
@@ -637,30 +774,14 @@ class Orders extends CI_Controller
         echo json_encode($a);
     }
 
-    private function __sendmail($email, $title, $message)
-    {
-
-
-        //============================= send email ==============================//
-        $this->load->library('email');
-        $this->email->subject('');
-        $this->email->from($this->setting_data['email_for_contact'], $title);
-        $this->email->to($email);
-        $this->email->set_mailtype("html");
-
-        $html = '';
-        $html = str_replace(array('[title]', '[message]'), array($title, $message), $html);
-        $this->email->message($html);
-        $this->email->send(FALSE);
-        //============================= send email ==============================//
-    }
 
     public function upload_document($id)
     {
-        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'staff'))) {
+        if (!$this->input->is_ajax_request() || !is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $user = $this->session->userdata('fnsn');
+        $user_data = $this->orders->get_member_by_order($id);
         if (!empty($_FILES['file']['name'])) {
             $this->load->library('upload');
             $path_parts = pathinfo($_FILES["file"]["name"]);
@@ -686,6 +807,27 @@ class Orders extends CI_Controller
                 $fid = $this->orders->add_document($params);
                 add_log($user['name'], "Upload document : " . $this->input->post('title'), "order_" . $id);
                 add_order_process($id, 'document', $this->input->post('title'), $fid);
+
+                $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 20px;">คุณมีเอกสารใหม่ที่ต้องตรวจสอบ คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . '</h3>
+</div>
+<div style="margin-top:20px;">
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . '  มีเอกสารใหม่ที่เกี่ยวข้อง. กรุณาตรวจสอบเอกสารฉบับนี้ โดยสามารถดาวน์โหลดผ่านลิงค์ด้านล่าง.
+</div>
+<div>
+<a href="' . base_url('order/document/' . $id) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">รายละเอียดเอกสาร</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('order/document/' . $id) . '" target="_blank">
+' . base_url('order/document/' . $id) . '
+</a>
+</div>
+<div style="margin-top:50px;">
+FSNS Thailand
+</div>';
+
+                send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'You have new document : ' . $this->input->post('title'), $html);
                 $a = array('status' => 'success');
             } else {
                 $a = array('status' => 'error', 'message' => $this->upload->display_errors());
@@ -700,24 +842,60 @@ class Orders extends CI_Controller
 
     function change_shipping($id)
     {
-        if (!is_group(array('admin', 'staff'))) {
+        if (!is_group(array('admin', 'co-sale'))) {
             exit('No direct script access allowed');
         }
         $user = $this->session->userdata('fnsn');
+        $user_data = $this->orders->get_member_by_order($id);
         $odid = explode(',', $this->input->post('ids-product'));
         array_unique($odid);
         if ($this->input->post('type')) {
             if ($this->input->post('type') == 'save_all') {
                 $param = array(
-                    'status' => 'shipping',
+                    'status' => 'success',
                     'note' => $this->input->post('comment')
                 );
                 $this->orders->update_order_all_product_status($id, $param);
+                $this->orders->save_status(array('status' => 'success', 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
                 add_log($user['name'], "Add shipping all product : " . $this->input->post('comment'), "order_" . $id);
                 add_order_process($id, 'shipping_all', 'จัดส่งสินค้าทิ้งหมดแล้ว', $this->input->post('comment'));
 
+                $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 20px;">คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง</h3>
+</div>
+<div style="margin-top:20px;">
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ได้มีการจัดส่งสินค้าทั้งหมดแล้ว
+</div>
+<div style="margin-top:20px;">
+<strong>รายละเอียดการจัดส่ง:</strong><br>
+<strong style="font-size: 20px; color: red;">' . $this->input->post('comment') . '</strong>
+</div>
+<div>
+<a href="' . base_url('order/view/' . $id) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">รายละเอียดการสั่งซื้อสินค้า</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('order/view/' . $id) . '" target="_blank">
+' . base_url('order/view/' . $id) . '
+</a>
+</div>
+<div style="margin-top:50px;">
+FSNS Thailand
+</div>';
+                send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง', $html);
+
             } else {
                 $html = '';
+                $html_email = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin:0px; font-size: 20px;">คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง</h3>
+</div>
+<div style="margin-top:20px;">
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ได้มีการจัดส่งสินค้าแล้ว
+</div>
+<div style="margin-top:20px;">
+<strong>รายละเอียดพัสดุ:</strong><br>
+<table width="100%" border="1">';
                 foreach ($odid as $oid) {
                     $param = array(
                         'status' => 'shipping',
@@ -725,11 +903,36 @@ class Orders extends CI_Controller
                     );
                     $this->orders->update_order_product_status($oid, $param);
                     add_log($user['name'], "Add shipping product : " . $this->input->post('comment'), "order_" . $id);
-                    if($oid!='') {
+                    if ($oid != '') {
                         $html .= $oid . '|' . $this->input->post('comment') . ',';
+
                     }
+                    $product = $this->orders->get_order_detail($oid);
+                    $html_email .= '<tr><td><a href="' . base_url('product/' . $product['pid'] . '/' . url_title($product['product_title'])) . '" target="_blank">[' . $product['product_code'] . '] ' . $product['product_title'] . ' - ' . $product['product_value'] . '</a><br>จำนวน : ' . $product['product_qty'] . '<br> <strong>[' . $this->input->post('comment') . ']</strong></td><td>' . $product['product_spacial_amount'] . '฿</td></tr>';
+
+                }
+                if ($this->orders->check_status_shipping($id)) {
+                    $this->orders->save_status(array('status' => 'shipping', 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
+                } else {
+                    $this->orders->save_status(array('status' => 'success', 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
+                    $this->orders->update_order_product_success($id);
                 }
                 add_order_process($id, 'shipping_list', 'จัดส่งสินค้าแล้ว', $html);
+
+                $html_email .= '</table></div>
+<div>
+<a href="' . base_url('order/view/' . $id) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">รายละเอียดการสั่งซื้อสินค้า</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('order/view/' . $id) . '" target="_blank">
+' . base_url('order/view/' . $id) . '
+</a>
+</div>
+<div style="margin-top:50px;">
+FSNS Thailand
+</div>';
+                send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . 'ของคุณอยู่ในระหว่างการจัดส่ง', $html);
+
             }
         }
         redirect('admin/orders/edit/' . $id);

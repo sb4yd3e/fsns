@@ -69,13 +69,14 @@ class Orders_model extends CI_Model
         return $this->db->get_where($this->table, array('oid' => $id))->row_array();
     }
 
-    function get_user_order($uid,$id)
+    function get_user_order($uid, $id)
     {
-        return $this->db->select('oid,at_date,amount,spacial_amount,coupon_code,discount,discount_100k,shipping_amount,vat_amount,total_amount,shipping_name,shipping_address,shipping_province,shipping_zip,order_status')->order_by('oid','desc')->get_where($this->table, array('oid' => $id,'uid'=>$uid))->row_array();
+        return $this->db->select('oid,at_date,amount,spacial_amount,coupon_code,discount,discount_100k,shipping_amount,vat_amount,total_amount,shipping_name,shipping_address,shipping_province,shipping_zip,billing_name,billing_address,billing_province,billing_zip,order_status,order_type')->order_by('oid', 'desc')->get_where($this->table, array('oid' => $id, 'uid' => $uid))->row_array();
     }
 
-    function get_order_detail($id){
-
+    function get_order_detail($id)
+    {
+        return $this->db->where('odid',$id)->get('order_details')->row_array();
     }
 
     function get_all_orders()
@@ -203,7 +204,7 @@ class Orders_model extends CI_Model
 
     function add_document($params)
     {
-         $this->db->insert('order_files', $params);
+        $this->db->insert('order_files', $params);
         return $this->db->insert_id();
     }
 
@@ -211,9 +212,10 @@ class Orders_model extends CI_Model
     {
         return $this->db->where('ufid', $fid)->get('order_files')->row_array();
     }
+
     function list_order_by_user($uid)
     {
-        return $this->db->where('uid', $uid)->order_by('oid','desc')->get('orders')->result_array();
+        return $this->db->where('uid', $uid)->order_by('oid', 'desc')->get('orders')->result_array();
     }
 
     function delete_file($fid)
@@ -239,11 +241,49 @@ class Orders_model extends CI_Model
         $this->db->where('odid', $odid)->update('order_details', $data);
     }
 
-    function get_shipping_address($uid){
-        return $this->db->select('shipping_name,shipping_address,shipping_province,shipping_zip')->where('uid',$uid)->get('users')->row_array();
+    function update_order_product_success($id)
+    {
+        $this->db->where('oid', $id)->update('order_details', array('status' => 'success'));
     }
 
-    function list_timeline($oid){
-        return $this->db->select('at_date,process_type,process_title,process_detail')->where('oid',$oid)->order_by('opid','desc')->get('order_process')->result_array();
+    function get_shipping_address($uid)
+    {
+        return $this->db->select('shipping_name,shipping_address,shipping_province,shipping_zip,billing_name,billing_address,billing_province,billing_zip')->where('uid', $uid)->get('users')->row_array();
     }
+
+    function list_timeline($oid)
+    {
+        return $this->db->select('at_date,process_type,process_title,process_detail')->where('oid', $oid)->order_by('opid', 'desc')->get('order_process')->result_array();
+    }
+
+    function check_status_shipping($id)
+    {
+        return $this->db->select('odid')->where('oid', $id)->where('status', 'pending')->get('order_details')->result();
+    }
+
+    function list_payment_gateway()
+    {
+        $rs = $this->db->select('title,bank_name,bank_type,bank_acc,bank_branch')->where('type', 'personal')->get('payment_gateway')->result_array();
+        $data = array();
+        $pay = payment_list();
+        foreach ($rs as $val) {
+            $data[$val['bank_name'] . '|' . $val['bank_acc']] = $pay[$val['bank_name']] . ' [' . $val['bank_acc'] . ']';
+        }
+        return $data;
+    }
+
+    function get_member_by_order($oid)
+    {
+        if ($uid = $this->db->select('uid')->where('oid', $oid)->get('orders')->row_array()) {
+            return $this->db->where('uid', $uid['uid'])->get('users')->row_array();
+        } else {
+            return false;
+        }
+    }
+
+    function show_payment_gateway()
+    {
+        return $this->db->select('title,bank_name,bank_type,bank_acc,bank_branch,detail,type')->get('payment_gateway')->result_array();
+    }
+
 }

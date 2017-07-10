@@ -24,7 +24,7 @@
                     </div>
                     <div class="totals-item" id="coupon-box">
                         <span>รหัสส่วนลด
-                        <input type="text" class="input" maxlength="20" placeholder="Please enter coupon code"
+                        <input type="text" class="wpcf7-text" maxlength="20" placeholder="Please enter coupon code"
                                id="coupon"></span>
                         <div class="totals-value" id="amount"></div>
                     </div>
@@ -54,7 +54,7 @@
                 <div id="payment-method">
 
                 </div>
-                <button id="submit-order" class="checkout">Confirm order</button>
+                <button id="submit-order" class="btn-big black" style="float: right;">Confirm order</button>
 
             </div>
 
@@ -99,7 +99,7 @@
         for (var i in products) {
             var rs_t = 0, rs_t_no = 0;
             var html = '<div class="product wd" id="p-' + i + '"><div class="product-details wd">';
-            html += '<div class="product-title wd">' + products[i]['title'] + '</div></div><div class="product-price wd">';
+            html += '<div class="product-title wd">' + '[' + products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</div></div><div class="product-price wd">';
             html += '<div class="cart-price wd">' + (products[i]['price']).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div>';
             if (products[i]['sp_price'] > 0) {
                 rs_t = products[i]['sp_price'] * products[i]['qty'];
@@ -219,7 +219,7 @@
                         });
                     } else {
                         localStorage.setItem('products', JSON.stringify({}));
-                        window.location = "<?php echo base_url('checkout/confirm-order'); ?>";
+                        window.location = "<?php echo base_url('checkout/confirm-order?id='); ?>" + obj.id;
                     }
                 });
                 return false;

@@ -36,7 +36,7 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <label>Shoping Online</label>
+                    <label>Is Shopping Online</label>
                     <?php echo form_dropdown('online',array(''=>'Show All','1'=>'Yes','0'=>'No'),'','id="online" aria-controls="table" class="form-control input-sm"'); ?>
                 </div>
             </div>

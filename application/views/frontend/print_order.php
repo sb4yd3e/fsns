@@ -350,6 +350,22 @@
            }
         }
 
+        .reset-this ul{
+            margin-left:20px !important;
+        }
+        .reset-this ol {
+             margin-left:0px !important;
+         }
+
+        .reset-this ul li {
+            list-style: disc  !important;
+        }
+        .reset-this ol li {
+             list-style: decimal  !important;
+         }
+        .reset-this ul li:first-child,.reset-this ol li:first-child{
+            font-size: inherit !important;
+        }
     </style>
 
 </head>
@@ -435,14 +451,16 @@
 
                         <tr>
                             <td width="100">ชื่อ-นามสกุล</td>
-                            <td><?php echo $order['shipping_name']; ?></td>
+                            <td><?php echo $order['billing_name'] ? $order['billing_name'] : $order['shipping_name']; ?></td>
                         </tr>
                         <tr valign="top">
                             <td>ที่อยู่</td>
                             <td>
-                                <?php echo nl2br($order['shipping_address']); ?><br>
-                                <?php echo $order['shipping_province']; ?><br>
-                                <?php echo $order['shipping_zip']; ?>
+                                <?php echo nl2br($order['billing_address']) ? $order['billing_address'] : $order['shipping_address']; ?>
+                                <br>
+                                <?php echo $order['billing_province'] ? $order['billing_province'] : $order['shipping_province']; ?>
+                                <br>
+                                <?php echo $order['billing_zip'] ? $order['billing_zip'] : $order['shipping_zip']; ?>
                             </td>
                         </tr>
 
@@ -471,16 +489,18 @@
                 $total = 0;
                 foreach ($products as $k => $product) { ?>
                     <tr>
-                        <td align="center"><?php echo $k+1; ?></td>
+                        <td align="center"><?php echo $k + 1; ?></td>
                         <td class="cart_t cart_r cart_l"><?php echo $product['product_code']; ?></td>
-                        <td class="cart_t cart_r"><?php echo $product['product_title'].' - '.$product['product_value']; ?></td>
-                        <td class="center cart_t cart_r" style="font-weight: bold;"><?php echo number_format($product['product_qty']); ?></td>
+                        <td class="cart_t cart_r"><?php echo $product['product_title'] . ' - ' . $product['product_value']; ?></td>
+                        <td class="center cart_t cart_r"
+                            style="font-weight: bold;"><?php echo number_format($product['product_qty']); ?></td>
                         <td class="right cart_t cart_r "><?php echo number_format($product['product_amount'], 2); ?></td>
                         <td class="right font_discount cart_t cart_r">
-                            <?php if($product['product_spacial_amount'] > 0){
+                            <?php if ($product['product_spacial_amount'] > 0) {
                                 $total = $total + $product['product_spacial_amount'];
                                 echo number_format(($product['product_amount'] - $product['product_spacial_amount']) * $product['product_qty'], 2);
-                            }else{
+                            } else {
+                                echo '0.00';
                                 $total = $total + $product['product_amount'];
                             }; ?></td>
                         <td class="right cart_t cart_r"><?php echo number_format($product['total_amount'], 2); ?></td>
@@ -493,7 +513,6 @@
                     <td class="right font_bold font_discount cart_t  cart_b"><?php echo number_format($order['spacial_amount'], 2); ?></td>
                     <td class="right font_bold font_total cart_t cart_r cart_l cart_b"><?php echo number_format($total, 2); ?></td>
                 </tr>
-
 
 
                 <tr style="background-color: #fff;   height:35px;">
@@ -534,15 +553,41 @@
                             <div style="background-color:#dad9d9;line-height:30px;text-align:center; vertical-align: middle;font-size:15px;font-weight:bold;">
                                 วิธีการชำระเงินค่าสินค้า
                             </div>
-                            <div style="font-size:15px;font-weight:bold;margin-top:15px;">
-                                ยังไม่มีข้อมูล
+                            <div style="font-size:15px;font-weight:bold;margin-top:15px; margin-bottom: 15px;">
+                                <table style="border:1px solid #e0e0e0;margin: 0px; width: 100%">
+                                    <?php if ($order['order_type'] == 'personal') { ?>
+                                        <thead>
+                                        <tr>
+                                            <th align="left" style="padding: 5px;background: #eeeeee;">ธนาคาร</th>
+                                            <th align="left" style="padding: 5px;background: #eeeeee;">เลขที่บัญชี</th>
+                                            <th align="left" style="padding: 5px;background: #eeeeee;">สาขา</th>
+                                            <th align="left" style="padding: 5px;background: #eeeeee;">ประเภทบัญชี</th>
+                                        </tr>
+                                        </thead>
+                                    <?php } ?>
+                                    <?php
+                                    foreach ($payments as $pv) {
+                                        if ($order['order_type'] == 'business' && $pv['type'] == 'business') {
+                                            echo '<tr><td style="padding: 5px;" class="reset-this">' . $pv['detail'] . '</td></tr>';
+                                        } else if ($order['order_type'] == 'personal' && $pv['type'] == 'personal') { ?>
+
+                                            <tr>
+                                                <td style="padding: 5px; font-weight: normal;"><?php
+                                                    $pay = payment_list();
+                                                    echo $pay[$pv['bank_name']]; ?></td>
+                                                <td style="padding: 5px; font-weight: normal;"><?php echo $pv['bank_acc']; ?></td>
+                                                <td style="padding: 5px; font-weight: normal;"><?php echo $pv['bank_branch']; ?></td>
+                                                <td style="padding: 5px; font-weight: normal;"><?php echo $pv['bank_type']; ?></td>
+                                            </tr>
+
+                                        <?php }
+                                    } ?>
+                                </table>
+                                <div style="margin-top: 20px; font-weight: normal;">หากชำระค่าสินค้าแล้วสามารถกดแจ้งได้ที่ เมนู Member ->
+                                    <a href="<?php echo base_url('my-orders'); ?>">My Orders</a></div>
                             </div>
                             <div>
-                                <div style="width:700px;text-align:left;margin-left:20px;">
-                                    xx
-                                </div>
 
-                                <div style="clear:both;"></div>
                             </div>
                             <div style="clear:both;"></div>
 
@@ -551,8 +596,8 @@
                             </div>
                             <div style="font-size:13px;margin-top:15px;">
                                 <p>Tel: 083-839-2929, 081-615-2621<br>
-                                Fax: 02-6885755<br>
-                                Email : contact@fsns-thailand.com</p>
+                                    Fax: 02-6885755<br>
+                                    Email : contact@fsns-thailand.com</p>
                             </div>
                         </div>
                     </td>

@@ -11,7 +11,7 @@
                         <div class="timeline">
                             <div class="title"><span><?php echo date('d/m/Y H:i:s', $time['at_date']); ?></span>
                                 | <?php echo order_status($time['process_title']); ?></div>
-                            <div class="detail"><?php echo nl2br($time['process_detail']); ?></div>
+                            <div class="detail"><?php echo str_replace('<br><br />','<br>',nl2br($time['process_detail'])); ?></div>
                         </div>
                         <?php
                         break;
@@ -21,7 +21,7 @@
                         <div class="timeline">
                             <div class="title"><span><?php echo date('d/m/Y H:i:s', $time['at_date']); ?></span>
                                 | <?php echo $time['process_title']; ?></div>
-                            <div class="detail"><?php echo nl2br($time['process_detail']); ?></div>
+                            <div class="detail"><?php echo str_replace('<br><br />','<br>',nl2br($time['process_detail'])); ?></div>
                         </div>
                         <?php
                         break;

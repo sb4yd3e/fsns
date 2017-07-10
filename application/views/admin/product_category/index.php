@@ -16,7 +16,7 @@
                         <input type="text" name="title_en" value="" />
                         <label>Category Caption</label>
                         <textarea name="body" style="width:450px;height:100px;" rows="5"></textarea>
-                        <label>Category Weight: </label>
+                        <label>Priority: </label>
                         <input type="text" name="weight" value="0" id="add-category-weight"/>
 
                         <input type="hidden" name="parent_id" class="parent_id" value=""/>
@@ -29,7 +29,7 @@
                         <input type="text" name="title_en" value="" id="edit-category-title-en" />
                         <label>Category Caption</label>
                         <textarea name="body" style="width:450px;height:100px;" id="edit-category-caption"></textarea>
-                        <label>Category Weight: </label>
+                        <label>Priority: </label>
                         <input type="text" name="weight" value="0" id="edit-category-weight"/>
                         <input type="hidden" name="term_id" value="" id="edit-category-id"/>
                     </form>

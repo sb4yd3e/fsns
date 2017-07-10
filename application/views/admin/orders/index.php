@@ -17,7 +17,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>Customer Type</label>
                             <select name="order_type" id="order_type" aria-controls="table"
@@ -28,13 +28,8 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Customer</label>
-                            <?php echo form_dropdown('uid', $members, '', 'id="uid" aria-controls="table" class="form-control input-sm"'); ?>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
                         <div class="form-group">
                             <label>Status</label>
                             <?php echo form_dropdown('status', array('' => 'Show All',
@@ -62,6 +57,7 @@
                             <th>#คำสั่งซื้อ</th>
                             <th>ชื่อ-นามสกุล</th>
                             <th>ประเภทลูกค้า</th>
+                            <th>Sale</th>
                             <th>จำนวนรายการ</th>
                             <th>สถานะ</th>
                             <th>ยอดรวม</th>
