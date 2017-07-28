@@ -7,7 +7,7 @@
             <form action="<?php echo base_url('profile'); ?>" method="post" id="profile-form">
                 <div class="col-6">
                     <div class="box-border">
-                        <h5>Account information</h5>
+                        <h5>ข้อมูลผู้ใช้งาน(account information)</h5>
                         <fieldset>
                             <label>Email (ใช้เป็นชื่อใช้งาน / Will be your username)</label>
                             <input type="email" class="wpcf7-text" placeholder="Email address" maxlength="100"
@@ -88,31 +88,7 @@
                 </div>
                 <div class="col-6">
                     <div class="box-border">
-                        <h5>Shipping Address</h5>
-                        <fieldset>
-                            <label>ชื่อผู้รับสินค้า(Shipping Name)<span class="required-star">*</span></label>
-                            <input type="text" name="shipping_name" class="wpcf7-text" placeholder="Shipping Name"
-                                   maxlength="200" value="<?php echo $user['shipping_name']; ?>" required>
-                        </fieldset>
-
-                        <fieldset>
-                            <label>ที่อยู่จัดสิ่งสินค้า(Shipping Address)<span class="required-star">*</span></label>
-                            <textarea name="shipping_address" class="wpcf7-text" placeholder="Shipping Address" rows="4"
-                                      required><?php echo $user['shipping_address']; ?></textarea>
-                        </fieldset>
-                        <fieldset>
-                            <label>จังหวัด(Shipping Province)<span class="required-star">*</span></label>
-                            <?php echo form_dropdown('shipping_province', list_province(), $user['shipping_province'], 'class="wpcf7-text"  required'); ?>
-                        </fieldset>
-                        <fieldset>
-                            <label>รหัสไปรษณีย์(Shipping Zip)<span class="required-star">*</span></label>
-                            <input type="text" name="shipping_zip" class="wpcf7-text" placeholder="Zip code"
-                                   value="<?php echo $user['shipping_zip']; ?>" minlength="5" maxlength="5"
-                                   required>
-                        </fieldset>
-                    </div>
-                    <div class="box-border">
-                        <h5>Billing Address</h5>
+                        <h5>ที่อยู่สำหรับ ใบเสร็จ/ใบกำกับภาษี(Billing Address)</h5>
                         <fieldset>
                             <label> ชื่อผู้รับ(Billing Name)<span class="required-star">*</span></label>
                             <input type="text" name="billing_name" class="wpcf7-text"
@@ -140,6 +116,31 @@
                                    minlength="5" required>
                         </fieldset>
                     </div>
+                    <div class="box-border">
+                        <h5>ที่อยู่สำหรับจัดส่งสินค้า(Shipping information)</h5>
+                        <fieldset>
+                            <label>ชื่อผู้รับสินค้า(Shipping Name)<span class="required-star">*</span></label>
+                            <input type="text" name="shipping_name" class="wpcf7-text" placeholder="Shipping Name"
+                                   maxlength="200" value="<?php echo $user['shipping_name']; ?>" required>
+                        </fieldset>
+
+                        <fieldset>
+                            <label>ที่อยู่จัดสิ่งสินค้า(Shipping Address)<span class="required-star">*</span></label>
+                            <textarea name="shipping_address" class="wpcf7-text" placeholder="Shipping Address" rows="4"
+                                      required><?php echo $user['shipping_address']; ?></textarea>
+                        </fieldset>
+                        <fieldset>
+                            <label>จังหวัด(Shipping Province)<span class="required-star">*</span></label>
+                            <?php echo form_dropdown('shipping_province', list_province(), $user['shipping_province'], 'class="wpcf7-text"  required'); ?>
+                        </fieldset>
+                        <fieldset>
+                            <label>รหัสไปรษณีย์(Shipping Zip)<span class="required-star">*</span></label>
+                            <input type="text" name="shipping_zip" class="wpcf7-text" placeholder="Zip code"
+                                   value="<?php echo $user['shipping_zip']; ?>" minlength="5" maxlength="5"
+                                   required>
+                        </fieldset>
+                    </div>
+
 
 
                 </div>

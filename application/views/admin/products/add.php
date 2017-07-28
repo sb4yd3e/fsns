@@ -158,14 +158,14 @@
                                             <label>Photo</label>
                                             <input type="file" name="photo[]" class="form-control"/>
                                         </div>
-                                        <div class="col-md-6 no-padding">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Price*:</label>
                                                 <input type="text" name="price[]" value="0" class="form-control digi"
                                                        required/>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 no-padding">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Special Price*:</label>
                                                 <input type="text" name="sp_price[]" value="0" class="form-control digi"
@@ -206,13 +206,18 @@
                                             <label>Color (Text)*:</label>
                                             <input type="text" name="value[]" class="form-control" required/>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group col-md-6">
                                             <label>Product In Stock*:</label>
                                             <?php echo form_dropdown('stock[]', array(
                                                 '1' => 'YES',
                                                 '0' => 'NO',
                                             ), '', 'class="form-control" required'); ?>
 
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Minimum Qty*:</label>
+                                            <input type="text" name="minimum[]" value="0" class="form-control number"
+                                                   required/>
                                         </div>
                                         <div id="box-type">
                                             <button type="button" class="btn btn-info btn-sm" id="add-color">Add

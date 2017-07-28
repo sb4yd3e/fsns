@@ -170,10 +170,10 @@ class Orders extends CI_Controller
             $row[] = number_format($order->total_amount, 2);
             if (is_group(array('admin', 'co-sale'))) {
                 $row[] = '<a href="#" class="label label-info ajax-file" data-uid="' . $order->uid . '" data-oid="' . $order->oid . '" data-toggle="modal" data-target="#ajaxModal"><i class="fa fa-download"></i> ดาวน์โหลดเอกสารลูกค้า</a> 
-            <a href="' . base_url('admin/orders/edit/' . $order->oid) . '" class="label label-warning"><i class="fa fa-pencil"></i> แก้ไขคำสั่งซื้อ</a> 
+            <a href="' . base_url('admin/orders/edit/' . $order->oid) . '" class="label label-warning"><i class="fa fa-pencil"></i> แก้ไขคำสั่งซื้อ</a> <a href="' . base_url('order/print/' . $order->oid) . '" class="label label-primary" target="_blank"><i class="fa fa-eye"></i> ใบเสนอราคา</a> 
             ';
             } else {
-                $row[] = '<a href="' . base_url('admin/orders/edit/' . $order->oid) . '" class="label label-warning"><i class="fa fa-eye"></i> View</a> ';
+                $row[] = '<a href="' . base_url('admin/orders/edit/' . $order->oid) . '" class="label label-warning"><i class="fa fa-eye"></i> รายละเอียด</a> <a href="' . base_url('order/print/' . $order->oid) . '" class="label label-primary" target="_blank"><i class="fa fa-eye"></i> ใบเสนอราคา</a> ';
             }
             $data[] = $row;
         }
@@ -206,7 +206,6 @@ class Orders extends CI_Controller
         if ($this->form_validation->run()) {
             if (is_group('sale')) {
                 die('Access denie');
-                exit();
             }
 
             $products = json_decode($this->input->post('products'));
@@ -226,7 +225,10 @@ class Orders extends CI_Controller
             $total_product = 0;
             $total_qty = 0;
             $att = array();
-
+            $custom_discount = $this->input->post('custom_discount');
+            if ($custom_discount < 0) {
+                $custom_discount = 0;
+            }
 
             if ($shipping < 0) {
                 $shipping = 0;
@@ -237,6 +239,15 @@ class Orders extends CI_Controller
                 $coupon = '';
             }
             $k = 0;
+            //validate minimum
+            foreach ($products as $key => $product) {
+                $paid = str_replace('p', '', $key);
+                $product_data = $this->orders->get_attribute($paid);
+                if($product_data['minimum'] > 0 && $product->qty < $product_data['minimum']){
+                    die(json_encode(array('status' => 'error', 'message' => 'Product : '.$product_data['p_value'].' minimum is '.$product_data['minimum'])));
+                }
+            }
+
             //cal order
             foreach ($products as $key => $product) {
                 $paid = str_replace('p', '', $key);
@@ -330,7 +341,7 @@ class Orders extends CI_Controller
                 $total_discount = 0;
             }
 
-            $total_before_vat = $total_amount - $total_discount;
+            $total_before_vat = $total_amount - $total_discount - $custom_discount;
             $total_vat = ($total_before_vat / 100) * 7;
             $total = $total_before_vat + $total_vat + $shipping;
 
@@ -348,6 +359,7 @@ class Orders extends CI_Controller
                     'discount_100k' => $discount_10k,
                     'shipping_amount' => $shipping,
                     'total_amount' => $total,
+                    'custom_discount' => $custom_discount,
                     'vat_amount' => $total_vat)
             );
             $user = $this->session->userdata('fnsn');
@@ -390,6 +402,12 @@ class Orders extends CI_Controller
 </tr>
 <tr style="background-color: #fff;   height:35px;">
     <td colspan="4"></td>
+    <td colspan="2" class="line_under right font_bold">ส่วนลดพิเศษ (บาท)</td>
+    <td class="right line_under font_bold">' . number_format($custom_discount, 2) . '
+    </td>
+</tr>
+<tr style="background-color: #fff;   height:35px;">
+    <td colspan="4"></td>
     <td colspan="2" class="line_under right font_bold">ภาษีมูลค่าเพิ่ม 7% (บาท)</td>
     <td class="right line_under font_bold">' . number_format($total_vat, 2) . '</td>
 </tr>
@@ -405,6 +423,14 @@ class Orders extends CI_Controller
     <td class="right font_total line_under font_underline font_bold">' . number_format($total, 2) . '</td>
 </tr>
 </table>
+<br><br>
+ สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
+                <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">My Orders</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('my-orders/') . '" target="_blank">
+' . base_url('my-orders') . '
+</a> 
 </div>
 <div style="margin-top:50px;">
     FSNS Thailand
@@ -446,6 +472,7 @@ class Orders extends CI_Controller
             var discount_code = "' . $data['coupon_code'] . '";
             var discount_code_value = ' . $data['discount'] . ';
             var shipping = ' . $data['shipping_amount'] . ';
+            var custom_discount = ' . $data['custom_discount'] . ';
             init_order(); 
             
             function ajax_list_files(){
@@ -597,7 +624,7 @@ class Orders extends CI_Controller
                         <td>' . number_format($fiile['file_size'], 2) . ' KB</td>
                         <td><a href="' . base_url('admin/orders/download_file/' . $fiile['ufid']) . '" class="label-info label" target="_blank">Download</a></td>';
             if (!is_group('sale')) {
-                $html .= '<td><a class="label label-success send-email-file" data-fid="' . $fiile['ufid'] . '">Send Email</a> <a href="#" class="label label-danger delete-file" data-fid="' . $fiile['ufid'] . '"><i class="fa fa-times-circle"></i></a></td>
+                $html .= '<td><a href="#" class="label label-danger delete-file" data-fid="' . $fiile['ufid'] . '"><i class="fa fa-times-circle"></i></a></td>
                         </tr>';
             } else {
                 $html .= '<td></td>
@@ -625,7 +652,8 @@ class Orders extends CI_Controller
                 'color' => $item['color'],
                 'p_value' => $item['p_value'],
                 'normal_price' => $item['normal_price'],
-                'special_price' => $item['special_price']
+                'special_price' => $item['special_price'],
+                'minimum' => $item['minimum']
             );
         }
         echo json_encode($a);
@@ -678,26 +706,32 @@ class Orders extends CI_Controller
         $this->form_validation->set_rules('submit', 'status', 'required');
         if ($this->form_validation->run()) {
             $user = $this->session->userdata('fnsn');
+            $sendmail_f = false;
+            $status = '';
             switch ($this->input->post('submit')) {
                 case "save":
                     $this->orders->save_status(array('status' => $this->input->post('status'), 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
-//                    $this->__sendmail('status', $this->input->post('status'));
                     add_log($user['name'], "Change status to : " . order_status($this->input->post('status')), "order_" . $id);
+                    $sendmail_f = true;
+                    $status = $this->input->post('status');
                     break;
                 case "nomail":
                     $this->orders->save_status(array('status' => $this->input->post('status'), 'at_date' => time(), 'text' => $this->input->post('comment'), 'owner' => 'Seller', 'oid' => $id));
                     add_log($user['name'], "Change status to : " . order_status($this->input->post('status')), "order_" . $id);
+                    $sendmail_f = false;
+                    $status = $this->input->post('status');
                     break;
                 case "email":
-//                     $this->__sendmail('status', $this->input->post('status'));
+                    $status = $this->orders->get_order($id);
+                    $status = $status['order_status'];
+                    $sendmail_f = true;
                     break;
             }
             add_order_process($id, 'status', $this->input->post('status'), $this->input->post('comment'));
 
             $user_data = $this->orders->get_member_by_order($id);
-
             $html_email = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
-	<h3 style="margin:0px; font-size: 20px;">คำสั่งซื้อสินค้าอัพเดท : ' . order_status($this->input->post('status')) . '</h3>
+	<h3 style="margin:0px; font-size: 20px;">คำสั่งซื้อสินค้าอัพเดท : ' . order_status($status) . '</h3>
 </div>
 <div style="margin-top:20px;">
 เรียนคุณ ' . $user_data['name'] . '<br><br><br>
@@ -705,13 +739,21 @@ class Orders extends CI_Controller
 รายละเอียด : <br>' . $this->input->post('comment') . '
 </div>
 <div>
-
+ สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
+                <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">My Orders</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('my-orders/') . '" target="_blank">
+' . base_url('my-orders') . '
+</a> 
 </div>
 <div style="margin-top:50px;">
 FSNS Thailand
 </div>';
-            send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าอัพเดท : ' . order_status($this->input->post('status')), $html_email);
 
+            if ($sendmail_f) {
+                send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าอัพเดท : ' . order_status($this->input->post('status')), $html_email);
+            }
 
             redirect('admin/orders/edit/' . $id);
         } else {
@@ -763,6 +805,14 @@ FSNS Thailand
 <div>
 ' . $html . '
 </div>
+<br>
+ สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
+                <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">My Orders</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('my-orders/') . '" target="_blank">
+' . base_url('my-orders') . '
+</a> 
 <div style="margin-top:50px;">
 FSNS Thailand
 </div>';
@@ -823,6 +873,14 @@ margin-top: 20px;">รายละเอียดเอกสาร</a><br>
 ' . base_url('order/document/' . $id) . '
 </a>
 </div>
+<br>
+ สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
+                <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">My Orders</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('my-orders/') . '" target="_blank">
+' . base_url('my-orders') . '
+</a> 
 <div style="margin-top:50px;">
 FSNS Thailand
 </div>';
@@ -879,6 +937,14 @@ margin-top: 20px;">รายละเอียดการสั่งซื้�
 ' . base_url('order/view/' . $id) . '
 </a>
 </div>
+<br>
+ สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
+                <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">My Orders</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('my-orders/') . '" target="_blank">
+' . base_url('my-orders') . '
+</a> 
 <div style="margin-top:50px;">
 FSNS Thailand
 </div>';
@@ -927,7 +993,14 @@ margin-top: 20px;">รายละเอียดการสั่งซื้�
 <a href="' . base_url('order/view/' . $id) . '" target="_blank">
 ' . base_url('order/view/' . $id) . '
 </a>
-</div>
+</div><br>
+ สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
+                <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">My Orders</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('my-orders/') . '" target="_blank">
+' . base_url('my-orders') . '
+</a> 
 <div style="margin-top:50px;">
 FSNS Thailand
 </div>';

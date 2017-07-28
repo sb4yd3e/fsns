@@ -3,6 +3,7 @@ var total_sp_discount = 0;
 var total_amount = 0;
 var discount_10k = 0;
 
+
 var discount_code_amount = 0;
 var total_discount = 0;
 var total_before_vat = 0;
@@ -38,6 +39,16 @@ function init_order() {
             $(this).val(_num);
         }
         update_product("edit", "p" + $(this).data('id'), 'sp_price', _num);
+    });
+
+    $(document).on("change", "#custom-discount", function () {
+        var _num = parseInt($(this).val());
+        if (_num < 0) {
+            _num = 0;
+            $(this).val(_num);
+        }
+        custom_discount = _num;
+        cal_order();
     });
 
     $(document).on("change", "#shipping-amount", function () {
@@ -76,7 +87,7 @@ function init_order() {
                 $("#code-select").html('<option value="">== Select ==</option>');
                 var obj = jQuery.parseJSON(alt);
                 obj.forEach(function (v) {
-                    $("#code-select").append('<option value="' + v['pa_id'] + '|' + v['color'] + '|' + v['p_value'] + '|' + v['normal_price'] + '|' + v['special_price'] + '|' + v['code'] + '">' + v['code'] + ' - ' + v['p_value'] + '</option>');
+                    $("#code-select").append('<option value="' + v['pa_id'] + '|' + v['color'] + '|' + v['p_value'] + '|' + v['normal_price'] + '|' + v['special_price'] + '|' + v['code']+ '|' + v['minimum'] + '">' + v['code'] + ' - ' + v['p_value'] + '</option>');
                 });
             });
         }
@@ -84,7 +95,7 @@ function init_order() {
         $("#product-color").hide();
         $("#add-product-price").html('');
         $("#add-product-sp-price").html('');
-
+        $("#add-minimum").html('');
 
     });
 
@@ -95,6 +106,7 @@ function init_order() {
             $("#product-color").hide();
             $("#add-product-price").html('');
             $("#add-product-sp-price").html('');
+            $("#add-minimum").html('');
             return;
         }
         var data = d.split("|");
@@ -102,6 +114,7 @@ function init_order() {
         $("#product-color").show();
         $("#add-product-price").html(data[3]);
         $("#add-product-sp-price").html(data[4]);
+        $("#add-minimum").html(data[6]);
 
     });
     $(document).on("click", "#add-product-btn", function () {
@@ -142,12 +155,17 @@ function init_order() {
         var json = JSON.stringify(products);
         $.ajax({
             method: "POST",
-            data: {coupon: $('#coupon').val(), products: json, shipping: shipping},
+            data: {coupon: $('#coupon').val(), products: json, shipping: shipping,custom_discount:custom_discount},
             url: window.location.href,
         }).done(function (status) {
             var obj = jQuery.parseJSON(status);
             if (obj.status === "error") {
-                $.notify("Can't save order.", "error");
+                if(obj.message){
+                    $.notify(obj.message, "error");
+                }else{
+                    $.notify("Can't save order.", "error");
+                }
+
             } else {
                 $.notify("Save order success.", "success");
             }
@@ -247,6 +265,10 @@ function update_product(type, index, key, value) {
     if (type === "add") {
         var prod = value[0].split("|");
         var att = value[1].split("|");
+        var minimum = parseInt($("#add-minimum").html());
+        if(minimum<=0){
+            minimum = 1;
+        }
 
         if (("p" + att[0] in products)) {
             return;
@@ -256,10 +278,14 @@ function update_product(type, index, key, value) {
             title: prod[1],
             price: att[3],
             sp_price: att[4],
-            qty: 1
+            qty: minimum
+        }
+        var remark = '';
+        if(minimum > 1){
+            remark = '*ต้องสั่งขั้นต่ำอย่างน้อย '+minimum+' หน่วย';
         }
 
-        $('#body-product').append('<tr id="p-' + att[0] + '"> <td><a href="/product/' + prod[0] + '/' + convertToSlug(prod[1]) + '" target="_blank">' + prod[1] + '</a> [' + att[5] + '] -  ' + att[2] + '</td><td><input type="text" value="' + att[3] + '" class="form-control product_amount digi" data-id="' + att[0] + '" id="product_amount-' + att[0] + '"></td> <td><input type="text" value="' + att[4] + '" class="form-control product_spacial_amount digi" data-id="' + att[0] + '" id="product_spacial_amount-' + att[0] + '"></td><td><input type="number" value="1" class="form-control product_qty number" data-id="' + att[0] + '" id="product_qty-"></td><td id="total_amount_p' + att[0] + '"></td><td><button type="button" class="btn btn-sm btn-danger delete-product" data-id="' + att[0] + '"><i class="fa fa-times-circle"></i></button></td></tr>');
+        $('#body-product').append('<tr id="p-' + att[0] + '"> <td><a href="/product/' + prod[0] + '/' + convertToSlug(prod[1]) + '" target="_blank">' + prod[1] + '</a> [' + att[5] + '] -  ' + att[2] + '</td><td><input type="text" value="' + att[3] + '" class="form-control product_amount digi" data-id="' + att[0] + '" id="product_amount-' + att[0] + '"></td> <td><input type="text" value="' + att[4] + '" class="form-control product_spacial_amount digi" data-id="' + att[0] + '" id="product_spacial_amount-' + att[0] + '"></td><td><input type="number" value="'+minimum+'" min="'+minimum+'" class="form-control product_qty number" data-id="' + att[0] + '" id="product_qty-">'+remark+'</td><td id="total_amount_p' + att[0] + '"></td><td><button type="button" class="btn btn-sm btn-danger delete-product" data-id="' + att[0] + '"><i class="fa fa-times-circle"></i></button></td></tr>');
         $('#addproductModal').modal('hide');
     } else if (type === "edit") {
         products[index][key] = value;
@@ -325,7 +351,7 @@ function cal_order() {
     }
     //========= discount
 
-    total_before_vat = total_amount - total_discount;
+    total_before_vat = total_amount - total_discount - custom_discount;
     total_vat = (total_before_vat / 100) * 7;
     total = total_before_vat + total_vat + shipping;
     update_order();
@@ -353,6 +379,7 @@ function update_order() {
     $("#before-vat").html(total_before_vat.toFixed(2));
     $("#vat").html(total_vat.toFixed(2));
     $("#shipping-amount").val(shipping.toFixed(2));
+    $("#custom-discount").val(custom_discount.toFixed(2));
     $("#total-price").html(total.toFixed(2));
 }
 

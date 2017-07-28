@@ -71,7 +71,14 @@ class Orders_model extends CI_Model
 
     function get_user_order($uid, $id)
     {
-        return $this->db->select('oid,at_date,amount,spacial_amount,coupon_code,discount,discount_100k,shipping_amount,vat_amount,total_amount,shipping_name,shipping_address,shipping_province,shipping_zip,billing_name,billing_address,billing_province,billing_zip,order_status,order_type')->order_by('oid', 'desc')->get_where($this->table, array('oid' => $id, 'uid' => $uid))->row_array();
+
+         $this->db->select('oid,uid,at_date,amount,custom_discount,spacial_amount,coupon_code,discount,discount_100k,shipping_amount,vat_amount,total_amount,shipping_name,shipping_address,shipping_province,shipping_zip,billing_name,billing_address,billing_province,billing_zip,order_status,order_type')->order_by('oid', 'desc');
+        if(!is_group(array('admin', 'co-sale', 'sale'))) {
+            return  $this->db->get_where($this->table, array('oid' => $id, 'uid' => $uid))->row_array();
+        }else{
+            return  $this->db->get_where($this->table, array('oid' => $id))->row_array();
+        }
+
     }
 
     function get_order_detail($id)
@@ -136,7 +143,7 @@ class Orders_model extends CI_Model
 
     function list_products($oid)
     {
-        return $this->db->where('oid', $oid)->get('order_details')->result_array();
+        return $this->db->select('order_details.*,product_attribute.minimum')->from('order_details')->where('order_details.oid', $oid)->join('product_attribute','product_attribute.pa_id = order_details.pa_id')->get()->result_array();
     }
 
     function list_all_products()

@@ -43,14 +43,38 @@
                                             <?php if(!is_group('sale')){ ?>
 											<option value="0">No Sale</option>
                                             <?php } ?>
-											<?php 
-											foreach($all_admins as $admin)
-											{
-												$selected = ($admin['aid'] == $content['staff_id']) ? ' selected="selected"' : "";
 
-												echo '<option value="'.$admin['aid'].'" '.$selected.'>'.$admin['name'].'</option>';
-											} 
-											?>
+                                            <?php
+                                            $arr = array();
+                                            foreach($all_admins as $key => $item)
+                                            {
+                                                $arr[$item['admin_group']][$key] = $item;
+                                            }
+                                            ksort($arr, SORT_NUMERIC);
+                                            if(isset($arr['co-sale'])&&count($arr['sale'])>0){
+                                                echo '<optgroup label="Sale support">';
+                                                foreach($arr['co-sale'] as $admin)
+                                                {
+                                                    $selected = ($admin['aid'] == $content['staff_id']) ? ' selected="selected"' : "";
+
+                                                    echo '<option value="'.$admin['aid'].'" '.$selected.'>'.$admin['name'].'</option>';
+                                                }
+                                                echo '</optgroup>';
+                                            }
+
+                                            if(isset($arr['sale'])&&count($arr['sale'])>0){
+                                                echo '<optgroup label="Sale">';
+                                                foreach($arr['sale'] as $admin)
+                                                {
+                                                    $selected = ($admin['aid'] == $content['staff_id']) ? ' selected="selected"' : "";
+
+                                                    echo '<option value="'.$admin['aid'].'" '.$selected.'>'.$admin['name'].'</option>';
+                                                }
+                                                echo '</optgroup>';
+                                            }
+
+
+                                            ?>
 										</select>
 									</div>
 									<label for="name" class="control-label">Name</label>

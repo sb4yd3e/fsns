@@ -7,7 +7,7 @@
             <form action="<?php echo base_url('register'); ?>" method="post" id="register-form">
                 <div class="col-6">
                     <div class="box-border">
-                        <h5>Account information</h5>
+                        <h5>ข้อมูลผู้ใช้งาน(account information)</h5>
                     <fieldset>
                         <label>Email*</label>
                         <input type="email" name="email" class="wpcf7-text" placeholder="Email address" maxlength="100"
@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-6">
                     <div class="box-border">
-                        <h5>Shipping information</h5>
+                        <h5>ที่อยู่สำหรับจัดส่งสินค้า(Shipping information)</h5>
 
                     <fieldset>
                         <label>Shipping Name*</label>

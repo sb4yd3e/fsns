@@ -42,7 +42,7 @@
                                         href="<?php echo base_url('order/document/' . $order['oid']); ?>">
                                             [เอกสาร] </a>
                                     <?php } ?>
-                                    <a href="<?php echo base_url('order/print/' . $order['oid']); ?>" target="_blank">[ใบสั่งซื้อ]</a>
+                                    <a href="<?php echo base_url('order/print/' . $order['oid']); ?>" target="_blank">[ใบเสนอราคา]</a>
                                     <a href="<?php echo base_url('order/view/' . $order['oid']); ?>" target="_blank">[ประวัติ]</a>
 
                                 </td>

@@ -1,12 +1,46 @@
 //cart
 var products = localStorage.getItem('products');
-if (products === null) {
+var product_times = localStorage.getItem('product_times');
+if (products === null || products === '' || product_times === null || product_times === '') {
     products = {};
+    localStorage.setItem('products', JSON.stringify({}));
 } else {
     products = JSON.parse(products);
+    var today = new Date().getTime();
+
+    if (parseInt(product_times) < (today - 86400000)) {
+        products = {};
+        localStorage.setItem('products', JSON.stringify({}));
+    }
 }
 $(document).ready(function () {
     var select_attr = false;
+
+    //ajax check product data
+
+    $.ajax({
+        type: "POST",
+        url: "/ajax_check",
+        data: {products: JSON.stringify(products)}
+    })
+        .done(function (msg) {
+            if (msg !== '') {
+                var obj = JSON.parse(msg);
+
+                if (Object.size(obj) > 0) {
+                    products = JSON.parse(msg);
+                    localStorage.setItem('products', msg);
+                } else {
+                    localStorage.setItem('products', JSON.stringify({}));
+                }
+            }
+        });
+
+    $('#qty').change(function(){
+       if(parseInt($(this).val()) < parseInt($(this).attr('min'))){
+           $(this).val($(this).attr('min'));
+       }
+    });
 
     $('.select-color').click(function () {
         if ($(this).hasClass('disabled')) {
@@ -21,6 +55,10 @@ $(document).ready(function () {
         var aid = $(this).data('aid');
         var value = $(this).data('value');
         var cover = $(this).data('cover');
+        var minimum = parseInt($(this).data('cover'));
+        if (minimum < 0) {
+            minimum = 1;
+        }
 
         $('#product_paid').val(aid);
         $('#product_code').val(code);
@@ -29,6 +67,12 @@ $(document).ready(function () {
         $('#product_spprice').val(spprice);
         $('#product_instock').val(stock);
 
+        if (minimum > 1) {
+            $('#remark').html('*ต้องสั่งขั้นต่ำอย่างน้อย ' + minimum + ' หน่วย');
+        } else {
+            $('#remark').html('');
+        }
+        $('#qty').val(minimum).attr('min', minimum);
         if (parseInt(spprice) > 0) {
             $('.default-price').html('<s>' + parseInt(price).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s>');
             $('.special-price').html(parseInt(spprice).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
@@ -39,15 +83,15 @@ $(document).ready(function () {
         if (cover && cover !== "") {
             var image = new Image();
             var newSrc = '/timthumb.php?src=/uploads/products/' + cover + '&w=480&h=480&zc=2';
-            image.onload = function() {
-                    $('.big-thumb img').attr("src", newSrc);
+            image.onload = function () {
+                $('.big-thumb img').attr("src", newSrc);
             };
             image.src = newSrc;
 
-        }else{
+        } else {
             var image = new Image();
             var newSrc = '/timthumb.php?src=/uploads/products/' + $('#hidden-thumb').val() + '&w=480&h=480&zc=2';
-            image.onload = function() {
+            image.onload = function () {
                 $('.big-thumb img').attr("src", newSrc);
             };
             image.src = newSrc;
@@ -73,6 +117,7 @@ $(document).ready(function () {
             $('.default-price').html('-');
             $('.special-price').html('');
             $('#code').html('-');
+            $('#remark').html('');
         } else {
             var dt = $(this).val().split('|');
             var price = parseInt(dt[1]);
@@ -82,13 +127,23 @@ $(document).ready(function () {
             var aid = dt[4];
             var value = dt[5];
             var cover = dt[6];
+            var minimum = parseInt(dt[7]);
+            if (minimum <= 0) {
+                minimum = 1;
+            }
             $('#product_paid').val(aid);
             $('#product_code').val(code);
             $('#product_value').val(value);
             $('#product_price').val(price);
             $('#product_spprice').val(spprice);
             $('#product_instock').val(stock);
+            if (minimum > 1) {
+                $('#remark').html('*ต้องสั่งขั้นต่ำอย่างน้อย ' + minimum + ' หน่วย');
+            } else {
+                $('#remark').html('');
 
+            }
+            $('#qty').val(minimum).attr('min', minimum);
             if (parseInt(spprice) > 0) {
                 $('.default-price').html('<s>' + price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s>');
                 $('.special-price').html(spprice.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
@@ -99,24 +154,24 @@ $(document).ready(function () {
             if (cover && cover !== "") {
                 var image = new Image();
                 var newSrc = '/timthumb.php?src=/uploads/products/' + cover + '&w=480&h=480&zc=2';
-                image.onload = function() {
+                image.onload = function () {
                     $('.big-thumb img').attr("src", newSrc);
                 };
                 image.src = newSrc;
 
-            }else{
+            } else {
                 var image = new Image();
                 var newSrc = '/timthumb.php?src=/uploads/products/' + $('#hidden-thumb').val() + '&w=480&h=480&zc=2';
-                image.onload = function() {
+                image.onload = function () {
                     $('.big-thumb img').attr("src", newSrc);
                 };
                 image.src = newSrc;
             }
 
             if (parseInt(stock) > 0) {
-                $('#add-to-cart').html('ADD TO CART').removeAttr('disabled');
+                $('#add-to-cart').html('ADD TO CART').removeAttr('disabled').addClass('black').removeClass('btn-red');
             } else {
-                $('#add-to-cart').html('OUT OF STOCK').attr('disabled', 'disabled');
+                $('#add-to-cart').html('OUT OF STOCK').attr('disabled', 'disabled').addClass('btn-red').removeClass('black');
             }
             $('#code').html(code);
             select_attr = true;
@@ -198,10 +253,17 @@ $(document).ready(function () {
             var product_spprice = parseInt($('#product_spprice').val());
             var product_qty = parseInt($('#qty').val());
             var product_stock = parseInt($('#product_instock').val());
+            var minimum = parseInt($('#qty').attr('min'));
+            if(minimum<=0){
+                minimum = 1;
+            }
             if (product_qty <= 0) {
                 product_qty = 1;
             }
-            if(product_stock<=0){
+            if(product_qty < minimum){
+                product_qty = minimum;
+            }
+            if (product_stock <= 0) {
                 swal({
                     title: "ผิดพลาด!",
                     text: "สินค้านี้ไม่มีในสต๊อก",
@@ -210,7 +272,7 @@ $(document).ready(function () {
                 });
                 return false;
             }
-            update_product('add', product_paid, null, [product_paid, product_pid, product_title, product_code, product_value, product_price, product_spprice, product_qty, product_image]);
+            update_product('add', product_paid, null, [product_paid, product_pid, product_title, product_code, product_value, product_price, product_spprice, product_qty, product_image,minimum]);
 
             $('#order-info .p-thumb').html($('.big-thumb').html());
             $('#order-info .p-title').html(product_title);
@@ -276,6 +338,7 @@ $(document).ready(function () {
         $(this).val(num.toFixed(0));
     });
 });
+
 function showRequest_register() {
     $('#submit-register').html('Loading...').attr('disabled', 'disabled');
     return true;
@@ -414,7 +477,8 @@ function update_product(type, index, key, value) {
                 price: value[5],
                 sp_price: value[6],
                 qty: value[7],
-                image: value[8]
+                image: value[8],
+                minimum:value[9]
             }
         }
     } else if (type === "edit") {
@@ -423,8 +487,10 @@ function update_product(type, index, key, value) {
     } else if (type === "delete") {
         delete products[index];
     }
+    localStorage.setItem('product_times', new Date().getTime());
     localStorage.setItem('products', JSON.stringify(products));
 }
+
 Object.size = function (obj) {
     var size = 0, key;
     for (key in obj) {
@@ -468,6 +534,7 @@ function cal_simpleorder() {
     }
 
 }
+
 function convertToSlug(Text) {
     return Text.toLowerCase().replace(/ /g, '-').replace(/\s+/g, '').replace(/_/g, '').replace(/[^\w\d-]+/g, '')
 }

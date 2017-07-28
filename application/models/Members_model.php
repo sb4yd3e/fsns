@@ -137,7 +137,7 @@ class Members_model extends CI_Model
 
     function get_all_admins()
     {
-        return $this->db->where('admin_group','sale')->get('admins')->result_array();
+        return $this->db->where('admin_group','sale')->or_where('admin_group','co-sale')->get('admins')->result_array();
     }
 
     function get_list_members()
