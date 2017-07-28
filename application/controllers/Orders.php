@@ -205,7 +205,9 @@ class Orders extends CI_Controller
                 }
                 $total_qty = $total_qty + $product->qty;
                 $total_product++;
-
+                if ($product->qty < $product_data['minimum']) {
+                    $product->qty = $product_data['minimum'];
+                }
 
                 //add product order
                 $this->order->add_order_product($id, array(
@@ -298,7 +300,7 @@ class Orders extends CI_Controller
 </div>
 
 <div style="margin-top:10px;margin-bottom:10px;">
-เรียนคุณ ' . $user_data['name'].'<br><br><br>
+เรียนคุณ ' . $user_data['name'] . '<br><br><br>
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกสร้างขึ้น. <br>สมาชิกจะได้รับอีเมลแจ้งเตือนเมื่อเมื่อคำสั่งซื้อได้รับการยืนยัน
 </div>
 <div>
@@ -343,6 +345,14 @@ class Orders extends CI_Controller
     <td class="right font_total line_under font_underline font_bold">' . number_format($total, 2) . '</td>
 </tr>
 </table>
+<br>
+ สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
+                <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">My Orders</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('my-orders/') . '" target="_blank">
+' . base_url('my-orders') . '
+</a> 
 </div>
 <div style="margin-top:50px;">
     FSNS Thailand
@@ -357,7 +367,7 @@ class Orders extends CI_Controller
                     $email_to = $user_data['email'];
                 }
                 send_mail($email_to, $this->setting_data['email_for_contact'], $this->setting_data['email_for_order'], 'Your order is pending.', $html);
-                echo json_encode(array('status' => 'success','id'=>$id));
+                echo json_encode(array('status' => 'success', 'id' => $id));
             } else {
                 echo json_encode(array('status' => 'error'));
             }
@@ -443,7 +453,7 @@ class Orders extends CI_Controller
                 </div>
                 
                 <div style="margin-top:10px;margin-bottom:10px;">
-                เรียนคุณ ' . $user_data['name'].'<br><br><br>
+                เรียนคุณ ' . $user_data['name'] . '<br><br><br>
                 คุณได้อัพโหลดเอกสารที่เกี่ยวกับคำสั่งซื้อ #' . str_pad($oid, 6, "0", STR_PAD_LEFT) . '.
                 <br>สมาชิกสามารถตรวจสอบรายละเอียดที่เมนู My Orders
                 </div>
@@ -461,13 +471,20 @@ class Orders extends CI_Controller
                 </div>
                 
                 <div style="margin-top:10px;margin-bottom:10px;">
-                เรียนคุณ ' . $user_data['name'].'<br><br><br>
+                เรียนคุณ ' . $user_data['name'] . '<br><br><br>
                 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($oid, 6, "0", STR_PAD_LEFT) . '.
                 <br>คุณสามารถดาวน์โหลดไฟล์ได้จากลิงค์ด้านล่าง
                 </div>
                 <div>
                 <a href="' . base_url('admin/orders/download_file/' . $fid) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
-margin-top: 20px;">Download file</a><br>
+margin-top: 20px;">Download file</a><br><br>
+ สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
+                <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">My Orders</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('my-orders/') . '" target="_blank">
+' . base_url('my-orders') . '
+</a> 
                 </div>
                 <div style="margin-top:50px;">
                     FSNS Thailand
@@ -532,14 +549,21 @@ margin-top: 20px;">Download file</a><br>
 
     function print_file($oid)
     {
-        if (!is_login()) {
-            redirect('');
+        if (!is_group(array('admin', 'co-sale', 'sale'))) {
+            if (!is_login()) {
+                redirect('');
+            }
         }
         $user = $this->session->userdata('fnsn');
-        if ($render_data['order'] = $this->order->get_user_order($user['uid'], $oid)) {
+        if (is_group(array('admin', 'co-sale', 'sale'))) {
+            $render_data['order'] = $this->order->get_user_order('', $oid);
+        } else {
+            $render_data['order'] = $this->order->get_user_order($user['uid'], $oid);
+        }
+        if ($render_data['order']) {
             $render_data['products'] = $this->order->list_products($oid);
             $render_data['payments'] = $this->order->show_payment_gateway();
-                $this->load->view('frontend/print_order', $render_data);
+            $this->load->view('frontend/print_order', $render_data);
 
         } else {
             redirect('');
@@ -569,7 +593,7 @@ margin-top: 20px;">Download file</a><br>
             if ($this->form_validation->run() && $this->input->is_ajax_request()) {
 //confirm payment
                 $pay = payment_list();
-                $gateway = explode('|' , $this->input->post('gateway'));
+                $gateway = explode('|', $this->input->post('gateway'));
                 $html = 'Name : ' . $this->input->post('name') . '<br>
 Email : ' . $this->input->post('email') . '<br>
 Phone : ' . $this->input->post('phone') . '<br>
@@ -626,12 +650,20 @@ Message : ' . nl2br($this->input->post('note')) . '
                 </div>
                 
                 <div style="margin-top:10px;margin-bottom:10px;">
-                เรียนคุณ ' . $user_data['name'].'<br><br><br>
+                เรียนคุณ ' . $user_data['name'] . '<br><br><br>
                 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($oid, 6, "0", STR_PAD_LEFT) . ' ได้รับคำสั่งแจ้งยืนยันการชำระเงินแล้ว. <br>
                 สมาชิกจะได้รับอีเมล์ยืนยันการแจ้งชำระเงินอีครั้งเมื่อได้รับการตรวจสอบ
                 </div>
                 <div>
                 ' . $html . '
+                <br>
+                สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
+                <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">My Orders</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('my-orders/') . '" target="_blank">
+' . base_url('my-orders') . '
+</a> 
                 </div>
                 <div style="margin-top:50px;">
                    FSNS Thailand

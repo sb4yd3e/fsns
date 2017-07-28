@@ -93,6 +93,7 @@ $route['catalog/(:num)/(:any)/(:num)/(:any)/(:num)'] = 'frontend/catalog/$1/$3/$
 $route['contact'] = 'frontend/contact';
 
 //product
+$route['ajax_check'] = 'frontend/ajax_check_product_data';
 $route['product/(:num)/(:any)'] = 'frontend/product_get/$1';
 
 // News //

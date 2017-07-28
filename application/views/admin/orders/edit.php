@@ -69,8 +69,13 @@
                                     <td><input type="number" value="<?php echo $product['product_qty']; ?>"
                                                class="form-control product_qty number"
                                                data-id="<?php echo $product['pa_id']; ?>"
+                                               min="<?php echo $product['minimum']; ?>"
                                                id="product_qty-<?php echo $product['pa_id']; ?>"
-                                               <?php if ($data['order_status'] != "pending"){ ?>readonly<?php } ?>></td>
+                                               <?php if ($data['order_status'] != "pending"){ ?>readonly<?php } ?>>
+                                        <?php if ($product['minimum'] > 0){ ?>
+                                        *ต้องสั่งขั้นต่ำอย่างน้อย <?php echo $product['minimum']; ?> หน่วย
+                                        <?php } ?>
+                                    </td>
                                     <td id="total_amount_p<?php echo $product['pa_id']; ?>"><?php echo $product['total_amount']; ?></td>
                                     <td>
                                         <?php if ($data['order_status'] == "pending"&&!is_group('sale')) { ?>
@@ -129,6 +134,13 @@
                                         <div id="discount-100k">0</div>
                                     </strong>
                                 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><strong>ส่วนลดพิเศษ</strong></td>
+                                <td colspan="2"><strong>
+                                        <input type="text" id="custom-discount" value="0" class="form-control digi"
+                                               <?php if ($data['order_status'] != "pending"){ ?>readonly<?php } ?>/>
+                                    </strong></td>
                             </tr>
                             <tr>
                                 <td colspan="4"><strong>ยอดรวมก่อนภาษี</strong></td>
@@ -493,6 +505,10 @@
                 <div class="form-group">
                     <label>Spacial Price : </label>
                     <div id="add-product-sp-price"></div>
+                </div>
+                <div class="form-group">
+                    <label>Minimum QTY : </label>
+                    <div id="add-minimum"></div>
                 </div>
             </div>
             <div class="modal-footer">

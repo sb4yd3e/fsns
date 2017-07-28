@@ -102,7 +102,7 @@ class Products extends CI_Controller
         foreach ($list as $products) {
             $no++;
             $row = array();
-            $row[] = '<a href="' . base_url('product/' . $products->id . '/' . url_title($products->title)) . '" target="_blank"><img src="' . base_url('timthumb.php?src=') . base_url('uploads/products/' . $products->cover) . '&w=150&h=150&z=c" target="_blank" style="width:150px; height:auto;"></a>';
+            $row[] = '<a href="' . base_url('product/' . $products->id . '/' . url_title($products->title)) . '" target="_blank"><img src="' . base_url('timthumb.php?src=') . base_url('uploads/products/' . $products->cover) . '&w=150&h=150&zc=2" target="_blank" style="width:150px; height:auto;"></a>';
             $row[] = '<a href="' . base_url('admin/products/edit/'. $products->id) . '">' . $products->title . '</a>';
             $row[] = $products->model_code;
             $row[] = $products->group;
@@ -227,7 +227,8 @@ class Products extends CI_Controller
                         'p_value' => $_POST['value'][$k],
                         'color' => $color,
                         'p_cover' => $p_cover,
-                        'in_stock' => $_POST['stock'][$k]
+                        'in_stock' => $_POST['stock'][$k],
+                        'minimum' => $_POST['minimum'][$k]
                     );
                     $this->products->add_product_alt($param_alt);
 
@@ -307,8 +308,8 @@ var html = \'<div class="clearfix row sub-alt" id="at-\'+num+\'" style="padding-
 html += \'<button type="button" class="btn btn-sm btn-danger pull-right delete-at" data-id="\'+num+\'"><i class="fa fa-times-circle"></i> </button>\';
 html += \'<div class="clearfix"></div> <div class="col-md-6"> <div class="form-group"> <label>Code*:</label>\';
 html += \'<input type="text" name="code[]" value="\' + $("#product_model_code").val() + \'" class="form-control" required/>\';
-html += \'</div><div class="form-group"><label>Photo</label><input type="file" name="photo[]" class="form-control"/></div><div class="col-md-6 no-padding"><div class="form-group"><label>Price*:</label>\';
-html += \'<input type="text" name="price[]" value="\' + $("#product_price").val() + \'" class="form-control digi" required/></div></div><div class="col-md-6 no-padding">\';
+html += \'</div><div class="form-group"><label>Photo</label><input type="file" name="photo[]" class="form-control"/></div><div class="col-md-6"><div class="form-group"><label>Price*:</label>\';
+html += \'<input type="text" name="price[]" value="\' + $("#product_price").val() + \'" class="form-control digi" required/></div></div><div class="col-md-6">\';
 html += \'<div class="form-group"><label>Special Price*:</label>\';
 html += \'<input type="text" name="sp_price[]"  value="\' + $("#product_spacial_price").val() + \'" class="form-control digi" required/>\';
 html += \'</div></div></div><div class="col-md-6">\';
@@ -334,10 +335,10 @@ html += \'<div class="form-group"><label>Model (Text)*:</label>\';
 if(attr_type==="size"){
 html += \'<div class="form-group"><label>Size (Text)*:</label>\';
 }
-html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group">\';
+html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group col-md-6">\';
 html += \'<label>Product In Stock*:</label><select name="stock[]" class="form-control" required>\';
 html += \'<option value="1">YES</option><option value="0">NO</option>\';
-html += \'</select></div></div></div></div>\';
+html += \'</select></div><div class="form-group col-md-6"> <label>Minimum Qty*:</label> <input type="text" name="minimum[]" value="0" class="form-control number" required/></div></div></div></div>\';
 $(\'#more-att\').append(html);
 $(\'#color-picker-\'+num).ColorPicker({
   color: \'#0000ff\',
@@ -456,7 +457,8 @@ $(function(){
                 'in_stock' => $this->input->post('product_in_stock'),
                 'taxonomy_term_id' => $this->input->post('taxonomy_term_id'),
                 'att_type'=> $this->input->post('type'),
-                'online' => $this->input->post('product_online')
+                'online' => $this->input->post('product_online'),
+                'at_update'=>time()
             );
             if (!empty($_FILES['cover']['name'])) {
                 if ($this->upload->do_upload('cover')) {
@@ -518,7 +520,8 @@ $(function(){
                         'p_type' => $this->input->post('type'),
                         'p_value' => $_POST['value'][$k],
                         'color' => $color,
-                        'in_stock' => $_POST['stock'][$k]
+                        'in_stock' => $_POST['stock'][$k],
+                        'minimum' => $_POST['minimum'][$k]
                     );
 
                     $p_cover = '';
@@ -634,9 +637,9 @@ var html = \'<div class="clearfix row sub-alt" id="at-\'+num+\'" style="padding-
 html += \'<button type="button" class="btn btn-sm btn-danger pull-right delete-at" data-id="\'+num+\'"><i class="fa fa-times-circle"></i> </button>\';
 html += \'<div class="clearfix"></div> <div class="col-md-6"> <div class="form-group"> <label>Code</label>\';
 html += \'<input type="text" name="code[]" value="\' + $("#product_model_code").val() + \'" class="form-control" required/>\';
-html += \'</div><div class="form-group"><label>Photo</label><input type="file" name="photo[]" class="form-control"/></div><div class="col-md-6 no-padding"><div class="form-group"><label>Price*:</label>\';
+html += \'</div><div class="form-group"><label>Photo</label><input type="file" name="photo[]" class="form-control"/></div><div class="col-md-6"><div class="form-group"><label>Price*:</label>\';
 html += \'<input type="text" name="price[]" value="\' + $("#product_price").val() + \'" class="form-control digi" required/></div></div>\';
-html += \'<div class="col-md-6 no-padding"><div class="form-group"><label>Special Price*:</label>\';
+html += \'<div class="col-md-6"><div class="form-group"><label>Special Price*:</label>\';
 html += \'<input type="text" name="sp_price[]"  value="\' + $("#product_spacial_price").val() + \'" class="form-control digi" required/>\';
 html += \'</div></div></div><div class="col-md-6">\';
 
@@ -661,10 +664,10 @@ html += \'<div class="form-group"><label>Model (Text)*:</label>\';
 if(attr_type==="size"){
 html += \'<div class="form-group"><label>Size (Text)*:</label>\';
 }
-html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group">\';
+html += \'<input type="text" name="value[]" class="form-control" required/></div><div class="form-group col-md-6">\';
 html += \'<label>Product In Stock</label><select name="stock[]" class="form-control" required>\';
 html += \'<option value="1">YES</option><option value="0">NO</option>\';
-html += \'</select></div></div></div></div>\';
+html += \'</select></div><div class="form-group col-md-6"> <label>Minimum Qty*:</label> <input type="text" name="minimum[]" value="0" class="form-control number" required/></div></div></div></div>\';
 $(\'#more-att\').append(html);
 $(\'#color-picker-\'+num).ColorPicker({
   color: \'#0000ff\',

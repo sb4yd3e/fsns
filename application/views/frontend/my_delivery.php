@@ -7,9 +7,10 @@
                 <p>ไม่มีสินค้าในรถเข็น</p>
             </section>
             <div id="shiping_address" class="wpcf7">
+                <form method="post" action="<?php echo base_url('checkout/delivery-info'); ?>" id="shipping-form">
                 <div class="col-6">
                     <a href="<?php echo base_url('shopping-carts'); ?>" id="back-btn">< Back to carts</a>
-                    <form method="post" action="<?php echo base_url('checkout/delivery-info'); ?>" id="shipping-form">
+
                         <div class="box-border">
                             <h5>ที่อยู่สำหรับจัดส่งสินค้า(Shipping information)</h5>
                             <fieldset>
@@ -37,7 +38,7 @@
                             </fieldset>
                         </div>
                         <div class="box-border">
-                            <h5>ที่อยู่สำหรับจัดส่งใบเสร็จรับเงิน(Billing Address)</h5>
+                            <h5>ที่อยู่สำหรับ ใบเสร็จ/ใบกำกับภาษี(Billing Address)</h5>
                             <fieldset>
                                 <label> ชื่อ-นามสกุล(Billing Name)<span class="required-star">*</span></label>
                                 <input type="text" name="billing_name" class="wpcf7-text"
@@ -67,11 +68,11 @@
                         <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>"
                                value="<?php echo $this->security->get_csrf_hash(); ?>">
 
-                        <button class="wpcf7-submit" type="submit" id="submit-shipping">Continue to checkout</button>
-                    </form>
+
+
                 </div>
-                <div class="col-6 hide-mobile">
-                    <div id="shoping-detail">
+                <div class="col-6">
+                    <div id="shoping-detail" class="hide-mobile">
                         <div id="head-table">สรุปการสั่งซื้อ</div>
                         <table class="table">
                             <thead>
@@ -102,7 +103,9 @@
                             </tfoot>
                         </table>
                     </div>
+                    <button class="wpcf7-submit" style="float: right; margin-top: 10px;" type="submit" id="submit-shipping">Continue to checkout</button>
                 </div>
+                </form>
                 <div class="clearfix"></div>
             </div>
 
@@ -155,7 +158,7 @@
                 } else {
                     t = products[i]['price'] * products[i]['qty'];
                     summery = summery + t;
-                    html += '<tr><td>' + products[i]['title'] + '</td><td>' + products[i]['qty'] + '</td><td>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</td></tr>';
+                    html += '<tr><td>' + '[' + products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</td><td>' + products[i]['qty'] + '</td><td>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</td></tr>';
                 }
 
                 $('#shoping-detail tbody').append(html);

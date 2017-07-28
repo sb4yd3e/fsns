@@ -187,7 +187,7 @@
                                                 <label>Photo</label>
                                                 <input type="file" name="photo[]" class="form-control"/>
                                             </div>
-                                            <div class="col-md-6 no-padding">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Price*:</label>
                                                     <input type="text" name="price[]"
@@ -195,7 +195,7 @@
                                                            class="form-control digi" required/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 no-padding">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Special Price*:</label>
                                                     <input type="text" name="sp_price[]"
@@ -238,13 +238,18 @@
                                                 <label>Color (Text)*:</label>
                                                 <input type="text" name="value[]" class="form-control" required/>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group col-md-6">
                                                 <label>Product In Stock*:</label>
                                                 <?php echo form_dropdown('stock[]', array(
                                                     '1' => 'YES',
                                                     '0' => 'NO'
                                                 ), '', 'class="form-control" required'); ?>
 
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label>Minimum Qty*:</label>
+                                                <input type="text" name="minimum[]" value="0" class="form-control number"
+                                                       required/>
                                             </div>
                                             <div id="box-type">
                                                 <button type="button" class="btn btn-info btn-sm" id="add-color">Add
@@ -294,7 +299,7 @@
                                                 <input type="file" name="photo[]" class="form-control"/>
                                             </div>
 
-                                            <div class="col-md-6 no-padding">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Price*:</label>
                                                     <input type="number" name="price[]"
@@ -302,7 +307,7 @@
                                                            class="form-control" required/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 no-padding">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Special Price*:</label>
                                                     <input type="number" name="sp_price[]"
@@ -357,13 +362,18 @@
                                                        value="<?php echo isset($product_alts[0]['p_value']) ? $product_alts[0]['p_value'] : ""; ?>"
                                                        class="form-control" required/>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group col-md-6">
                                                 <label>Product In Stock*:</label>
                                                 <?php echo form_dropdown('stock[]', array(
                                                     '1' => 'YES',
                                                     '0' => 'NO'
                                                 ), isset($product_alts[0]['in_stock']) ? $product_alts[0]['in_stock'] : "", 'class="form-control" required'); ?>
 
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label>Minimum Qty*:</label>
+                                                <input type="text" name="minimum[]" value="<?php echo isset($product_alts[0]['minimum']) ? $product_alts[0]['minimum'] : "0"; ?>" class="form-control number"
+                                                       required/>
                                             </div>
                                             <div id="box-type" style="display: none;">
                                                 <button type="button" class="btn btn-info btn-sm" id="add-color">Add
@@ -411,14 +421,14 @@
                                                         <input type="file" name="photo[]" class="form-control"/>
                                                     </div>
 
-                                                    <div class="col-md-6 no-padding">
+                                                    <div class="col-md-6">
                                                         <div class="form-group"><label>Price*:</label>
                                                             <input type="number" name="price[]" class="form-control"
                                                                    value="<?php echo isset($pa['normal_price']) ? $pa['normal_price'] : ""; ?>"
                                                                    required/>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6 no-padding">
+                                                    <div class="col-md-6">
                                                         <div class="form-group"><label>Special Price*:</label>
                                                             <input type="number" name="sp_price[]"
                                                                    value="<?php echo isset($pa['special_price']) ? $pa['special_price'] : ""; ?>"
@@ -474,13 +484,18 @@
                                                                value="<?php echo isset($pa['p_value']) ? $pa['p_value'] : ""; ?>"
                                                                required/>
                                                     </div>
-                                                    <div class="form-group">
+                                                    <div class="form-group col-md-6">
                                                         <label>Product In Stock*:</label>
                                                         <?php echo form_dropdown('stock[]', array(
                                                             '1' => 'YES',
                                                             '0' => 'NO'
 
                                                         ), isset($pa['in_stock']) ? $pa['in_stock'] : "", 'class="form-control" required'); ?>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Minimum Qty*:</label>
+                                                        <input type="text" name="minimum[]" value="<?php echo isset($pa['minimum']) ? $pa['minimum'] : "0"; ?>" class="form-control number"
+                                                               required/>
                                                     </div>
                                                 </div>
                                             </div>

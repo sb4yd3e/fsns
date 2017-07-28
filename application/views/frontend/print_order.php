@@ -388,7 +388,7 @@
                 </div>
 
                 <div style="float: left;width: 268px;text-align: right;font-size: 13px;text-align:center;border:0px solid #e0e0e0;font-size:30px; font-weight: bold;">
-                    ใบสั่งซื้อสินค้า
+                    ใบเสนอราคา
                 </div>
 
                 <div style="float: left;width: 300px;text-align: right;font-size: 13px;">
@@ -429,6 +429,19 @@
                             <td width="100">ชื่อ-นามสกุล</td>
                             <td><?php echo $order['shipping_name']; ?></td>
                         </tr>
+                        <?php if($order['order_type']=='business'){
+                            $this->load->model('member_model','members');
+                            $order_biz = $this->members->get_members($order['uid']);
+                            ?>
+                            <tr>
+                                <td width="100" valign="top">บริษัท</td>
+                                <td>
+                                    <?php echo $order_biz['business_name']; ?><br>
+                                    Tax ID : <?php echo $order_biz['business_number']; ?><br>
+                                    Branch : <?php echo $order_biz['business_branch']; ?><br>
+                                </td>
+                            </tr>
+                        <?php } ?>
                         <tr valign="top">
                             <td>ที่อยู่</td>
                             <td>
@@ -453,6 +466,16 @@
                             <td width="100">ชื่อ-นามสกุล</td>
                             <td><?php echo $order['billing_name'] ? $order['billing_name'] : $order['shipping_name']; ?></td>
                         </tr>
+                        <?php if($order['order_type']=='business'){ ?>
+                            <tr>
+                                <td width="100" valign="top">บริษัท</td>
+                                <td>
+                                    <?php echo $order_biz['business_name']; ?><br>
+                                    Tax ID : <?php echo $order_biz['business_number']; ?><br>
+                                    Branch : <?php echo $order_biz['business_branch']; ?><br>
+                                </td>
+                            </tr>
+                        <?php } ?>
                         <tr valign="top">
                             <td>ที่อยู่</td>
                             <td>
@@ -519,6 +542,11 @@
                     <td colspan="4"></td>
                     <td colspan="2" class="line_under right font_bold">คูปองส่วนลด (บาท)</td>
                     <td class="right line_under font_bold"><?php echo number_format(((($order['amount'] - $order['spacial_amount']) / 100) * $order['discount']) + $order['discount_100k'], 2); ?></td>
+                </tr>
+                <tr style="background-color: #fff;   height:35px;">
+                    <td colspan="4"></td>
+                    <td colspan="2" class="line_under right font_bold">ส่วนลดพิเศษ</td>
+                    <td class="right line_under font_bold"><?php echo number_format($order['custom_discount'],2); ?></td>
                 </tr>
                 <tr style="background-color: #fff;   height:35px;">
                     <td colspan="4"></td>

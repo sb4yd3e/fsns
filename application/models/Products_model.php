@@ -8,7 +8,7 @@ class Products_model extends CI_Model
     var $table = 'products';
     var $column_order = array(null, 'title', 'model_code', 'group', 'online', 'normal_price', 'special_price', 'in_stock', null);
     var $column_search = array('title', 'model_code', 'group');
-    var $order = array('id' => 'desc');
+    var $order = array('at_update' => 'desc');
 
     function __construct()
     {
@@ -128,11 +128,12 @@ class Products_model extends CI_Model
     {
 
         if ($taxonomy_term_id == 0) {
-            $query = $this->db->select('products.id,products.title,products.normal_price,products.online,products.group,products.body,products.online,cover,pdf,taxonomy_terms.title as term_title')->order_by('id')->from('products')->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->get();
+            $query = $this->db->select('products.id,products.title,products.special_price,products.normal_price,products.online,products.group,products.body,products.online,cover,pdf,taxonomy_terms.title as term_title')->order_by('products.title')->from('products')->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->get();
         } else {
-            $query = $this->db->select('products.id,products.title,products.normal_price,products.online,products.group,products.body,products.online,cover,pdf,taxonomy_terms.title as term_title')
+            $query = $this->db->select('products.id,products.title,products.special_price,products.normal_price,products.online,products.group,products.body,products.online,cover,pdf,taxonomy_terms.title as term_title')
                 ->where('taxonomy_term_id', $taxonomy_term_id)
                 ->order_by('products.group')
+                ->order_by('products.title')
                 ->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')
                 //->group_by('products.group')
                 ->get('products');

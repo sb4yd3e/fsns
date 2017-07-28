@@ -57,7 +57,7 @@
                 <form action="<?php echo base_url('register'); ?>" method="post" id="register-form">
                     <div class="col-6">
                         <div class="box-border">
-                            <h5>Account information</h5>
+                            <h5>ข้อมูลผู้ใช้งาน(account information)</h5>
                             <fieldset>
                                 <label>Email (ใช้เป็นชื่อใช้งาน / Will be your username)<span class="required-star">*</span></label>
                                 <input type="email" name="email" class="wpcf7-text" placeholder="Email address" maxlength="100"
@@ -122,31 +122,10 @@
                     </div>
                     <div class="col-6">
                         <div class="box-border">
-                            <h5>Shipping information</h5>
-
-                            <fieldset>
-                                <label>ชื่อผู้รับสินค้า(Shipping Name)<span class="required-star">*</span></label>
-                                <input type="text" name="shipping_name" class="wpcf7-text" placeholder="Shipping Name" maxlength="200" required>
-                            </fieldset>
-
-                            <fieldset>
-                                <label>ที่อยู่จัดสิ่งสินค้า(Shipping Address)<span class="required-star">*</span></label>
-                                <textarea name="shipping_address" class="wpcf7-text" placeholder="Shipping Address" rows="4" required></textarea>
-                            </fieldset>
-                            <fieldset>
-                                <label>จังหวัด(Shipping Province)<span class="required-star">*</span></label>
-                                <?php echo form_dropdown('shipping_province',list_province(),'','class="wpcf7-text" required'); ?>
-                            </fieldset>
-                            <fieldset>
-                                <label>รหัสไปรษณีย์(Shipping Zip)<span class="required-star">*</span></label>
-                                <input type="text" name="shipping_zip" class="wpcf7-text number" placeholder="Zip code" maxlength="5" minlength="5" required>
-                            </fieldset>
-                        </div>
-                        <div class="box-border">
-                            <h5>Billing Address</h5>
+                            <h5>ที่อยู่สำหรับ ใบเสร็จ/ใบกำกับภาษี(Billing Address)</h5>
                             <fieldset>
                                 <label>ชื่อผู้รับ(Billing Name)<span class="required-star">*</span></label>
-                                <input type="text" name="billing_name" class="wpcf7-text"
+                                <input type="text" name="billing_name" id="billing_name" class="wpcf7-text"
                                        maxlength="200"
                                        value=""
                                        required>
@@ -154,13 +133,13 @@
 
                             <fieldset>
                                 <label>ที่อยู่(Billing Address)<span class="required-star">*</span></label>
-                                <textarea name="billing_address" class="wpcf7-text"
+                                <textarea name="billing_address" id="billing_address" class="wpcf7-text"
                                           rows="4"
                                           required></textarea>
                             </fieldset>
                             <fieldset>
                                 <label>จังหวัด(Billing Province)<span class="required-star">*</span></label>
-                                <?php echo form_dropdown('billing_province', list_province(), '', 'class="wpcf7-text"required'); ?>
+                                <?php echo form_dropdown('billing_province', list_province(), '', 'class="wpcf7-text" id="billing_province" required'); ?>
                             </fieldset>
                             <fieldset>
                                 <label>รหัสไปรษณีย์(Billing Zip)<span class="required-star">*</span></label>
@@ -172,6 +151,32 @@
                             </fieldset>
 
                         </div>
+                        <div class="box-border">
+                            <h5>ที่อยู่สำหรับจัดส่งสินค้า(Shipping information)</h5>
+
+                            <fieldset>
+                                <input type="checkbox" style="float: left;" id="clone-address"> <label style="width:90%;margin-top: 4px;" for="clone-address">ใช้ที่อยู่เดียวกับ ใบเสร็จ/ใบกำกับภาษี(Billing Address)</label>
+                            </fieldset>
+
+                            <fieldset>
+                                <label>ชื่อผู้รับสินค้า(Shipping Name)<span class="required-star">*</span></label>
+                                <input type="text" name="shipping_name" id="shipping_name" class="wpcf7-text" placeholder="Shipping Name" maxlength="200" required>
+                            </fieldset>
+
+                            <fieldset>
+                                <label>ที่อยู่จัดสิ่งสินค้า(Shipping Address)<span class="required-star">*</span></label>
+                                <textarea name="shipping_address" id="shipping_address" class="wpcf7-text" placeholder="Shipping Address" rows="4" required></textarea>
+                            </fieldset>
+                            <fieldset>
+                                <label>จังหวัด(Shipping Province)<span class="required-star">*</span></label>
+                                <?php echo form_dropdown('shipping_province',list_province(),'','class="wpcf7-text" id="shipping_province" required'); ?>
+                            </fieldset>
+                            <fieldset>
+                                <label>รหัสไปรษณีย์(Shipping Zip)<span class="required-star">*</span></label>
+                                <input type="text" name="shipping_zip" id="shipping_zip" class="wpcf7-text number" placeholder="Zip code" maxlength="5" minlength="5" required>
+                            </fieldset>
+                        </div>
+
                     </div>
                     <div class="clearfix"></div>
                     <div class="g-recaptcha" data-sitekey="<?php echo $this->config->item('recaptcha_key'); ?>"></div>
@@ -195,6 +200,14 @@
                 var id = window.location.hash.substring(1);
                 $('#link-'+id).click();
                 $('.link-'+id).click();
+            });
+            $(document).on('change','#clone-address',function(){
+                if($(this).is(":checked")){
+                    $('#shipping_name').val($('#billing_name').val());
+                    $('#shipping_address').val($('#billing_address').val());
+                    $('#shipping_province').val($('#billing_province').val());
+                    $('#shipping_zip').val($('#billing_zip').val());
+                }
             });
 
         });

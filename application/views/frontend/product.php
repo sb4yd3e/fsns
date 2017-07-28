@@ -55,7 +55,7 @@
                                     <?php echo $product['body'] ?>
                                 </span>
                                     <?php if (is_login() && $product['online'] == 1) { ?>
-                                        <div class="title"><?php echo number_format($product['normal_price'],2); ?> บาท</div>
+                                        <div class="title"><?php echo number_format(($product['special_price'] >0)?$product['special_price']:$product['normal_price'],2); ?> บาท</div>
                                         <?php } else { ?>
                                         <div class="title">กรุณาสอบถาม</div>
                                     <?php } ?>

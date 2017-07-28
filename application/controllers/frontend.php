@@ -233,6 +233,7 @@ class Frontend extends CI_Controller
         $this->render_data['product_attr'] = $this->product->get_attribute($product_id);
         $this->render_data['product_list'] = $this->product->get_other_product($product_id, 5);
         $this->render_data['web_title'] = $this->render_data['product_data']['title'];
+        $this->render_data['web_nav'] = 'Home / '.$this->render_data['product_data']['term_title'] .' / '.$this->render_data['product_data']['title'];
 
         $this->template->write_view('content', 'frontend/product_view', $this->render_data);
         $this->template->render();
@@ -265,5 +266,41 @@ class Frontend extends CI_Controller
         }
     }
 
+    function ajax_check_product_data()
+    {
+        if ($this->input->is_ajax_request()) {
+            $json = json_decode($this->input->post('products'));
+            if ($json && count($json) > 0) {
+                $product = array();
+                foreach ($json as $k => $val) {
+                    $rs = $this->db->select('product_attribute.*,products.title,products.cover')->from('product_attribute')->join('products','product_attribute.pid = products.id')->where('product_attribute.pa_id',$k)->get()->row_array();
+                    if($rs){
+                        if($rs['minimum'] > $val->qty){
+                            $val->qty = $rs['minimum'];
+                        }
+                        if($rs['p_cover']!=""){
+                            $val->image = $rs['p_cover'];
+                        }else{
+                            $val->image = $rs['cover'];
+                        }
+                        $product[$k] = array(
+                          'pid'=>$rs['pid'],
+                            'title'=>$rs['title'],
+                            'code'=>$rs['code'],
+                            'value'=>$rs['p_value'],
+                            'price'=>$rs['normal_price'],
+                            'sp_price'=>$rs['special_price'],
+                            'qty'=>$val->qty,
+                            'image'=>'/timthumb.php?src=/uploads/products/'. $val->image,
+                            'minimum'=>$rs['minimum']
+                        );
+                    }
+                }
+                echo json_encode($product, JSON_NUMERIC_CHECK);
+            }
+        } else {
+            show_404();
+        }
+    }
 
 }

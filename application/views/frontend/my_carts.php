@@ -3,7 +3,7 @@
 
         <div id="membber-form" style="min-height: 400px;">
             <div align="center"><h2>ตะกร้าสินค้า</h2></div>
-              <section class="infobox" id="empty">
+            <section class="infobox" id="empty">
                 <p>ไม่มีสินค้าในรถเข็น</p>
             </section>
             <div class="shopping-cart" id="table-orders">
@@ -54,20 +54,21 @@
             for (var i in products) {
                 var t = 0;
                 var html = '<div class="product" id="p-' + i + '"><div class="product-image"><img src="' + products[i]['image'] + '"></div><div class="product-details">';
-                html += '<div class="product-title">' + '['+products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</div><p class="product-description"></p></div><div class="product-price">';
+                html += '<div class="product-title">' + '[' + products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</div><p class="product-description"></p></div><div class="product-price">';
                 if (products[i]['sp_price'] > 0) {
-
-                    html += '<div class="cart-spprice"> ราคาพิเศษ : ' + products[i]['sp_price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div>';
-                    html += '<div class="cart-price">ราคา : <s>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s></div>';
+                    html += '<div class="cart-price"><s>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s></div>';
+                    html += '<div class="cart-spprice">' + products[i]['sp_price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div>';
                     t = products[i]['sp_price'] * products[i]['qty'];
                 } else {
-                    t =  products[i]['price'] * products[i]['qty'];
-                    html += '<div class="cart-price">ราคา : ' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div>';
+                    t = products[i]['price'] * products[i]['qty'];
+                    html += '<div class="cart-price">' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div>';
                 }
-
-                html += '</div><div class="product-quantity"><input type="number" class="wpcf7-text number" min="1" data-id="' + i + '" value="' + products[i]['qty'] + '"></div>';
-                html += '<div class="product-removal"><button class="remove-product"  data-id="' + i + '">ลบ</button></div><div  id="price-' + i + '" class="product-line-price" >' + t.toFixed(2) + '</div> </div> ';
-
+                var msg_minimum = '';
+                if(products[i]['minimum'] > 1){
+                    msg_minimum = '*ขั้นต่ำ '+products[i]['minimum']+' หน่วย';
+                }
+                html += '</div><div class="product-quantity"><input type="number" class="wpcf7-text number" min="' + products[i]['minimum'] + '" data-id="' + i + '" value="' + products[i]['qty'] + '">'+msg_minimum+'</div>';
+                html += '<div class="product-removal"><button class="remove-product"  data-id="' + i + '">ลบ</button></div><div  id="price-' + i + '" class="product-line-price" >' + t.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div></div>';
 
                 $('#order-list').append(html);
             }
@@ -81,6 +82,10 @@
                 num = 1;
             } else {
                 num = parseInt(num);
+            }
+            if (num < parseInt($(this).attr('min'))) {
+                num = parseInt($(this).attr('min'));
+                $(this).val(num);
             }
             update_product('edit', id, 'qty', num);
             cal_simpleorder();
