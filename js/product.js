@@ -55,7 +55,7 @@ $(document).ready(function () {
         var aid = $(this).data('aid');
         var value = $(this).data('value');
         var cover = $(this).data('cover');
-        var minimum = parseInt($(this).data('cover'));
+        var minimum = parseInt($(this).data('minimum'));
         if (minimum < 0) {
             minimum = 1;
         }

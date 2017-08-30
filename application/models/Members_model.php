@@ -183,4 +183,8 @@ class Members_model extends CI_Model
     function transfer_order($old_id,$new_id){
         return $this->db->where('sale_id',$old_id)->where('order_status !=','success')->where('order_status !=','cancel')->update('orders',array('sale_id'=>$new_id));
     }
+
+    function get_user_by_email($email){
+        return $this->db->select('token')->where('email',$email)->where('is_active','0')->get('users')->row_array();
+    }
 }

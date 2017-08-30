@@ -141,11 +141,11 @@
                                 </div>
                                 <label for="business_province" class="control-label">Business Province</label>
                                 <div class="form-group">
-                                    <?php echo form_dropdown('business_province',list_province(),$this->input->post('business_province'),'class="form-control" autocomplete="off" required'); ?>
+                                    <?php echo form_dropdown('business_province',list_province(),$this->input->post('business_province'),'class="form-control" autocomplete="off"'); ?>
                                 </div>
                                 <label for="business_note" class="control-label">Business Note</label>
                                 <div class="form-group">
-                                    <textarea name="business_note" class="form-control" id="business_note" autocomplete="off" required><?php echo $this->input->post('business_note'); ?></textarea>
+                                    <textarea name="business_note" class="form-control" id="business_note" autocomplete="off"><?php echo $this->input->post('business_note'); ?></textarea>
                                 </div>
 							</div>
 						</div>

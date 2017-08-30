@@ -69,8 +69,7 @@
                         </table>
                         <?php if ($order['order_status'] != "success" && $order['order_status'] != "cancel") { ?>
                             <div id="upload-box" class="wpcf7">
-                                <form method="post" action=""
-                                      enctype="multipart/form-data" id="ajax-upload-document">
+                                <form method="post" enctype="multipart/form-data" id="ajax-upload-document">
                                     <br>
                                     <fieldset>
                                         <label>ชื่อไฟล์ : </label>

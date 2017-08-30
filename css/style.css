@@ -1632,6 +1632,12 @@ li.pricing-footer {
     margin-bottom: 0;
 }
 
+.page-title .title a {
+    font: bold 20px 'Open Sans', Arial, sans-serif;
+    line-height: normal;
+    color: #444;
+}
+
 .page-title p.subtitle {
     float: left;
     color: #777;
@@ -4602,4 +4608,8 @@ h5#reply-title {
         float: none;
         margin: 10px auto 0;
     }
+}
+.link-alert{
+    font: 15px 'Open Sans', Arial, sans-serif;
+    line-height: 18px;
 }

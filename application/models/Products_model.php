@@ -165,7 +165,7 @@ class Products_model extends CI_Model
 
     public function get_product($product_id)
     {
-        $query = $this->db->select('products.*,taxonomy_terms.id as term_id,taxonomy_terms.title as term_title')->order_by('id')->from('products')->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->where('products.id', $product_id)->get();
+        $query = $this->db->select('products.*,taxonomy_terms.id as term_id,taxonomy_terms.title as term_title,taxonomy_terms.id as sub_cat_id,taxonomy_terms.parent_id as cat_id')->order_by('id')->from('products')->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->where('products.id', $product_id)->get();
         if ($query->num_rows() > 0) {
             return $query->row_array();
         }
@@ -245,5 +245,9 @@ class Products_model extends CI_Model
     public function delete_alt($key)
     {
         return $this->db->where('pa_id', $key)->delete('product_attribute');
+    }
+    public function get_title_cat($cid){
+        $db = $this->db->select('title')->where('id',$cid)->get('taxonomy_terms')->row_array();
+        return $db['title'];
     }
 }

@@ -48,6 +48,8 @@ class Orders_model extends CI_Model
         }
         if (isset($_POST['status']) && $_POST['status'] != "") {
             $this->db->where("order_status", $_POST['status']);
+        }else{
+            $this->db->where("order_status !=", 'cancel');
         }
 
         if (is_group('sale')) {
