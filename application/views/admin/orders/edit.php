@@ -155,6 +155,12 @@
                                     </strong></td>
                             </tr>
                             <tr>
+                                <td colspan="4"><strong>รวมเป็นเงิน</strong></td>
+                                <td colspan="2"><strong>
+                                        <div id="before-shipping">0</div>
+                                    </strong></td>
+                            </tr>
+                            <tr>
                                 <td colspan="4"><strong>ค่าส่งสินค้า</strong></td>
                                 <td colspan="2"><strong>
                                         <input type="text" id="shipping-amount" value="0" class="form-control digi"
@@ -162,7 +168,7 @@
                                     </strong></td>
                             </tr>
                             <tr>
-                                <td colspan="4"><strong>รวมสุทธิ</strong></td>
+                                <td colspan="4"><strong>รวมเป็นเงินที่ต้องชำระ</strong></td>
                                 <td colspan="2"><strong>
                                         <div id="total-price">0</div>
                                     </strong></td>

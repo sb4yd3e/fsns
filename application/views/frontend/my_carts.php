@@ -54,7 +54,7 @@
             for (var i in products) {
                 var t = 0;
                 var html = '<div class="product" id="p-' + i + '"><div class="product-image"><img src="' + products[i]['image'] + '"></div><div class="product-details">';
-                html += '<div class="product-title">' + '[' + products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</div><p class="product-description"></p></div><div class="product-price">';
+                html += '<div class="product-title">' + products[i]['title'] +'</div><p class="product-description">' + products[i]['code'] + ' - ' + products[i]['value'] + ' </p></div><div class="product-price">';
                 if (products[i]['sp_price'] > 0) {
                     html += '<div class="cart-price"><s>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s></div>';
                     html += '<div class="cart-spprice">' + products[i]['sp_price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div>';

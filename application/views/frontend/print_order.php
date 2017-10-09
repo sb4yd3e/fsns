@@ -366,6 +366,9 @@
         .reset-this ul li:first-child,.reset-this ol li:first-child{
             font-size: inherit !important;
         }
+        td{
+            padding: 5px;
+        }
     </style>
 
 </head>
@@ -512,19 +515,19 @@
                 $total = 0;
                 foreach ($products as $k => $product) { ?>
                     <tr>
-                        <td align="center"><?php echo $k + 1; ?></td>
+                        <td align="center" class="cart_t cart_l"><?php echo $k + 1; ?></td>
                         <td class="cart_t cart_r cart_l"><?php echo $product['product_code']; ?></td>
-                        <td class="cart_t cart_r"><?php echo $product['product_title'] . ' - ' . $product['product_value']; ?></td>
+                        <td class="cart_t cart_r"><?php echo $product['product_title']; ?><br>- <?php echo $product['product_value']; ?></td>
                         <td class="center cart_t cart_r"
                             style="font-weight: bold;"><?php echo number_format($product['product_qty']); ?></td>
-                        <td class="right cart_t cart_r "><?php echo number_format($product['product_amount'], 2); ?></td>
-                        <td class="right font_discount cart_t cart_r">
+                        <td class="center cart_t cart_r "><?php echo number_format($product['product_amount'], 2); ?></td>
+                        <td class="center font_discount cart_t cart_r" align="center">
                             <?php if ($product['product_spacial_amount'] > 0) {
-                                $total = $total + $product['product_spacial_amount'];
+                                $total = $total + ($product['product_spacial_amount'] * $product['product_qty']);
                                 echo number_format(($product['product_amount'] - $product['product_spacial_amount']) * $product['product_qty'], 2);
                             } else {
                                 echo '0.00';
-                                $total = $total + $product['product_amount'];
+                                $total = $total + ($product['product_amount'] * $product['product_qty']);
                             }; ?></td>
                         <td class="right cart_t cart_r"><?php echo number_format($product['total_amount'], 2); ?></td>
                     </tr>
@@ -533,36 +536,41 @@
                     <td colspan="5" class="right font_bold cart_t cart_r cart_l cart_b" style="text-align:right">
                         รวมราคาสินค้า (บาท)
                     </td>
-                    <td class="right font_bold font_discount cart_t  cart_b"><?php echo number_format($order['spacial_amount'], 2); ?></td>
-                    <td class="right font_bold font_total cart_t cart_r cart_l cart_b"><?php echo number_format($total, 2); ?></td>
+                    <td class="center font_bold font_discount cart_t  cart_b" align="right"><?php echo number_format($order['spacial_amount'], 2); ?></td>
+                    <td class="right font_bold font_total cart_t cart_r cart_l cart_b" align="right"><?php echo number_format($total, 2); ?></td>
                 </tr>
 
 
                 <tr style="background-color: #fff;   height:35px;">
                     <td colspan="4"></td>
                     <td colspan="2" class="line_under right font_bold">คูปองส่วนลด (บาท)</td>
-                    <td class="right line_under font_bold"><?php echo number_format(((($order['amount'] - $order['spacial_amount']) / 100) * $order['discount']) + $order['discount_100k'], 2); ?></td>
+                    <td class="right line_under font_bold" align="right"><?php echo number_format(((($order['amount'] - $order['spacial_amount']) / 100) * $order['discount']) + $order['discount_100k'], 2); ?></td>
                 </tr>
                 <tr style="background-color: #fff;   height:35px;">
                     <td colspan="4"></td>
                     <td colspan="2" class="line_under right font_bold">ส่วนลดพิเศษ</td>
-                    <td class="right line_under font_bold"><?php echo number_format($order['custom_discount'],2); ?></td>
+                    <td class="right line_under font_bold" align="right"><?php echo number_format($order['custom_discount'],2); ?></td>
                 </tr>
                 <tr style="background-color: #fff;   height:35px;">
                     <td colspan="4"></td>
                     <td colspan="2" class="line_under right font_bold">ภาษีมูลค่าเพิ่ม 7% (บาท)</td>
-                    <td class="right line_under font_bold"><?php echo number_format($order['vat_amount'], 2); ?></td>
+                    <td class="right line_under font_bold" align="right"><?php echo number_format($order['vat_amount'], 2); ?></td>
+                </tr>
+                <tr style="background-color: #fff;   height:35px;">
+                    <td colspan="4"></td>
+                    <td colspan="2" class="line_under right font_bold">รวมเป็นเงิน (บาท)</td>
+                    <td class="right line_under font_bold" align="right"><?php echo number_format($order['total_amount'] - $order['shipping_amount'], 2); ?></td>
                 </tr>
                 <tr style="background-color: #fff;   height:35px;">
                     <td colspan="4"></td>
                     <td colspan="2" class="line_under right font_bold">ค่าจัดส่ง (บาท)</td>
-                    <td class="right line_under font_bold"><?php echo number_format($order['shipping_amount'], 2); ?></td>
+                    <td class="right line_under font_bold" align="right"><?php echo number_format($order['shipping_amount'], 2); ?></td>
                 </tr>
 
                 <tr style="background-color: #fff;   height:35px;">
                     <td colspan="4"></td>
-                    <td colspan="2" class="line_under right font_bold">รวมเป็นเงินทั้งสิ้น</td>
-                    <td class="right font_total line_under font_underline font_bold"><?php echo number_format($order['total_amount'], 2); ?></td>
+                    <td colspan="2" class="right font_bold">รวมเป็นเงินที่ต้องชำระ</td>
+                    <td class="right font_total  font_bold" align="right"><?php echo number_format($order['total_amount'], 2); ?></td>
                 </tr>
             </table>
 
@@ -624,8 +632,8 @@
                             </div>
                             <div style="font-size:13px;margin-top:15px;">
                                 <p>Tel: 083-839-2929, 081-615-2621<br>
-                                    Fax: 02-6885755<br>
-                                    Email : contact@fsns-thailand.com</p>
+                                    Fax: 024208829<br>
+                                    Email : admin@fsns-thailand.com</p>
                             </div>
                         </div>
                     </td>

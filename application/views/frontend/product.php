@@ -52,7 +52,7 @@
                                     </p>
 
                                     <span class="subtitle">
-                                    <?php echo $product['body'] ?>
+                                    <?php echo $product['model_code'] ?>
                                 </span>
                                     <?php if (is_login() && $product['online'] == 1) { ?>
                                         <div class="title"><?php echo number_format(($product['special_price'] >0)?$product['special_price']:$product['normal_price'],2); ?> บาท</div>

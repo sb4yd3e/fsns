@@ -142,7 +142,7 @@ class Products extends CI_Controller
         $this->form_validation->set_error_delimiters('<div class="alert alert-warning">', '</div>');
         $this->form_validation->set_rules('title', 'Product title', 'required|max_length[80]');
         $this->form_validation->set_rules('group', 'Product group', 'required|max_length[80]');
-        $this->form_validation->set_rules('body', 'Product Description', 'required|min_length[10]');
+//        $this->form_validation->set_rules('body', 'Product Description', 'required|min_length[10]');
         $this->form_validation->set_rules('product_price', 'Product normal price', 'required');
         $this->form_validation->set_rules('product_spacial_price', 'Product special price', 'required');
         $this->form_validation->set_rules('model_code', 'Product Model Code', 'required');
@@ -437,7 +437,7 @@ $(function(){
         $this->form_validation->set_error_delimiters('<div class="alert alert-warning">', '</div>');
         $this->form_validation->set_rules('title', 'Product title', 'required|max_length[80]');
         $this->form_validation->set_rules('group', 'Product group', 'required|max_length[80]');
-        $this->form_validation->set_rules('body', 'Product Description', 'required|min_length[10]');
+//        $this->form_validation->set_rules('body', 'Product Description', 'required|min_length[10]');
         $this->form_validation->set_rules('product_price', 'Product normal price', 'required');
         $this->form_validation->set_rules('product_spacial_price', 'Product special price', 'required');
         $this->form_validation->set_rules('model_code', 'Product Model Code', 'required');

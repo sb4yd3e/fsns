@@ -82,6 +82,11 @@ class Orders_model extends CI_Model
         }
 
     }
+    function get_email_order($id)
+    {
+        $this->db->select('oid,uid,at_date,amount,custom_discount,spacial_amount,coupon_code,discount,discount_100k,shipping_amount,vat_amount,total_amount,shipping_name,shipping_address,shipping_province,shipping_zip,billing_name,billing_address,billing_province,billing_zip,order_status,order_type')->order_by('oid', 'desc');
+        return  $this->db->get_where($this->table, array('oid' => $id))->row_array();
+    }
 
     function get_order_detail($id)
     {

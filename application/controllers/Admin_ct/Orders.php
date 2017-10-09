@@ -243,8 +243,8 @@ class Orders extends CI_Controller
             foreach ($products as $key => $product) {
                 $paid = str_replace('p', '', $key);
                 $product_data = $this->orders->get_attribute($paid);
-                if($product_data['minimum'] > 0 && $product->qty < $product_data['minimum']){
-                    die(json_encode(array('status' => 'error', 'message' => 'Product : '.$product_data['p_value'].' minimum is '.$product_data['minimum'])));
+                if ($product_data['minimum'] > 0 && $product->qty < $product_data['minimum']) {
+                    die(json_encode(array('status' => 'error', 'message' => 'Product : ' . $product_data['p_value'] . ' minimum is ' . $product_data['minimum'])));
                 }
             }
 
@@ -366,7 +366,7 @@ class Orders extends CI_Controller
             add_log($user['name'], 'Update order.', 'order_' . $id);
             add_order_process($id, 'edit_order', 'แก้ไขข้อมูลการสั่งซื้อสินค้า', '');
 
-            $user_data = $this->orders->get_member_by_order($id);
+            /*$user_data = $this->orders->get_member_by_order($id);
             $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
 	<h3 style="margin: 0px; font-size: 20px;">คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง</h3>
 </div>
@@ -436,7 +436,7 @@ margin-top: 20px;">My Orders</a><br>
     FSNS Thailand
 </div>';
             send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง.', $html);
-
+*/
 
             echo json_encode(array('status' => 'success', 'debug' => $total_sp_discount));
         } else {
@@ -738,6 +738,9 @@ margin-top: 20px;">My Orders</a><br>
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกเปลี่ยนสถานะเป็น  ' . order_status($this->input->post('status')) . '<br><br>
 รายละเอียด : <br>' . $this->input->post('comment') . '
 </div>
+<div style="margin-top:20px;">
+' . html_order($id) . '
+</div>
 <div>
  สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
                 <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
@@ -801,6 +804,9 @@ FSNS Thailand
 เรียนคุณ ' . $user_data['name'] . '<br><br><br>
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($this->input->post('oid'), 6, "0", STR_PAD_LEFT) . '
 มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า 
+</div>
+<div style="margin-top:20px;">
+' . html_order($id) . '
 </div>
 <div>
 ' . $html . '
@@ -926,6 +932,9 @@ FSNS Thailand
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ได้มีการจัดส่งสินค้าทั้งหมดแล้ว
 </div>
 <div style="margin-top:20px;">
+' . html_order($id) . '
+</div>
+<div style="margin-top:20px;">
 <strong>รายละเอียดการจัดส่ง:</strong><br>
 <strong style="font-size: 20px; color: red;">' . $this->input->post('comment') . '</strong>
 </div>
@@ -958,6 +967,9 @@ FSNS Thailand
 <div style="margin-top:20px;">
 เรียนคุณ ' . $user_data['name'] . '<br><br><br>
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ได้มีการจัดส่งสินค้าแล้ว
+</div>
+<div style="margin-top:20px;">
+' . html_order($id) . '
 </div>
 <div style="margin-top:20px;">
 <strong>รายละเอียดพัสดุ:</strong><br>

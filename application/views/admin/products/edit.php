@@ -118,9 +118,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Product description*:</label>
-                                <textarea name="body" rows="5" id="body" class="form-control"
-                                          required><?php echo set_value('body', $product['body']) ?></textarea>
+                                <label>Product description:</label>
+                                <textarea name="body" rows="5" id="body" class="form-control"><?php echo set_value('body', $product['body']) ?></textarea>
                             </div>
                             <div class="row clearfix">
                                 <div class="col-md-6">
@@ -288,7 +287,7 @@
                                                        value="<?php echo isset($product_alts[0]['code']) ? $product_alts[0]['code'] : ""; ?>"
                                                        class="form-control" required/>
                                             </div>
-                                            <?php if ($product_alts[0]['p_cover']) { ?>
+                                            <?php if (isset($product_alts[0]['p_cover']) && $product_alts[0]['p_cover']!='') { ?>
                                                 <div class="form-groupg thumb-attr">
                                                     <img src="<?php echo base_url() ?>timthumb.php?src=<?php echo base_url() . PRODUCT_PATH . '/' . $product_alts[0]['p_cover'] ?>&w=50"
                                                          style="border:2px solid #eee" class="thumbnail"/>

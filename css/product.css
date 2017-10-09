@@ -27,6 +27,7 @@
 .container_6 .inner-wrap .product-title {
   font-size: 24px;
   font-weight: bold;
+  line-height: 30px;
 }
 .container_6 .inner-wrap .product-desc {
   margin-top: 10px;
@@ -409,6 +410,7 @@
 }
 #table-orders .product-price.wd {
   width: 20%;
+  text-align: center;
 }
 #table-orders .product-quantity {
   float: left;
@@ -416,6 +418,7 @@
 }
 #table-orders .product-quantity.wd {
   width: 10%;
+  text-align: center;
 }
 #table-orders .product-removal {
   float: left;
@@ -484,7 +487,11 @@
   width: 100px;
 }
 #table-orders .product .product-details .product-title {
+  color: #000000;
   margin-right: 20px;
+}
+#table-orders .product .product-details .product-title .light {
+  color: #888888;
 }
 #table-orders .product .product-details .product-description {
   margin: 5px 20px 5px 0;
@@ -520,7 +527,7 @@
 }
 #table-orders .totals .totals-item .totals-value {
   float: right;
-  width: 21%;
+  width: 25%;
   text-align: right;
 }
 #table-orders .checkout {

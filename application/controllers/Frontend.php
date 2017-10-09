@@ -230,6 +230,9 @@ class Frontend extends CI_Controller
 
 
         $this->render_data['product_data'] = $this->product->get_product($product_id);
+        if(!$this->render_data['product_data']){
+            redirect('frontend');
+        }
         $this->render_data['product_attr'] = $this->product->get_attribute($product_id);
         $this->render_data['product_list'] = $this->product->get_other_product($product_id, 5);
         $this->render_data['web_title'] = $this->render_data['product_data']['title'];

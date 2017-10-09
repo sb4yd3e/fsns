@@ -92,14 +92,20 @@ class Taxonomy_model extends CI_Model {
                 ->from('taxonomy_vocabularies')
                 ->join('taxonomy_terms', 'taxonomy_terms.vocabulary_id = taxonomy_vocabularies.id')
                 ->where('internal_key', $internal_key)
-                ->order_by('weight', 'asc')
+                //->order_by('weight', 'asc')
                 ->get();
 
         if ($vocab->num_rows() > 0) {
             $tmp_terms = $vocab->result_array();
+			
+		
+			
+			
             // return $tmp_terms;
             // Manipulate Terms //
             foreach ($tmp_terms as $term) {
+				
+				
                 if ($term['parent_id'] == null) {
                     $terms_array[$term['id']] = array(
                         'term_id' => $term['id'],
@@ -137,6 +143,10 @@ class Taxonomy_model extends CI_Model {
                 }
             }
         }
+		
+		
+		
+		
         // Sort by Weight //
         $tmp_array = array();
         $back_array = array();
@@ -179,6 +189,9 @@ class Taxonomy_model extends CI_Model {
             $back_array[] = $terms_array[$key];
         }
         $terms_array = $back_array;
+		
+		
+		
 
         return $terms_array;
     }

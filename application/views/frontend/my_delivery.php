@@ -152,13 +152,13 @@
                 var html = '';
                 html += '';
                 if (products[i]['sp_price'] > 0) {
-                    html += '<tr><td>' + '[' + products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</td><td>' + products[i]['qty'] + '</td><td><s>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s><br>' + products[i]['sp_price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</td></tr>';
+                    html += '<tr><td><strong>' + products[i]['title'] + '</strong> <br>'+ products[i]['code'] +' - ' + products[i]['value'] + '</td><td>' + products[i]['qty'] + '</td><td><s>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</s><br>' + products[i]['sp_price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</td></tr>';
                     t = products[i]['sp_price'] * products[i]['qty'];
                     summery = summery + t;
                 } else {
                     t = products[i]['price'] * products[i]['qty'];
                     summery = summery + t;
-                    html += '<tr><td>' + '[' + products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</td><td>' + products[i]['qty'] + '</td><td>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</td></tr>';
+                    html += '<tr><td><strong>' + products[i]['title'] + '</strong> <br>'+ products[i]['code'] +' - ' + products[i]['value'] + '</td><td>' + products[i]['qty'] + '</td><td>' + products[i]['price'].toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</td></tr>';
                 }
 
                 $('#shoping-detail tbody').append(html);

@@ -36,10 +36,10 @@ $(document).ready(function () {
             }
         });
 
-    $('#qty').change(function(){
-       if(parseInt($(this).val()) < parseInt($(this).attr('min'))){
-           $(this).val($(this).attr('min'));
-       }
+    $('#qty').change(function () {
+        if (parseInt($(this).val()) < parseInt($(this).attr('min'))) {
+            $(this).val($(this).attr('min'));
+        }
     });
 
     $('.select-color').click(function () {
@@ -254,13 +254,13 @@ $(document).ready(function () {
             var product_qty = parseInt($('#qty').val());
             var product_stock = parseInt($('#product_instock').val());
             var minimum = parseInt($('#qty').attr('min'));
-            if(minimum<=0){
+            if (minimum <= 0) {
                 minimum = 1;
             }
             if (product_qty <= 0) {
                 product_qty = 1;
             }
-            if(product_qty < minimum){
+            if (product_qty < minimum) {
                 product_qty = minimum;
             }
             if (product_stock <= 0) {
@@ -272,7 +272,7 @@ $(document).ready(function () {
                 });
                 return false;
             }
-            update_product('add', product_paid, null, [product_paid, product_pid, product_title, product_code, product_value, product_price, product_spprice, product_qty, product_image,minimum]);
+            update_product('add', product_paid, null, [product_paid, product_pid, product_title, product_code, product_value, product_price, product_spprice, product_qty, product_image, minimum]);
 
             $('#order-info .p-thumb').html($('.big-thumb').html());
             $('#order-info .p-title').html(product_title);
@@ -285,7 +285,19 @@ $(document).ready(function () {
                 $('#order-info .p-spprice').html('');
             }
 
-            cal_simpleorder();
+            // cal_simpleorder();
+            var sum_total = product_price;
+            if (product_spprice > 0) {
+                sum_total = product_spprice;
+            }
+
+            $('#order-info .total-amount span').html((sum_total * product_qty).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+            $('#order-info .total-vat span').html((((sum_total * product_qty) * 0.07) + (sum_total * product_qty)).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+
+
+                $('.cart-number').html('(' + product_qty + ')');
+
+
             $('#lightbox-overlay').fadeIn(200);
             $('#lightbox').fadeIn(200);
         }
@@ -478,7 +490,7 @@ function update_product(type, index, key, value) {
                 sp_price: value[6],
                 qty: value[7],
                 image: value[8],
-                minimum:value[9]
+                minimum: value[9]
             }
         }
     } else if (type === "edit") {

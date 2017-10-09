@@ -388,7 +388,9 @@ function get_product_by_oid($text)
     }
     return $html;
 }
-function get_email_sale($id){
+
+function get_email_sale($id)
+{
     if ($id && $id != 0) {
 
         $ci = &get_instance();
@@ -400,42 +402,127 @@ function get_email_sale($id){
     }
 }
 
-function payment_list(){
+function payment_list()
+{
     return array(
-        ''=>'Select',
-        'BBL'=>'ธนาคารกรุงเทพ',
-        'KBANK'=>'ธนาคารกสิกรไทย',
-        'KTB'=>'ธนาคารกรุงไทย',
-        'TMB'=>'ธนาคารทหารไทย',
-        'SCB'=>'ธนาคารไทยพาณิชย์',
-        'BAY'=>'ธนาคารกรุงศรีอยุธยา',
-        'KKB'=>'ธนาคารเกียรตินาคิน',
-        'CIMB'=>'ธนาคารซีไอเอ็มบีไทย',
-        'TISCO'=>'ธนาคารทิสโก้',
-        'TBANK'=>'ธนาคารธนชาต',
-        'UOB'=>'ธนาคารยูโอบี',
-        'SCBT'=>'ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)',
-        'TCD'=>'ธนาคารไทยเครดิตเพื่อรายย่อย',
-        'LHBANK'=>'ธนาคารแลนด์ แอนด์ เฮาส์',
-        'ICBC'=>'ธนาคารไอซีบีซี (ไทย)',
-        'SME'=>'ธนาคารพัฒนาวิสาหกิจขนาดกลางและขนาดย่อมแห่งประเทศไทย',
-        'BAAC'=>'ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร',
-        'EXIM'=>'ธนาคารเพื่อการส่งออกและนำเข้าแห่งประเทศไทย',
-        'GSB'=>'ธนาคารออมสิน',
-        'GHB'=>'ธนาคารอาคารสงเคราะห์',
-        'ISALAM'=>'ธนาคารอิสลามแห่งประเทศไทย'
+        '' => 'Select',
+        'BBL' => 'ธนาคารกรุงเทพ',
+        'KBANK' => 'ธนาคารกสิกรไทย',
+        'KTB' => 'ธนาคารกรุงไทย',
+        'TMB' => 'ธนาคารทหารไทย',
+        'SCB' => 'ธนาคารไทยพาณิชย์',
+        'BAY' => 'ธนาคารกรุงศรีอยุธยา',
+        'KKB' => 'ธนาคารเกียรตินาคิน',
+        'CIMB' => 'ธนาคารซีไอเอ็มบีไทย',
+        'TISCO' => 'ธนาคารทิสโก้',
+        'TBANK' => 'ธนาคารธนชาต',
+        'UOB' => 'ธนาคารยูโอบี',
+        'SCBT' => 'ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)',
+        'TCD' => 'ธนาคารไทยเครดิตเพื่อรายย่อย',
+        'LHBANK' => 'ธนาคารแลนด์ แอนด์ เฮาส์',
+        'ICBC' => 'ธนาคารไอซีบีซี (ไทย)',
+        'SME' => 'ธนาคารพัฒนาวิสาหกิจขนาดกลางและขนาดย่อมแห่งประเทศไทย',
+        'BAAC' => 'ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร',
+        'EXIM' => 'ธนาคารเพื่อการส่งออกและนำเข้าแห่งประเทศไทย',
+        'GSB' => 'ธนาคารออมสิน',
+        'GHB' => 'ธนาคารอาคารสงเคราะห์',
+        'ISALAM' => 'ธนาคารอิสลามแห่งประเทศไทย'
     );
 }
 
-function send_mail($email,$from,$cc,$title,$message){
+function html_order($id)
+{
+    $ci = &get_instance();
+    $ci->load->model('orders_model', 'order');
+    $html = '';
+    $order = $ci->order->get_email_order($id);
+    $products = $ci->order->list_products($id);
+
+    $html .= '<table style="border:1px solid #000000;margin: 0px;width: 100%;" border="1">
+                <tr style="background-color:#e0e0e0;font-weight: bold;text-align: center">
+                    <td width=\'50\' class="cart_t cart_r cart_l" style="padding:5px;">ลำดับ</td>
+                    <td width=\'100\' class="cart_t cart_r cart_l" style="padding:5px;">รหัสสินค้า</td>
+                    <td class="cart_t cart_r" style="padding:5px;">รายการสินค้า</td>
+                    <td width=\'50\' class="cart_t cart_r" style="padding:5px;">จำนวน</td>
+                    <td width=\'120\' class="cart_t cart_r" style="padding:5px;">ราคา / หน่วย</td>
+                    <td width=\'50\' class="cart_t cart_r" style="padding:5px;">ส่วนลด</td>
+                    <td width=\'100\' class="cart_t cart_r" style="padding:5px;">จำนวนเงินรวม</td>
+                </tr>';
+
+    $total = 0;
+    foreach ($products as $k => $product) {
+        $html .= '<tr>
+                        <td class="cart_t cart_l" align="center" style="padding:5px;">' . ($k + 1) . '</td>
+                        <td class="cart_t cart_r cart_l" style="padding:5px;">' . $product['product_code'] . '</td>
+                        <td class="cart_t cart_r" style="padding:5px;">' . $product['product_title'] .  '<br>- '.$product['product_value'].'</td>
+                        <td class="center cart_t cart_r"
+                            style="font-weight: bold;padding: 5px;" align="center">' . number_format($product['product_qty']) . '</td>
+                        <td class="right cart_t cart_r " align="center" style="padding:5px;">' . number_format($product['product_amount'], 2) . '</td>
+                        <td class="right font_discount cart_t cart_r" align="center" style="padding:5px;">';
+        if ($product['product_spacial_amount'] > 0) {
+            $total = $total + ($product['product_spacial_amount'] * $product['product_qty']);
+            $html .= number_format(($product['product_amount'] - $product['product_spacial_amount']) * $product['product_qty'], 2);
+        } else {
+            $html .= '0.00';
+            $total = $total + ($product['product_amount'] * $product['product_qty']);
+        };
+        $html .= '</td>
+                        <td class="right cart_t cart_r" style="padding:5px;"  align="right">' . number_format($product['total_amount'], 2) . '</td>
+                    </tr>';
+                 }
+    $html .= ' <tr style="background-color: #fff;   height:35px;">
+                    <td colspan="5" class="right font_bold cart_t cart_r cart_l cart_b" style="text-align:center;padding: 5px;">
+                        รวมราคาสินค้า (บาท)
+                    </td>
+                    <td class="right font_bold font_discount cart_t  cart_b" align="center">' . number_format($order['spacial_amount'], 2) . '</td>
+                    <td class="right font_bold font_total cart_t cart_r cart_l cart_b" align="right">' . number_format($total, 2) . '</td>
+                </tr>
+                <tr style="background-color: #fff;   height:35px;">
+                    <td colspan="4"></td>
+                    <td colspan="2" class="line_under right font_bold" style="padding:5px;">คูปองส่วนลด (บาท)</td>
+                    <td class="right line_under font_bold" align="right" style="padding:5px;">' . number_format(((($order['amount'] - $order['spacial_amount']) / 100) * $order['discount']) + $order['discount_100k'], 2) . '</td>
+                </tr>
+                <tr style="background-color: #fff;   height:35px;">
+                    <td colspan="4"></td>
+                    <td colspan="2" class="line_under right font_bold" style="padding:5px;">ส่วนลดพิเศษ</td>
+                    <td class="right line_under font_bold" align="right" style="padding:5px;">' . number_format($order['custom_discount'], 2) . '</td>
+                </tr>
+                <tr style="background-color: #fff;   height:35px;">
+                    <td colspan="4"></td>
+                    <td colspan="2" class="line_under right font_bold" style="padding:5px;">ภาษีมูลค่าเพิ่ม 7% (บาท)</td>
+                    <td class="right line_under font_bold" align="right" style="padding:5px;">' . number_format($order['vat_amount'], 2) . '</td>
+                </tr>
+                <tr style="background-color: #fff;   height:35px;">
+                    <td colspan="4"></td>
+                    <td colspan="2" class="line_under right font_bold" style="padding:5px;">รวมเป็นเงิน (บาท)</td>
+                    <td class="right line_under font_bold" align="right" style="padding:5px;">' . number_format($order['total_amount'] - $order['shipping_amount'], 2) . '</td>
+                </tr>
+                <tr style="background-color: #fff;   height:35px;">
+                    <td colspan="4"></td>
+                    <td colspan="2" class="line_under right font_bold" style="padding:5px;">ค่าจัดส่ง (บาท)</td>
+                    <td class="right line_under font_bold" align="right" style="padding:5px;">' . number_format($order['shipping_amount'], 2) . '</td>
+                </tr>
+
+                <tr style="background-color: #fff;   height:35px;">
+                    <td colspan="4"></td>
+                    <td colspan="2" class="line_under right font_bold" align="right" style="padding:5px;">รวมเป็นเงินที่ต้องชำระ</td>
+                    <td class="right font_total line_under font_underline font_bold" style="padding:5px;" align="right">' . number_format($order['total_amount'], 2) . '</td>
+                </tr>
+            </table>';
+        return $html;
+
+}
+
+function send_mail($email, $from, $cc, $title, $message)
+{
     $ci = &get_instance();
     $filename = 'img/logo.png';
     $ci->load->library('email');
     $ci->email->attach($filename);
     $ci->email->subject($title);
-    $ci->email->from($from, 'FSNS Thailand : '.$title);
+    $ci->email->from($from, 'FSNS Thailand : ' . $title);
     $ci->email->to($email);
-    if($cc){
+    if ($cc) {
         $ci->email->cc($cc);
     }
     $img = $ci->email->attachment_cid($filename);
