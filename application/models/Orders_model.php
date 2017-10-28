@@ -84,7 +84,7 @@ class Orders_model extends CI_Model
     }
     function get_email_order($id)
     {
-        $this->db->select('oid,uid,at_date,amount,custom_discount,spacial_amount,coupon_code,discount,discount_100k,shipping_amount,vat_amount,total_amount,shipping_name,shipping_address,shipping_province,shipping_zip,billing_name,billing_address,billing_province,billing_zip,order_status,order_type')->order_by('oid', 'desc');
+        $this->db->select('oid,uid,at_date,amount,custom_discount,spacial_amount,coupon_code,discount,discount_100k,shipping_amount,vat_amount,total_amount,shipping_name,shipping_address,shipping_province,shipping_zip,billing_name,billing_address,billing_province,billing_zip,order_status,order_type,note')->order_by('oid', 'desc');
         return  $this->db->get_where($this->table, array('oid' => $id))->row_array();
     }
 
@@ -213,7 +213,7 @@ class Orders_model extends CI_Model
 
     function delete_order_product($id, $paid)
     {
-        return $this->db->where_not_in('pa_id', $paid)->delete('order_details');
+        return $this->db->where_not_in('pa_id', $paid)->where('oid',$id)->delete('order_details');
     }
 
     function add_document($params)

@@ -88,21 +88,21 @@
         }
       }
     }
-    #qty {
-      width: 100px;
-      border: 1px solid #ccc;
-      background: #fff;
-      -webkit-border-radius: 3px;
-      border-radius: 3px;
-      font-size: 14px;
-      padding: 5px;
-      margin-top: 20px;
-    }
+    /* #qty {
+       width: 100px;
+       border: 1px solid #ccc;
+       background: #fff;
+       -webkit-border-radius: 3px;
+       border-radius: 3px;
+       font-size: 14px;
+       padding: 5px;
+       margin-top: 20px;
+     }*/
     #add-to-cart {
       margin: 20px auto;
       background: #1B88CB;
       border: 1px solid #0b52b4;
-      &:disabled{
+      &:disabled {
         background: #ff2f00;
         border: 1px solid #b41600;
       }
@@ -184,7 +184,7 @@
   display: none;
 }
 
-#popup-box, #lightbox, #uploadbox, #confirmbox {
+#popup-box, #lightbox, #uploadbox, #confirmbox, #lightbox-search {
 
   display: none;
   position: fixed;
@@ -199,7 +199,7 @@
   -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
   text-align: center;
-  #close, #close-lightbox, #close-uploadbox, #close-confirmbox {
+  #close, #close-lightbox, #close-uploadbox, #close-confirmbox, #close-searchbox {
     width: 30px;
     height: 26px;
     padding-top: 4px;
@@ -217,6 +217,10 @@
       height: 16px;
     }
   }
+}
+
+#search-input {
+  padding: 30px;
 }
 
 #order-info {
@@ -479,7 +483,7 @@
   .product .product-details .product-title {
     color: #000000;
     margin-right: 20px;
-    .light{
+    .light {
       color: #888888;
     }
   }
@@ -908,4 +912,70 @@
 
 .btn-big.btn-red {
   background: #BD4932 !important;
+}
+
+#top-bar {
+  background: #ffffff;
+  border-bottom: 1px solid #eee;
+  padding: 3px;
+  margin: 0 auto;
+  #search-btn {
+    max-width: 940px;
+    margin: 0 auto;
+    text-align: right;
+    div {
+      display: inline-block;
+      cursor: pointer;
+      color: #000;
+    }
+  }
+}
+
+#product-content td {
+  border: 1px solid #eee;
+  padding: 5px;
+}
+
+.product-qty {
+
+  .input-group {
+    margin-top: 20px;
+    .input-group-btn {
+      float: left;
+      button {
+        border: 1px solid #ccc;
+        padding: 7px 10px;
+        background: #ffffff;
+        cursor: pointer;
+        width: 30px;
+
+      }
+      &:first-child{
+        button {
+          border-right: none;
+        }
+      }
+      &:last-child{
+        button {
+          border-left: none;
+        }
+      }
+    }
+    .input-number {
+      float: left;
+      border-radius: 0;
+      -moz-border-radius: 0;
+      border: 1px solid #ccc;
+      background: #ffffff;
+      font-size: 14px;
+      padding: 5px;
+      width: 50px;
+      text-align: center;
+    }
+    &:after{
+      content:'';
+      display: block;
+      clear: both;
+    }
+  }
 }

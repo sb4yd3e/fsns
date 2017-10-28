@@ -508,8 +508,16 @@ function html_order($id)
                     <td colspan="2" class="line_under right font_bold" align="right" style="padding:5px;">รวมเป็นเงินที่ต้องชำระ</td>
                     <td class="right font_total line_under font_underline font_bold" style="padding:5px;" align="right">' . number_format($order['total_amount'], 2) . '</td>
                 </tr>
-            </table>';
+            </table>
+            <div style="margin-top: 10px;">
+            <strong>หมายเหตุ</strong><br>
+            '.$order['note'].'
+</div>';
         return $html;
+
+}
+
+function loop_mail(){
 
 }
 
@@ -522,9 +530,7 @@ function send_mail($email, $from, $cc, $title, $message)
     $ci->email->subject($title);
     $ci->email->from($from, 'FSNS Thailand : ' . $title);
     $ci->email->to($email);
-    if ($cc) {
-        $ci->email->cc($cc);
-    }
+
     $img = $ci->email->attachment_cid($filename);
     $ci->email->set_mailtype("html");
 
@@ -532,4 +538,11 @@ function send_mail($email, $from, $cc, $title, $message)
     $html = str_replace('[message]', $message, $html);
     $ci->email->message($html);
     $ci->email->send(FALSE);
+
+    if($cc){
+        $cc_arr = explode(',',$cc);
+        foreach($cc_arr as $cc_val){
+            send_mail($cc_val, $from, '', $title, $message);
+        }
+    }
 }

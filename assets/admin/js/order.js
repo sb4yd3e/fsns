@@ -157,7 +157,7 @@ if(!confirm('ยืนยันการลบสินค้าชิ้นน�
         var json = JSON.stringify(products);
         $.ajax({
             method: "POST",
-            data: {coupon: $('#coupon').val(), products: json, shipping: shipping,custom_discount:custom_discount},
+            data: {coupon: $('#coupon').val(),note: $('#note').val(), products: json, shipping: shipping,custom_discount:custom_discount},
             url: window.location.href,
         }).done(function (status) {
             var obj = jQuery.parseJSON(status);

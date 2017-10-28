@@ -307,4 +307,10 @@ class Frontend extends CI_Controller
         }
     }
 
+    function search(){
+        $this->render_data['web_title'] = 'Search';
+        $this->template->write_view('content', 'frontend/search', $this->render_data);
+        $this->template->render();
+    }
+
 }

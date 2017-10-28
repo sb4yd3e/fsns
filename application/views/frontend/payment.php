@@ -49,9 +49,14 @@
                         <span><strong>ค่าส่งสินค้า</strong></span>
                         <div class="totals-value" id="shipping">0</div>
                     </div>
+
                     <div class="totals-item">
                         <span><strong>รวมเป็นเงินที่ต้องชำระ</strong></span>
                         <div class="totals-value" id="total">0</div>
+                    </div>
+                    <div class="totals-item">
+                        <span><strong>หมายเหตุ</strong></span>
+                        <textarea class="wpcf7-textarea" rows="4" id="note" maxlength="1000"></textarea>
                     </div>
                 </div>
 
@@ -213,7 +218,7 @@
             } else {
                 $.ajax({
                     type: 'POST',
-                    data: {coupon_code: rs_discount_code, products: JSON.stringify(products)},
+                    data: {coupon_code: rs_discount_code,note:$('#note').val(), products: JSON.stringify(products)},
                     url: "<?php echo base_url('/checkout/confirm-order'); ?>"
                 }).done(function (status) {
                     var obj = jQuery.parseJSON(status);

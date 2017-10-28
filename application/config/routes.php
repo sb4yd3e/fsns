@@ -106,4 +106,6 @@ $route['news/(:num)/(:any)'] = 'frontend/news/$1';
 // Services //
 $route['services/(:any)'] = 'frontend/services/$1';
 
+$route['search'] = 'frontend/search';
+
 $route['translate_uri_dashes'] = FALSE;

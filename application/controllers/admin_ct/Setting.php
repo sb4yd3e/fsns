@@ -66,4 +66,8 @@ class Setting extends CI_Controller
             redirect('admin');
         }
     }
+
+    function term(){
+
+    }
 }

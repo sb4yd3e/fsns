@@ -295,7 +295,7 @@ $(document).ready(function () {
             $('#order-info .total-vat span').html((((sum_total * product_qty) * 0.07) + (sum_total * product_qty)).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
 
-                $('.cart-number').html('(' + product_qty + ')');
+            $('.cart-number').html('(' + product_qty + ')');
 
 
             $('#lightbox-overlay').fadeIn(200);
@@ -349,6 +349,63 @@ $(document).ready(function () {
         }
         $(this).val(num.toFixed(0));
     });
+    $('#search-btn div').click(function () {
+        $('#lightbox-overlay').fadeIn(200);
+        $('#lightbox-search').fadeIn(200);
+    });
+    $('#close-searchbox').click(function () {
+        $('#lightbox-overlay').fadeOut(200);
+        $('#lightbox-search').fadeOut(200);
+    });
+
+
+    $('.btn-number').click(function (e) {
+        e.preventDefault();
+
+        fieldName = $(this).attr('data-field');
+        type = $(this).attr('data-type');
+        var input = $("input[name='" + fieldName + "']");
+        var currentVal = parseInt(input.val());
+        if (!isNaN(currentVal)) {
+            if (type == 'minus') {
+
+                if (currentVal > input.attr('min')) {
+                    input.val(currentVal - 1).change();
+                }
+                if (parseInt(input.val()) == input.attr('min')) {
+                    $(this).attr('disabled', true);
+                }
+
+            } else if (type == 'plus') {
+
+                input.val(currentVal + 1).change();
+
+
+            }
+        } else {
+            input.val(0);
+        }
+    });
+    $('.input-number').focusin(function () {
+        $(this).data('oldValue', $(this).val());
+    });
+    $('.input-number').change(function () {
+
+        minValue = parseInt($(this).attr('min'));
+
+        valueCurrent = parseInt($(this).val());
+
+        name = $(this).attr('name');
+        if (valueCurrent >= minValue) {
+            $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+        } else {
+            alert('Sorry, the minimum value was reached');
+            $(this).val($(this).data('oldValue'));
+        }
+
+
+    });
+
 });
 
 function showRequest_register() {

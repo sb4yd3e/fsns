@@ -179,6 +179,7 @@ class Orders extends CI_Controller
                 'shipping_amount' => '0',
                 'vat_amount' => '0',
                 'total_amount' => '0',
+                'note' => $this->input->post('note'),
                 'order_type' => $user_data['account_type'],
                 'shipping_name' => $user_data['shipping_name'],
                 'shipping_address' => $user_data['shipping_address'],
