@@ -62,7 +62,9 @@ function init_order() {
     });
 
     $(document).on("click", ".delete-product", function () {
-
+if(!confirm('ยืนยันการลบสินค้าชิ้นนี้?')){
+    return false;
+}
         if (Object.size(products) === 1) {
             alert('ไม่สามารถลบรายการนี้ได้ จำเป็นต้องมีรายการสินค้าอย่างน้อย 1 รายการ');
             return;
@@ -155,7 +157,7 @@ function init_order() {
         var json = JSON.stringify(products);
         $.ajax({
             method: "POST",
-            data: {coupon: $('#coupon').val(), products: json, shipping: shipping,custom_discount:custom_discount},
+            data: {coupon: $('#coupon').val(),note: $('#note').val(), products: json, shipping: shipping,custom_discount:custom_discount},
             url: window.location.href,
         }).done(function (status) {
             var obj = jQuery.parseJSON(status);
@@ -377,6 +379,7 @@ function update_order() {
     $("#coupon-total").html(discount_code_amount.toFixed(2));
     $("#discount-100k").html(discount_10k);
     $("#before-vat").html(total_before_vat.toFixed(2));
+    $("#before-shipping").html((total - shipping).toFixed(2));
     $("#vat").html(total_vat.toFixed(2));
     $("#shipping-amount").val(shipping.toFixed(2));
     $("#custom-discount").val(custom_discount.toFixed(2));

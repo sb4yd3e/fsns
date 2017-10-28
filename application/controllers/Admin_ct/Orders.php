@@ -243,8 +243,8 @@ class Orders extends CI_Controller
             foreach ($products as $key => $product) {
                 $paid = str_replace('p', '', $key);
                 $product_data = $this->orders->get_attribute($paid);
-                if($product_data['minimum'] > 0 && $product->qty < $product_data['minimum']){
-                    die(json_encode(array('status' => 'error', 'message' => 'Product : '.$product_data['p_value'].' minimum is '.$product_data['minimum'])));
+                if ($product_data['minimum'] > 0 && $product->qty < $product_data['minimum']) {
+                    die(json_encode(array('status' => 'error', 'message' => 'Product : ' . $product_data['p_value'] . ' minimum is ' . $product_data['minimum'])));
                 }
             }
 
@@ -360,83 +360,12 @@ class Orders extends CI_Controller
                     'shipping_amount' => $shipping,
                     'total_amount' => $total,
                     'custom_discount' => $custom_discount,
-                    'vat_amount' => $total_vat)
+                    'vat_amount' => $total_vat,
+                    'note' => $this->input->post('note'))
             );
             $user = $this->session->userdata('fnsn');
             add_log($user['name'], 'Update order.', 'order_' . $id);
             add_order_process($id, 'edit_order', 'แก้ไขข้อมูลการสั่งซื้อสินค้า', '');
-
-            $user_data = $this->orders->get_member_by_order($id);
-            $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
-	<h3 style="margin: 0px; font-size: 20px;">คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง</h3>
-</div>
-
-<div style="margin-top:10px;margin-bottom:10px;">
-เรียนคุณ ' . $user_data['name'] . '<br><br><br>
-คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง. <br>รายการสั่งซื้อสินค้าของคุณได้ถูกเปลี่ยนแปลงโดยมีรายละเอียดดังนี้
-</div>
-<div>
-<table style="border:1px solid #e0e0e0;margin: 0px;width: 100%;" border="1">
-                <tr style="background-color:#e0e0e0;font-weight: bold;text-align: center">
-                    <td width=\'50\' class="cart_t cart_r cart_l">ลำดับ</td>
-                    <td width=\'100\' class="cart_t cart_r cart_l">รหัสสินค้า</td>
-                    <td class="cart_t cart_r">รายการสินค้า</td>
-                    <td width=\'50\' class="cart_t cart_r">จำนวน</td>
-                    <td width=\'120\' class="cart_t cart_r">ราคา / หน่วย</td>
-                    <td width=\'50\' class="cart_t cart_r">ส่วนลด</td>
-                    <td width=\'100\' class="cart_t cart_r">จำนวนเงินรวม</td>
-                </tr>' . $product_html;
-            $html .= '
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="5" class="right font_bold cart_t cart_r cart_l cart_b" style="text-align:right">
-        รวมราคาสินค้า (บาท)
-    </td>
-    <td class="right font_bold font_discount cart_t  cart_b">' . number_format($total_sp_discount, 2) . '</td>
-    <td class="right font_bold font_total cart_t cart_r cart_l cart_b">' . number_format($total_amount, 2) . '</td>
-</tr>
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="4"></td>
-    <td colspan="2" class="line_under right font_bold">คูปองส่วนลด (บาท)</td>
-    <td class="right line_under font_bold">' . number_format($total_discount, 2) . '
-    </td>
-</tr>
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="4"></td>
-    <td colspan="2" class="line_under right font_bold">ส่วนลดพิเศษ (บาท)</td>
-    <td class="right line_under font_bold">' . number_format($custom_discount, 2) . '
-    </td>
-</tr>
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="4"></td>
-    <td colspan="2" class="line_under right font_bold">ภาษีมูลค่าเพิ่ม 7% (บาท)</td>
-    <td class="right line_under font_bold">' . number_format($total_vat, 2) . '</td>
-</tr>
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="4"></td>
-    <td colspan="2" class="line_under right font_bold">ค่าจัดส่ง (บาท)</td>
-    <td class="right line_under font_bold">' . number_format($shipping, 2) . '</td>
-</tr>
-
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="4"></td>
-    <td colspan="2" class="line_under right font_bold">รวมเป็นเงินทั้งสิ้น</td>
-    <td class="right font_total line_under font_underline font_bold">' . number_format($total, 2) . '</td>
-</tr>
-</table>
-<br><br>
- สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
-                <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
-margin-top: 20px;">My Orders</a><br>
-หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
-<a href="' . base_url('my-orders/') . '" target="_blank">
-' . base_url('my-orders') . '
-</a> 
-</div>
-<div style="margin-top:50px;">
-    FSNS Thailand
-</div>';
-            send_mail($user_data['email'], $this->setting_data['email_for_contact'], get_email_sale($user_data['staff_id']), 'คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' มีการเปลี่ยนแปลง.', $html);
-
 
             echo json_encode(array('status' => 'success', 'debug' => $total_sp_discount));
         } else {
@@ -738,6 +667,9 @@ margin-top: 20px;">My Orders</a><br>
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกเปลี่ยนสถานะเป็น  ' . order_status($this->input->post('status')) . '<br><br>
 รายละเอียด : <br>' . $this->input->post('comment') . '
 </div>
+<div style="margin-top:20px;">
+' . html_order($id) . '
+</div>
 <div>
  สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
                 <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
@@ -801,6 +733,9 @@ FSNS Thailand
 เรียนคุณ ' . $user_data['name'] . '<br><br><br>
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($this->input->post('oid'), 6, "0", STR_PAD_LEFT) . '
 มีการเปลี่ยนแปลงที่อยู่ในการจัดส่งสินค้า 
+</div>
+<div style="margin-top:20px;">
+' . html_order($id) . '
 </div>
 <div>
 ' . $html . '
@@ -926,6 +861,9 @@ FSNS Thailand
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ได้มีการจัดส่งสินค้าทั้งหมดแล้ว
 </div>
 <div style="margin-top:20px;">
+' . html_order($id) . '
+</div>
+<div style="margin-top:20px;">
 <strong>รายละเอียดการจัดส่ง:</strong><br>
 <strong style="font-size: 20px; color: red;">' . $this->input->post('comment') . '</strong>
 </div>
@@ -958,6 +896,9 @@ FSNS Thailand
 <div style="margin-top:20px;">
 เรียนคุณ ' . $user_data['name'] . '<br><br><br>
 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ได้มีการจัดส่งสินค้าแล้ว
+</div>
+<div style="margin-top:20px;">
+' . html_order($id) . '
 </div>
 <div style="margin-top:20px;">
 <strong>รายละเอียดพัสดุ:</strong><br>

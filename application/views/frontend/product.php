@@ -38,7 +38,7 @@
                         <figure class="portfolio clearfix">
                             <div class="portfolio-image">
                                 <a href="<?php echo base_url('product/' . $product['id'] . '/' . url_title($product['title'])); ?>">
-                                    <img src="./timthumb.php?src=./<?php echo PRODUCT_PATH ?>/<?php echo $product['cover'] ?>&zc=1&w=449&235"
+                                    <img src="./timthumb.php?src=./<?php echo PRODUCT_PATH ?>/<?php echo $product['cover'] ?>&zc=2&w=300&h=300"
                                          alt="portfolio" width="300"
                                          alt="<?php echo $web_title . ' - ' . $product['title'] ?>"/>
                                 </a>
@@ -52,7 +52,7 @@
                                     </p>
 
                                     <span class="subtitle">
-                                    <?php echo $product['body'] ?>
+                                    <?php echo $product['model_code'] ?>
                                 </span>
                                     <?php if (is_login() && $product['online'] == 1) { ?>
                                         <div class="title"><?php echo number_format(($product['special_price'] >0)?$product['special_price']:$product['normal_price'],2); ?> บาท</div>

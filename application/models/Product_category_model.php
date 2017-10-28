@@ -95,9 +95,14 @@ class Product_category_model extends CI_Model
         ->where('internal_key', $internal_key)
         ->order_by('id', 'asc')
         ->get();
+		
+		
 
         if ($vocab->num_rows() > 0) {
             $tmp_terms = $vocab->result_array();
+			
+		
+			
             // return $tmp_terms;
             // Manipulate Terms //
             foreach ($tmp_terms as $term) {
@@ -138,6 +143,9 @@ class Product_category_model extends CI_Model
                 }
             }
         }
+		
+
+		
         // Sort by Weight //
         $tmp_array = array();
         $back_array = array();

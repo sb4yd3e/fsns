@@ -36,10 +36,10 @@ $(document).ready(function () {
             }
         });
 
-    $('#qty').change(function(){
-       if(parseInt($(this).val()) < parseInt($(this).attr('min'))){
-           $(this).val($(this).attr('min'));
-       }
+    $('#qty').change(function () {
+        if (parseInt($(this).val()) < parseInt($(this).attr('min'))) {
+            $(this).val($(this).attr('min'));
+        }
     });
 
     $('.select-color').click(function () {
@@ -55,7 +55,7 @@ $(document).ready(function () {
         var aid = $(this).data('aid');
         var value = $(this).data('value');
         var cover = $(this).data('cover');
-        var minimum = parseInt($(this).data('cover'));
+        var minimum = parseInt($(this).data('minimum'));
         if (minimum < 0) {
             minimum = 1;
         }
@@ -254,13 +254,13 @@ $(document).ready(function () {
             var product_qty = parseInt($('#qty').val());
             var product_stock = parseInt($('#product_instock').val());
             var minimum = parseInt($('#qty').attr('min'));
-            if(minimum<=0){
+            if (minimum <= 0) {
                 minimum = 1;
             }
             if (product_qty <= 0) {
                 product_qty = 1;
             }
-            if(product_qty < minimum){
+            if (product_qty < minimum) {
                 product_qty = minimum;
             }
             if (product_stock <= 0) {
@@ -272,7 +272,7 @@ $(document).ready(function () {
                 });
                 return false;
             }
-            update_product('add', product_paid, null, [product_paid, product_pid, product_title, product_code, product_value, product_price, product_spprice, product_qty, product_image,minimum]);
+            update_product('add', product_paid, null, [product_paid, product_pid, product_title, product_code, product_value, product_price, product_spprice, product_qty, product_image, minimum]);
 
             $('#order-info .p-thumb').html($('.big-thumb').html());
             $('#order-info .p-title').html(product_title);
@@ -285,7 +285,19 @@ $(document).ready(function () {
                 $('#order-info .p-spprice').html('');
             }
 
-            cal_simpleorder();
+            // cal_simpleorder();
+            var sum_total = product_price;
+            if (product_spprice > 0) {
+                sum_total = product_spprice;
+            }
+
+            $('#order-info .total-amount span').html((sum_total * product_qty).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+            $('#order-info .total-vat span').html((((sum_total * product_qty) * 0.07) + (sum_total * product_qty)).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+
+
+            $('.cart-number').html('(' + product_qty + ')');
+
+
             $('#lightbox-overlay').fadeIn(200);
             $('#lightbox').fadeIn(200);
         }
@@ -337,6 +349,63 @@ $(document).ready(function () {
         }
         $(this).val(num.toFixed(0));
     });
+    $('#search-btn div').click(function () {
+        $('#lightbox-overlay').fadeIn(200);
+        $('#lightbox-search').fadeIn(200);
+    });
+    $('#close-searchbox').click(function () {
+        $('#lightbox-overlay').fadeOut(200);
+        $('#lightbox-search').fadeOut(200);
+    });
+
+
+    $('.btn-number').click(function (e) {
+        e.preventDefault();
+
+        fieldName = $(this).attr('data-field');
+        type = $(this).attr('data-type');
+        var input = $("input[name='" + fieldName + "']");
+        var currentVal = parseInt(input.val());
+        if (!isNaN(currentVal)) {
+            if (type == 'minus') {
+
+                if (currentVal > input.attr('min')) {
+                    input.val(currentVal - 1).change();
+                }
+                if (parseInt(input.val()) == input.attr('min')) {
+                    $(this).attr('disabled', true);
+                }
+
+            } else if (type == 'plus') {
+
+                input.val(currentVal + 1).change();
+
+
+            }
+        } else {
+            input.val(0);
+        }
+    });
+    $('.input-number').focusin(function () {
+        $(this).data('oldValue', $(this).val());
+    });
+    $('.input-number').change(function () {
+
+        minValue = parseInt($(this).attr('min'));
+
+        valueCurrent = parseInt($(this).val());
+
+        name = $(this).attr('name');
+        if (valueCurrent >= minValue) {
+            $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+        } else {
+            alert('Sorry, the minimum value was reached');
+            $(this).val($(this).data('oldValue'));
+        }
+
+
+    });
+
 });
 
 function showRequest_register() {
@@ -478,7 +547,7 @@ function update_product(type, index, key, value) {
                 sp_price: value[6],
                 qty: value[7],
                 image: value[8],
-                minimum:value[9]
+                minimum: value[9]
             }
         }
     } else if (type === "edit") {

@@ -72,13 +72,13 @@
                                                min="<?php echo $product['minimum']; ?>"
                                                id="product_qty-<?php echo $product['pa_id']; ?>"
                                                <?php if ($data['order_status'] != "pending"){ ?>readonly<?php } ?>>
-                                        <?php if ($product['minimum'] > 0){ ?>
-                                        *ต้องสั่งขั้นต่ำอย่างน้อย <?php echo $product['minimum']; ?> หน่วย
+                                        <?php if ($product['minimum'] > 0) { ?>
+                                            *ต้องสั่งขั้นต่ำอย่างน้อย <?php echo $product['minimum']; ?> หน่วย
                                         <?php } ?>
                                     </td>
                                     <td id="total_amount_p<?php echo $product['pa_id']; ?>"><?php echo $product['total_amount']; ?></td>
                                     <td>
-                                        <?php if ($data['order_status'] == "pending"&&!is_group('sale')) { ?>
+                                        <?php if ($data['order_status'] == "pending" && !is_group('sale')) { ?>
                                             <button type="button" class="btn btn-sm btn-danger delete-product"
                                                     data-id="<?php echo $product['pa_id']; ?>"><i
                                                         class="fa fa-times-circle"></i></button>
@@ -110,10 +110,10 @@
                                     <div class="input-group" style="max-width: 250px;">
                                         <input type="text" class="form-control"
                                                aria-label="Coupon Code" maxlength="20" id="coupon"
-                                               <?php if ($data['order_status'] != "pending"&&!is_group('sale')){ ?>readonly<?php } ?>>
-                                        <?php if(!is_group('sale')){ ?>
-                                        <span class="input-group-addon" id="submit-coupon"
-                                              <?php if ($data['order_status'] != "pending"&&!is_group('sale')){ ?>readonly<?php } ?>>ตกลง</span>
+                                               <?php if ($data['order_status'] != "pending" && !is_group('sale')){ ?>readonly<?php } ?>>
+                                        <?php if (!is_group('sale')) { ?>
+                                            <span class="input-group-addon" id="submit-coupon"
+                                                  <?php if ($data['order_status'] != "pending" && !is_group('sale')){ ?>readonly<?php } ?>>ตกลง</span>
                                         <?php } ?>
                                     </div>
 
@@ -155,6 +155,12 @@
                                     </strong></td>
                             </tr>
                             <tr>
+                                <td colspan="4"><strong>รวมเป็นเงิน</strong></td>
+                                <td colspan="2"><strong>
+                                        <div id="before-shipping">0</div>
+                                    </strong></td>
+                            </tr>
+                            <tr>
                                 <td colspan="4"><strong>ค่าส่งสินค้า</strong></td>
                                 <td colspan="2"><strong>
                                         <input type="text" id="shipping-amount" value="0" class="form-control digi"
@@ -162,7 +168,7 @@
                                     </strong></td>
                             </tr>
                             <tr>
-                                <td colspan="4"><strong>รวมสุทธิ</strong></td>
+                                <td colspan="4"><strong>รวมเป็นเงินที่ต้องชำระ</strong></td>
                                 <td colspan="2"><strong>
                                         <div id="total-price">0</div>
                                     </strong></td>
@@ -170,7 +176,11 @@
                             </tfoot>
 
                         </table>
-
+                        <div class="form-group">
+                            <label>Note</label>
+                            <textarea name="note" id="note" class="form-control" maxlength="1000"
+                                      rows="4"><?php echo $data['note']; ?></textarea>
+                        </div>
 
                         <div class="clearfix"></div>
                         <?php if ($data['order_status'] == "pending" && !is_group('sale')) { ?>
@@ -187,38 +197,40 @@
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="status">
 
-                        <div class="col-md-6"><?php if(!is_group('sale')){ ?>
-                            <form action="<?php echo base_url('admin/orders/save_status/' . $data['oid']); ?>"
-                                  method="post" id="ajax-status">
+                        <div class="col-md-6"><?php if (!is_group('sale')) { ?>
+                                <form action="<?php echo base_url('admin/orders/save_status/' . $data['oid']); ?>"
+                                      method="post" id="ajax-status">
 
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <?php echo form_dropdown('status', array('pending' => 'รอตรวจสอบการสั่งซื้อ',
-                                        'confirmed' => 'ยืนยันการสั่งซื้อ',
-                                        'wait_payment' => 'ลูกค้าชำระเงิน/ส่งเอกสาร',
-                                        'confirm_payment' => 'ยืนยันการชำระ/ส่งเอกสาร',
-                                        'shipping' => 'มีการจัดส่ง',
-                                        'success' => 'สำเร็จ',
-                                        'cancel' => 'ยกเลิก'), $data['order_status'], 'class="form-control"'); ?>
-                                </div>
-                                <div class="form-group">
-                                    <label>Comment</label>
-                                    <textarea name="comment" id="comment" rows="5" class="form-control"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn btn-primary" type="submit" value="nomail" name="submit">Save
-                                        without
-                                        send email.
-                                    </button>
-                                    <button class="btn btn-success" type="submit" value="save" name="submit">Save and
-                                        send
-                                        email.
-                                    </button>
-                                    <button class="btn btn-info" type="submit" value="email" name="submit">Send email
-                                        again.
-                                    </button>
-                                </div>
-                            </form>
+                                    <div class="form-group">
+                                        <label>Status</label>
+                                        <?php echo form_dropdown('status', array('pending' => 'รอตรวจสอบการสั่งซื้อ',
+                                            'confirmed' => 'ยืนยันการสั่งซื้อ',
+                                            'wait_payment' => 'ลูกค้าชำระเงิน/ส่งเอกสาร',
+                                            'confirm_payment' => 'ยืนยันการชำระ/ส่งเอกสาร',
+                                            'shipping' => 'มีการจัดส่ง',
+                                            'success' => 'สำเร็จ',
+                                            'cancel' => 'ยกเลิก'), $data['order_status'], 'class="form-control"'); ?>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Comment</label>
+                                        <textarea name="comment" id="comment" rows="5" class="form-control"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" type="submit" value="nomail" name="submit">Save
+                                            without
+                                            send email.
+                                        </button>
+                                        <button class="btn btn-success" type="submit" value="save" name="submit">Save
+                                            and
+                                            send
+                                            email.
+                                        </button>
+                                        <button class="btn btn-info" type="submit" value="email" name="submit">Send
+                                            email
+                                            again.
+                                        </button>
+                                    </div>
+                                </form>
                             <?php } ?>
                             <div class="">
                                 <?php foreach ($status_list as $status_item) { ?>
@@ -277,10 +289,10 @@
                         <div class="col-md-6">
                             <div class="panel  with-border">
                                 <div class="box-header with-border">จัดการเอกสารส่งให้ลูกค้า
-                                    <?php if(!is_group('sale')){ ?>
-                                    <button class="btn btn-info btn-sm pull-right" id="add-file" data-toggle="modal"
-                                            data-target="#addFileModal"><i
-                                                class="fa fa-plus"></i></button>
+                                    <?php if (!is_group('sale')) { ?>
+                                        <button class="btn btn-info btn-sm pull-right" id="add-file" data-toggle="modal"
+                                                data-target="#addFileModal"><i
+                                                    class="fa fa-plus"></i></button>
                                     <?php } ?>
                                 </div>
                                 <div class="panel-body with-border">
@@ -353,15 +365,15 @@
                                        value="<?php echo($this->input->post('billing_zip') ? $this->input->post('billing_zip') : $data['billing_zip']); ?>"
                                        class="form-control" id="billing_zip" required/>
                             </div>
-                            <?php if(!is_group('sale')){ ?>
-                            <div class="box-footer">
-                                <button type="button" id="save-shipping" class="btn btn-success">
-                                    <i class="fa fa-check"></i> Save
-                                </button>
-                                <a href="<?php echo base_url('admin/orders'); ?>" class="btn btn-warning">
-                                    <i class="fa fa-times-circle"></i> Back to list
-                                </a>
-                            </div>
+                            <?php if (!is_group('sale')) { ?>
+                                <div class="box-footer">
+                                    <button type="button" id="save-shipping" class="btn btn-success">
+                                        <i class="fa fa-check"></i> Save
+                                    </button>
+                                    <a href="<?php echo base_url('admin/orders'); ?>" class="btn btn-warning">
+                                        <i class="fa fa-times-circle"></i> Back to list
+                                    </a>
+                                </div>
                             <?php } ?>
                         </div>
                         <div class="col-md-6">
@@ -406,28 +418,28 @@
 
                                         </tbody>
                                     </table>
-                                    <?php if(!is_group('sale')){ ?>
-                                    <div>
-                                        <form action="<?php echo base_url('admin/orders/change_shipping/' . $data['oid']); ?>"
-                                              method="post">
-                                            <input type="hidden" id="id-products" name="ids-product" value="">
-                                            <div class="form-group">
-                                                <label>Comment</label>
-                                                <textarea name="comment" id="shipping-comment" class="form-control"
-                                                          rows="3"></textarea>
-                                            </div>
+                                    <?php if (!is_group('sale')) { ?>
+                                        <div>
+                                            <form action="<?php echo base_url('admin/orders/change_shipping/' . $data['oid']); ?>"
+                                                  method="post">
+                                                <input type="hidden" id="id-products" name="ids-product" value="">
+                                                <div class="form-group">
+                                                    <label>Comment</label>
+                                                    <textarea name="comment" id="shipping-comment" class="form-control"
+                                                              rows="3"></textarea>
+                                                </div>
 
-                                            <div class="form-group">
-                                                <button type="submit" name="type" value="save" class="btn btn-info">
-                                                    Shipping
-                                                    product
-                                                </button>
-                                                <button type="submit" name="type" value="save_all"
-                                                        class="btn btn-success">Shipping all products
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                                <div class="form-group">
+                                                    <button type="submit" name="type" value="save" class="btn btn-info">
+                                                        Shipping
+                                                        product
+                                                    </button>
+                                                    <button type="submit" name="type" value="save_all"
+                                                            class="btn btn-success">Shipping all products
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     <?php } ?>
 
                                 </div>
@@ -469,81 +481,82 @@
         </div>
     </div>
 </div>
-<?php if(!is_group('sale')){ ?>
-<div class="modal fade" id="addproductModal" tabindex="-1" role="dialog" aria-labelledby="addproductModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel"><i class="fa fa-plus"></i> Add Product</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Product : </label>
-                    <select id="product-select">
-                        <option value="">== Select ==</option>
-                        <?php foreach ($product_list as $product_item) { ?>
-                            <option value="<?php echo $product_item['id']; ?>|<?php echo $product_item['title']; ?>"><?php echo $product_item['title']; ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Product Code : </label>
-                    <select id="code-select">
-                        <option value="">== Select ==</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Color : </label>
-                    <div id="product-color"></div>
-                </div>
-                <div class="form-group">
-                    <label>Price : </label>
-                    <div id="add-product-price"></div>
-                </div>
-                <div class="form-group">
-                    <label>Spacial Price : </label>
-                    <div id="add-product-sp-price"></div>
-                </div>
-                <div class="form-group">
-                    <label>Minimum QTY : </label>
-                    <div id="add-minimum"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" id="add-product-btn">Add product</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="addFileModal" tabindex="-1" role="dialog" aria-labelledby="addFileModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form method="post" action="<?php echo base_url('admin/orders/upload_document/' . $data['oid']); ?>"
-                  enctype="multipart/form-data" id="ajax-upload-document">
+<?php if (!is_group('sale')) { ?>
+    <div class="modal fade" id="addproductModal" tabindex="-1" role="dialog" aria-labelledby="addproductModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel"><i class="fa fa-plus"></i> Add Document file</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel"><i class="fa fa-plus"></i> Add Product</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>File name : </label>
-                        <input type="text" name="title" maxlength="50" class="form-control" required>
+                        <label>Product : </label>
+                        <select id="product-select">
+                            <option value="">== Select ==</option>
+                            <?php foreach ($product_list as $product_item) { ?>
+                                <option value="<?php echo $product_item['id']; ?>|<?php echo $product_item['title']; ?>"><?php echo $product_item['title']; ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>File : </label>
-                        <input type="file" name="file" class="form-control" required>
+                        <label>Product Code : </label>
+                        <select id="code-select">
+                            <option value="">== Select ==</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Color : </label>
+                        <div id="product-color"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Price : </label>
+                        <div id="add-product-price"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Spacial Price : </label>
+                        <div id="add-product-sp-price"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Minimum QTY : </label>
+                        <div id="add-minimum"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" id="add-file-btn">Upload</button>
+                    <button type="button" class="btn btn-success" id="add-product-btn">Add product</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+
+
+    <div class="modal fade" id="addFileModal" tabindex="-1" role="dialog" aria-labelledby="addFileModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="post" action="<?php echo base_url('admin/orders/upload_document/' . $data['oid']); ?>"
+                      enctype="multipart/form-data" id="ajax-upload-document">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-plus"></i> Add Document file</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>File name : </label>
+                            <input type="text" name="title" maxlength="50" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>File : </label>
+                            <input type="file" name="file" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="add-file-btn">Upload</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 <?php } ?>

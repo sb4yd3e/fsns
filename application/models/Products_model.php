@@ -46,7 +46,7 @@ class Products_model extends CI_Model
         if (isset($_POST['in_stock']) && $_POST['in_stock'] != "") {
             $this->db->where("in_stock", $_POST['in_stock']);
         }
-
+        $this->db->where("is_active", "T");
         if (isset($_POST['order'])) {
             $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else if (isset($this->order)) {
@@ -74,6 +74,7 @@ class Products_model extends CI_Model
     public function count_all()
     {
         $this->db->from($this->table);
+        $this->db->where("is_active", "T");
         return $this->db->count_all_results();
     }
 
@@ -92,7 +93,7 @@ class Products_model extends CI_Model
 
     function get_attribute($pid)
     {
-        return $this->db->where('pid', $pid)->get('product_attribute')->result_array();
+        return $this->db->where('pid', $pid)->where("is_active", "T")->get('product_attribute')->result_array();
     }
 
     public function group_all()
@@ -105,6 +106,7 @@ class Products_model extends CI_Model
         $query = $this->db->select('products.id,products.title,taxonomy_terms.id as term_id')
             ->from('products')
             ->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')
+            ->where("products.is_active", "T")
             ->get();
         if ($query->num_rows() > 0) {
             $return_array = array();
@@ -119,7 +121,7 @@ class Products_model extends CI_Model
 
     public function get_other_product($product_id, $limit)
     {
-        $sql = "SELECT products.id,products.title,cover,taxonomy_terms.title as term_title FROM products JOIN taxonomy_terms WHERE products.taxonomy_term_id = taxonomy_terms.id AND products.id NOT IN(" . $product_id . ") ORDER BY RAND() LIMIT " . $limit;
+        $sql = "SELECT products.id,products.title,cover,taxonomy_terms.title as term_title FROM products  JOIN taxonomy_terms WHERE products.taxonomy_term_id = taxonomy_terms.id AND products.is_active = 'T' AND products.id NOT IN(" . $product_id . ") ORDER BY RAND() LIMIT " . $limit;
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -128,10 +130,11 @@ class Products_model extends CI_Model
     {
 
         if ($taxonomy_term_id == 0) {
-            $query = $this->db->select('products.id,products.title,products.special_price,products.normal_price,products.online,products.group,products.body,products.online,cover,pdf,taxonomy_terms.title as term_title')->order_by('products.title')->from('products')->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->get();
+            $query = $this->db->select('products.id,products.model_code,products.title,products.special_price,products.normal_price,products.online,products.group,products.body,products.online,cover,pdf,taxonomy_terms.title as term_title')->order_by('products.title')->from('products')->where("products.is_active", "T")->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->get();
         } else {
-            $query = $this->db->select('products.id,products.title,products.special_price,products.normal_price,products.online,products.group,products.body,products.online,cover,pdf,taxonomy_terms.title as term_title')
+            $query = $this->db->select('products.id,products.model_code,products.title,products.special_price,products.normal_price,products.online,products.group,products.body,products.online,cover,pdf,taxonomy_terms.title as term_title')
                 ->where('taxonomy_term_id', $taxonomy_term_id)
+                ->where("products.is_active", "T")
                 ->order_by('products.group')
                 ->order_by('products.title')
                 ->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')
@@ -148,10 +151,11 @@ class Products_model extends CI_Model
     {
 
         if ($taxonomy_term_id == 0) {
-            $query = $this->db->select('products.id,products.title,products.model_code,products.group,products.body,cover,pdf,taxonomy_terms.title as term_title')->order_by('id', 'DESC')->from('products')->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->get();
+            $query = $this->db->select('products.id,products.title,products.model_code,products.group,products.body,cover,pdf,taxonomy_terms.title as term_title')->order_by('id', 'DESC')->from('products')->where("products.is_active", "T")->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->get();
         } else {
             $query = $this->db->select('products.id,products.title,products.model_code,products.group,products.body,cover,pdf,taxonomy_terms.title as term_title')
                 ->where('taxonomy_term_id', $taxonomy_term_id)
+                ->where("products.is_active", "T")
                 ->order_by('products.id', 'DESC')
                 ->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')
                 //->group_by('products.group')
@@ -165,7 +169,7 @@ class Products_model extends CI_Model
 
     public function get_product($product_id)
     {
-        $query = $this->db->select('products.*,taxonomy_terms.id as term_id,taxonomy_terms.title as term_title')->order_by('id')->from('products')->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->where('products.id', $product_id)->get();
+        $query = $this->db->select('products.*,taxonomy_terms.id as term_id,taxonomy_terms.title as term_title,taxonomy_terms.id as sub_cat_id,taxonomy_terms.parent_id as cat_id')->order_by('id')->from('products')->where("products.is_active", "T")->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id')->where('products.id', $product_id)->get();
         if ($query->num_rows() > 0) {
             return $query->row_array();
         }
@@ -174,7 +178,7 @@ class Products_model extends CI_Model
 
     public function get_product_alt($id)
     {
-        return $this->db->where('pid', $id)->order_by('pa_id', 'asc')->get('product_attribute')->result_array();
+        return $this->db->where('pid', $id)->where("is_active", "T")->order_by('pa_id', 'asc')->get('product_attribute')->result_array();
     }
 
     public function get_product_search($string)
@@ -183,6 +187,7 @@ class Products_model extends CI_Model
         $this->db->select('products.id,products.title,cover,taxonomy_terms.title as term_title,taxonomy_terms.weight as weight')
             ->order_by('id')
             ->from('products')
+            ->where('products.is_active','T')
             ->join('taxonomy_terms', 'products.taxonomy_term_id = taxonomy_terms.id');
 
         $this->db->or_like('products.body', $string);
@@ -219,31 +224,37 @@ class Products_model extends CI_Model
         if ($query->num_rows() > 0) {
             $product = $query->row_array();
             // Unlink Cover //
-            if (file_exists('./' . UPLOAD_PATH . '/' . $product['cover'])) {
-                @unlink('./' . UPLOAD_PATH . '/' . $product['cover']);
-            }
+//            if (file_exists('./' . UPLOAD_PATH . '/' . $product['cover'])) {
+//                @unlink('./' . UPLOAD_PATH . '/' . $product['cover']);
+//            }
             // Unlink PDF //
-            if (file_exists('./' . PDF_PATH . '/' . $product['pdf'])) {
-                @unlink('./' . PDF_PATH . '/' . $product['pdf']);
-            }
+//            if (file_exists('./' . PDF_PATH . '/' . $product['pdf'])) {
+//                @unlink('./' . PDF_PATH . '/' . $product['pdf']);
+//            }
             // Delete product by id
             $this->db->where('id', $product_id);
-            $this->db->delete('products');
+            $this->db->update('products', array('is_active'=>'F'));
         }
     }
 
-    public function save_product($pid,$param)
+    public function save_product($pid, $param)
     {
-        return $this->db->where('id', $pid)->update('products',$param);
+        return $this->db->where('id', $pid)->update('products', $param);
     }
 
-    public function save_product_alt($paid,$param)
+    public function save_product_alt($paid, $param)
     {
-        return $this->db->where('pa_id', $paid)->update('product_attribute',$param);
+        return $this->db->where('pa_id', $paid)->update('product_attribute', $param);
     }
 
     public function delete_alt($key)
     {
-        return $this->db->where('pa_id', $key)->delete('product_attribute');
+        return $this->db->where('pa_id', $key)->update('product_attribute', array('is_active'=>'F'));
+    }
+
+    public function get_title_cat($cid)
+    {
+        $db = $this->db->select('title')->where('id', $cid)->get('taxonomy_terms')->row_array();
+        return $db['title'];
     }
 }

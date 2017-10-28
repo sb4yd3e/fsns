@@ -15,10 +15,9 @@ class Auth_model extends CI_Model
 
 	function member_login($param){
 //        $this->output->enable_profiler(TRUE);
-        $query= $this->db->select("uid,email,account_type,name,phone,staff_id,business_name")
+        $query= $this->db->select("uid,email,account_type,name,phone,staff_id,business_name,is_active")
             ->where("email",$param['email'])
             ->where("password",md5($param['password']))
-            ->where("is_active",1)
             ->get("users")
             ->row_array();
         return $query;

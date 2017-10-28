@@ -93,9 +93,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Product description*:</label>
-                                <textarea name="body" rows="5" id="body" class="form-control"
-                                          required><?php echo set_value('body') ?></textarea>
+                                <label>Product description:</label>
+                                <textarea name="body" rows="5" id="body" class="form-control"><?php echo set_value('body') ?></textarea>
                             </div>
                             <div class="row clearfix">
                                 <div class="col-md-6">

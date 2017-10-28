@@ -42,12 +42,21 @@
                         <div class="totals-value" id="vat">0</div>
                     </div>
                     <div class="totals-item">
+                        <span><strong>รวมเป็นเงิน</strong></span>
+                        <div class="totals-value" id="before_shiping">0</div>
+                    </div>
+                    <div class="totals-item">
                         <span><strong>ค่าส่งสินค้า</strong></span>
                         <div class="totals-value" id="shipping">0</div>
                     </div>
+
                     <div class="totals-item">
-                        <span><strong>รวมสุทธิ</strong></span>
+                        <span><strong>รวมเป็นเงินที่ต้องชำระ</strong></span>
                         <div class="totals-value" id="total">0</div>
+                    </div>
+                    <div class="totals-item">
+                        <span><strong>หมายเหตุ</strong></span>
+                        <textarea class="wpcf7-textarea" rows="4" id="note" maxlength="1000"></textarea>
                     </div>
                 </div>
 
@@ -76,6 +85,7 @@
         var rs_total = 0; //รวมราคาทั้งหมด
         var rs_shipping = 0; //ค่าขนส่ง
         var rs_total_discount = 0; //รวมส่วนลดทั้งหมด
+        var rs_before_shiping = 0; //รวมส่วนลดทั้งหมด
 
 
         var zip = '<?php echo $this->setting_data['shipping_zip']; ?>'.split(',');
@@ -99,7 +109,7 @@
         for (var i in products) {
             var rs_t = 0, rs_t_no = 0;
             var html = '<div class="product wd" id="p-' + i + '"><div class="product-details wd">';
-            html += '<div class="product-title wd">' + '[' + products[i]['code'] + '] ' + products[i]['title'] + ' - ' + products[i]['value'] + '</div></div><div class="product-price wd">';
+            html += '<div class="product-title wd"><strong>' + products[i]['title'] + '</strong> <br><span class="light">' + products[i]['code'] + ' ' + products[i]['value'] + '</span></div></div><div class="product-price wd">';
             html += '<div class="cart-price wd">' + (products[i]['price']).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</div>';
             if (products[i]['sp_price'] > 0) {
                 rs_t = products[i]['sp_price'] * products[i]['qty'];
@@ -174,15 +184,17 @@
 
             rs_vat = (rs_total_before / 100) * 7;
             rs_total = rs_total_before + rs_shipping + rs_vat;
-            if (rs_sp_discount > 0) {
-                $('#discount-result').html('- ราคาพิเศษ ลดรวม (' + rs_sp_discount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' บาท)');
-            }
-            ;
+
+
             if (rs_discount_code_amount > 0) {
-                $('#discount-result').append('<br>- รหัสส่วนลด ' + rs_discount_code_value + '% [' + rs_discount_code + '] ลดรวม (' + rs_discount_code_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' บาท)');
+                $('#discount-result').html('- รหัสส่วนลด ' + rs_discount_code_value + '% [' + rs_discount_code + '] ลดรวม (' + rs_discount_code_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' บาท)<br>');
             } else if (rs_discount_10k > 0) {
-                $('#discount-result').append('<br>- ซื้อครบ 100,000 บาทลด 5 % ลดรวม ( ' + rs_discount_10k.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'บาท)');
+                $('#discount-result').html('- ซื้อครบ 100,000 บาทลด 5 % ลดรวม ( ' + rs_discount_10k.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'บาท)<br>');
             }
+            if (rs_sp_discount > 0) {
+                $('#discount-result').append('- ราคาพิเศษ ลดรวม (' + rs_sp_discount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' บาท)');
+            }
+            rs_before_shiping = rs_total - rs_shipping;
 
             $('#total-before').html(rs_total_before.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
             $('#discount').html(rs_total_discount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
@@ -190,6 +202,7 @@
             $('#amount').html(rs_no_discount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
             $('#vat').html(rs_vat.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
             $('#total').html(rs_total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+            $('#before_shiping').html(rs_before_shiping.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
         }
 
         $('#submit-order').click(function () {
@@ -205,7 +218,7 @@
             } else {
                 $.ajax({
                     type: 'POST',
-                    data: {coupon_code: rs_discount_code, products: JSON.stringify(products)},
+                    data: {coupon_code: rs_discount_code,note:$('#note').val(), products: JSON.stringify(products)},
                     url: "<?php echo base_url('/checkout/confirm-order'); ?>"
                 }).done(function (status) {
                     var obj = jQuery.parseJSON(status);

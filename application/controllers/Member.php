@@ -191,20 +191,24 @@ FSNS Thailand
             $this->load->model('auth_model', 'auth');
             $param = array('email' => $this->input->post('email'), 'password' => $this->input->post('password'));
             if ($userdata = $this->auth->member_login($param)) {
+                if ($userdata['is_active'] == '1') {
 
-                $session = array(
-                    'uid' => $userdata['uid'],
-                    'type' => $userdata['account_type'],
-                    'group' => 'user',
-                    'name' => $userdata['name'],
-                    'business_name' => $userdata['business_name'],
-                    'phone' => $userdata['phone'],
-                    'staff_id' => $userdata['staff_id'],
-                    'email' => $userdata['email']
-                );
-                $this->db->where('uid', $userdata['uid'])->update('users', array('last_login' => time()));
-                $this->session->set_userdata('fnsn', $session);
-                echo json_encode(array('status' => 'success'));
+                    $session = array(
+                        'uid' => $userdata['uid'],
+                        'type' => $userdata['account_type'],
+                        'group' => 'user',
+                        'name' => $userdata['name'],
+                        'business_name' => $userdata['business_name'],
+                        'phone' => $userdata['phone'],
+                        'staff_id' => $userdata['staff_id'],
+                        'email' => $userdata['email']
+                    );
+                    $this->db->where('uid', $userdata['uid'])->update('users', array('last_login' => time()));
+                    $this->session->set_userdata('fnsn', $session);
+                    echo json_encode(array('status' => 'success'));
+                } else {
+                    echo json_encode(array('status' => 'error', 'message' => 'กรุณายืนยันอีเมลก่อเข้าใช้งาน <br><a href="' . base_url('re-send-email/' . $this->input->post('email')) . '" class="link-alert">หรือคลิกที่นี่เพื่อรับลิงค์ยืนยันการใช้งานอีกครั้ง</a>'));
+                }
             } else {
                 echo json_encode(array('status' => 'error', 'message' => 'เข้าสู่ระบบผิดพลาด'));
             }
@@ -290,7 +294,7 @@ FSNS Thailand
             if ($in_id) {
 
                 $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
-	<h3 style="margin: 20px 0px 0px 1px; font-size: 20px;">Please verify your email address.</h3>
+	<h3 style="margin: 20px 0px 0px 1px; font-size: 20px;">กรุณายืนยันบัญชีเพื่อเข้าใช้งาน</h3>
 </div>
 
 <div style="margin-top:20px;">
@@ -356,7 +360,7 @@ FSNS Thailand
     function verify_email($token = '')
     {
         if ($token == '' || !$dt = $this->members->get_user_by_token($token)) {
-            $html = 'การยืนยันอีเมล์ไม่ถูกต้องหรือเคยยืนยันแล้ว';
+            $html = 'การยืนยันอีเมลไม่ถูกต้องหรือเคยยืนยันแล้ว';
             $status = 'danger';
         } else {
             $html = 'ยืนยันอีเมลสำเร็จ. <br>กรุณา <a href="' . base_url('login') . '">คลิกที่นี่</a> เพื่อเข้าสู่ระบบ';
@@ -366,6 +370,39 @@ FSNS Thailand
         $this->render_data['status'] = $status;
         $this->render_data['web_title'] = 'ยืนยันอีเมล';
         $this->template->write_view('content', 'frontend/verify_email', $this->render_data);
+        $this->template->render();
+    }
+
+    function resendemail($email = '')
+    {
+        $token = $this->members->get_user_by_email($email);
+        if ($token) {
+            $html = '<div style="margin-top:10px;background: #013A93;padding:20px;color:#fff;">
+	<h3 style="margin: 20px 0px 0px 1px; font-size: 20px;">กรุณายืนยันบัญชีเพื่อเข้าใช้งาน</h3>
+</div>
+
+<div style="margin-top:20px;">
+เรียนสมาชิก FSNS Thailand<br><br><br>
+ขอขอบคุณที่สมัครเป็นสมาชิกกับ FSNS Thailand<br>
+เพื่อเป็นการยืนยันและเปิดใช้งานบัญชี กรุณายืนยันอีเมลโดยคลิกปุ่มด้านล่าง
+</div>
+<div>
+<a href="' . base_url('verify-email/' . $token['token']) . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
+margin-top: 20px;">ยืนยันอีเมล</a><br>
+หากไม่สามารถคลิกลิงค์ได้ สมาชิกสามารถคัดลอกลิงค์ด้านล่างเพื่อนำไปเปิดในบราวเซอร์ได้<br>
+<a href="' . base_url('verify-email/' . $token['token']) . '" target="_blank">
+' . base_url('verify-email/' . $token['token']) . '
+</a>
+</div>
+<div style="margin-top:50px;">
+FSNS Thailand
+</div>';
+
+            send_mail($email, $this->setting_data['email_for_member'], false, 'Please verify your email address.', $html);
+
+        }
+        $this->render_data['web_title'] = 'ส่งอีเมลยืนยันบัญชี';
+        $this->template->write_view('content', 'frontend/resend_email', $this->render_data);
         $this->template->render();
     }
 

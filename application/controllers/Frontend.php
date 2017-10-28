@@ -230,10 +230,14 @@ class Frontend extends CI_Controller
 
 
         $this->render_data['product_data'] = $this->product->get_product($product_id);
+        if(!$this->render_data['product_data']){
+            redirect('frontend');
+        }
         $this->render_data['product_attr'] = $this->product->get_attribute($product_id);
         $this->render_data['product_list'] = $this->product->get_other_product($product_id, 5);
         $this->render_data['web_title'] = $this->render_data['product_data']['title'];
-        $this->render_data['web_nav'] = 'Home / '.$this->render_data['product_data']['term_title'] .' / '.$this->render_data['product_data']['title'];
+        $cat_title = $this->product->get_title_cat($this->render_data['product_data']['cat_id']);
+        $this->render_data['web_nav'] = 'Home / <a href="'.base_url('catalog/'.$this->render_data['product_data']['cat_id'].'/'.url_title($cat_title).'/'.$this->render_data['product_data']['sub_cat_id'].'/'.url_title($this->render_data['product_data']['term_title'])).'">'.$cat_title.' > '.$this->render_data['product_data']['term_title'] .'</a> / '.$this->render_data['product_data']['title'];
 
         $this->template->write_view('content', 'frontend/product_view', $this->render_data);
         $this->template->render();
@@ -301,6 +305,12 @@ class Frontend extends CI_Controller
         } else {
             show_404();
         }
+    }
+
+    function search(){
+        $this->render_data['web_title'] = 'Search';
+        $this->template->write_view('content', 'frontend/search', $this->render_data);
+        $this->template->render();
     }
 
 }

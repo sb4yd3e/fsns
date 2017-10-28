@@ -87,7 +87,7 @@
                     <select id="select-size">
 
                         <?php foreach ($product_attr as $k => $attr) { ?>
-                            <option value="<?php echo $attr['code'] . '|' . $attr['normal_price'] . '|' . $attr['in_stock'] . '|' . $attr['special_price'] . '|' . $attr['pa_id'] . '|' . $attr['p_value'] . '|' . $attr['p_cover']. '|' . $attr['minimum']; ?>"><?php echo $attr['p_value']; ?></option>
+                            <option value="<?php echo $attr['code'] . '|' . $attr['normal_price'] . '|' . $attr['in_stock'] . '|' . $attr['special_price'] . '|' . $attr['pa_id'] . '|' . $attr['p_value'] . '|' . $attr['p_cover'] . '|' . $attr['minimum']; ?>"><?php echo $attr['p_value']; ?></option>
                         <?php } ?>
                     </select>
                     <script>
@@ -106,33 +106,33 @@
                 <?php } ?>
                 <?php if ($product_data['att_type'] == "model") { ?>
 
-                        <?php if (is_login() && $product_data['online'] == 1) { ?>
-                        <strong>เลือกรุ่น : </strong><br>
-                    <?php } else { ?>
-                        <strong>รุ่น : </strong><br>
-                    <?php } ?>
-                    <?php if ($product_data['online'] == 1) { ?>
-                        <select id="select-size">
+                    <?php if (is_login() && $product_data['online'] == 1) { ?>
+                    <strong>เลือกรุ่น : </strong><br>
+                <?php } else { ?>
+                    <strong>รุ่น : </strong><br>
+                <?php } ?>
+                <?php if ($product_data['online'] == 1) { ?>
+                    <select id="select-size">
 
+                        <?php foreach ($product_attr as $k => $attr) { ?>
+                            <option value="<?php echo $attr['code'] . '|' . $attr['normal_price'] . '|' . $attr['in_stock'] . '|' . $attr['special_price'] . '|' . $attr['pa_id'] . '|' . $attr['p_value'] . '|' . $attr['p_cover'] . '|' . $attr['minimum']; ?>"><?php echo $attr['p_value']; ?></option>
+                        <?php } ?>
+                    </select>
+                    <script>
+                        $(document).ready(function () {
+                            $("#select-size").change();
+                        });
+                    </script>
+                <?php } else { ?>
+                    <strong>รุ่น : </strong><br>
+                    <div class="widget_tag_cloud">
+                        <div class="tagcloud">
                             <?php foreach ($product_attr as $k => $attr) { ?>
-                                <option value="<?php echo $attr['code'] . '|' . $attr['normal_price'] . '|' . $attr['in_stock'] . '|' . $attr['special_price'] . '|' . $attr['pa_id'] . '|' . $attr['p_value'] . '|' . $attr['p_cover']. '|' . $attr['minimum']; ?>"><?php echo $attr['p_value']; ?></option>
+                                <a><?php echo $attr['p_value']; ?></a>
                             <?php } ?>
-                        </select>
-                        <script>
-                            $(document).ready(function () {
-                                $("#select-size").change();
-                            });
-                        </script>
-                    <?php } else { ?>
-                        <strong>รุ่น : </strong><br>
-                        <div class="widget_tag_cloud">
-                            <div class="tagcloud">
-                                <?php foreach ($product_attr as $k => $attr) { ?>
-                                    <a><?php echo $attr['p_value']; ?></a>
-                                <?php } ?>
-                            </div>
                         </div>
-                    <?php } ?>
+                    </div>
+                <?php } ?>
                 <?php } ?>
 
                 <div class="product-price">
@@ -152,7 +152,18 @@
                 </div>
                 <?php if ($product_data['online'] == '1' && is_login()) { ?>
                     <div class="product-qty">
-                        <input type="number" class="number" min="1" id="qty" value="1">
+
+                        <div class="input-group">
+          <span class="input-group-btn">
+              <button type="button" class="btn-number" disabled="disabled" data-type="minus" data-field="qty-order">-</button>
+          </span>
+                            <input name="qty-order" class="input-number number" min="1" id="qty" value="1" type="text">
+                            <span class="input-group-btn">
+              <button type="button" class="btn-number" data-type="plus" data-field="qty-order">+</button>
+          </span>
+                        </div>
+
+                        <!--                        <input type="number" class="number" min="1" id="qty" value="1">-->
                         <div id="remark"></div>
                     </div>
                     <div class="product-addcart">

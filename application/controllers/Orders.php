@@ -179,6 +179,7 @@ class Orders extends CI_Controller
                 'shipping_amount' => '0',
                 'vat_amount' => '0',
                 'total_amount' => '0',
+                'note' => $this->input->post('note'),
                 'order_type' => $user_data['account_type'],
                 'shipping_name' => $user_data['shipping_name'],
                 'shipping_address' => $user_data['shipping_address'],
@@ -233,11 +234,11 @@ class Orders extends CI_Controller
     <td>';
                 $total = 0;
                 if ($product_data['special_price'] > 0) {
-                    $total = $total + $product_data['special_price'];
+                    $total = $total + $product_data['special_price'] * $product->qty;
                     $product_html .= number_format(($product_data['normal_price'] - $product_data['special_price']) * $product->qty, 2);
                 } else {
                     $product_html .= 0;
-                    $total = $total + $product_data['normal_price'];
+                    $total = $total + ($product_data['normal_price'] * $product->qty);
                 };
                 $product_html .= '
     </td>
@@ -301,50 +302,10 @@ class Orders extends CI_Controller
 
 <div style="margin-top:10px;margin-bottom:10px;">
 เรียนคุณ ' . $user_data['name'] . '<br><br><br>
-คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกสร้างขึ้น. <br>สมาชิกจะได้รับอีเมลแจ้งเตือนเมื่อเมื่อคำสั่งซื้อได้รับการยืนยัน
+คำสั่งซื้อสินค้าหมายเลข #' . str_pad($id, 6, "0", STR_PAD_LEFT) . ' ถูกสร้างขึ้น. <br>สมาชิกจะได้รับอีเมลแจ้งเตือนเมื่อคำสั่งซื้อได้รับการยืนยัน
 </div>
 <div>
-<table style="border:1px solid #e0e0e0;margin: 0px;width: 100%;" border="1">
-                <tr style="background-color:#e0e0e0;font-weight: bold;text-align: center">
-                    <td width=\'50\' class="cart_t cart_r cart_l">ลำดับ</td>
-                    <td width=\'100\' class="cart_t cart_r cart_l">รหัสสินค้า</td>
-                    <td class="cart_t cart_r">รายการสินค้า</td>
-                    <td width=\'50\' class="cart_t cart_r">จำนวน</td>
-                    <td width=\'120\' class="cart_t cart_r">ราคา / หน่วย</td>
-                    <td width=\'50\' class="cart_t cart_r">ส่วนลด</td>
-                    <td width=\'100\' class="cart_t cart_r">จำนวนเงินรวม</td>
-                </tr>' . $product_html;
-            $html .= '
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="5" class="right font_bold cart_t cart_r cart_l cart_b" style="text-align:right">
-        รวมราคาสินค้า (บาท)
-    </td>
-    <td class="right font_bold font_discount cart_t  cart_b">' . number_format($total_sp_discount, 2) . '</td>
-    <td class="right font_bold font_total cart_t cart_r cart_l cart_b">' . number_format($total_amount, 2) . '</td>
-</tr>
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="4"></td>
-    <td colspan="2" class="line_under right font_bold">คูปองส่วนลด (บาท)</td>
-    <td class="right line_under font_bold">' . number_format($total_discount, 2) . '
-    </td>
-</tr>
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="4"></td>
-    <td colspan="2" class="line_under right font_bold">ภาษีมูลค่าเพิ่ม 7% (บาท)</td>
-    <td class="right line_under font_bold">' . number_format($total_vat, 2) . '</td>
-</tr>
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="4"></td>
-    <td colspan="2" class="line_under right font_bold">ค่าจัดส่ง (บาท)</td>
-    <td class="right line_under font_bold">' . number_format($shipping, 2) . '</td>
-</tr>
-
-<tr style="background-color: #fff;   height:35px;">
-    <td colspan="4"></td>
-    <td colspan="2" class="line_under right font_bold">รวมเป็นเงินทั้งสิ้น</td>
-    <td class="right font_total line_under font_underline font_bold">' . number_format($total, 2) . '</td>
-</tr>
-</table>
+'.html_order($id).'
 <br>
  สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
                 <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
@@ -578,7 +539,7 @@ margin-top: 20px;">My Orders</a><br>
         $this->render_data['active_menu'] = 'member';
         $user = $this->session->userdata('fnsn');
         if ($this->render_data['order'] = $this->order->get_user_order($user['uid'], $oid)) {
-            if ($this->render_data['order']['order_status'] != 'confirmed') {
+            if ($this->render_data['order']['order_status'] != 'confirmed' && $this->render_data['order']['order_status'] != 'wait_payment') {
                 redirect('my-orders');
             }
             $this->load->library('form_validation');
@@ -654,9 +615,12 @@ Message : ' . nl2br($this->input->post('note')) . '
                 คำสั่งซื้อสินค้าหมายเลข #' . str_pad($oid, 6, "0", STR_PAD_LEFT) . ' ได้รับคำสั่งแจ้งยืนยันการชำระเงินแล้ว. <br>
                 สมาชิกจะได้รับอีเมล์ยืนยันการแจ้งชำระเงินอีครั้งเมื่อได้รับการตรวจสอบ
                 </div>
-                <div>
+               
+                <div style="margin-top: 20px;">
                 ' . $html . '
-                <br>
+                </div>
+                 <div style="margin-top: 20px;">'.html_order($oid).'</div>
+                 <div style="margin-top: 20px;">
                 สามารถตรวจสอบสถานะรายการสั่งซื้อของท่านได้ที่ 
                 <a href="' . base_url('my-orders/') . '" target="_blank" style="display: block;padding:10px;color: #ffffff;text-decoration: none;background: #C50802;border-bottom: 3px solid #8E0501;font-size: 20px; max-width: 300px;text-align: center;
 margin-top: 20px;">My Orders</a><br>

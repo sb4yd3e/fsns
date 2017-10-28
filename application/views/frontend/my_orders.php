@@ -34,7 +34,7 @@
                                 </td>
                                 <td><?php echo order_status($order['order_status']); ?></td>
                                 <td align="right">
-                                    <?php if ($order['order_status'] == 'confirmed') { ?><a
+                                    <?php if ($order['order_status'] == 'confirmed' || $order['order_status'] == 'wait_payment') { ?><a
                                         href="<?php echo base_url('order/confirm-payment/' . $order['oid']); ?>">
                                             [แจ้งการชำระเงิน] </a>
                                     <?php } ?>

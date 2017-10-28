@@ -1547,13 +1547,14 @@ li.pricing-footer {
     z-index: 100;
 }
 
-#nav li ul li {
+#nav li ul li a {
     border-top: 1px solid #4c4c4c;
     border-right: 1px solid #3a3a3a;
     border-left: 1px solid #3a3a3a;
     border-bottom: 1px solid #303030;
     background: #3a3a3a;
     padding: 12px 20px !important;
+    display: block;
 }
 
 #nav li ul li.current-menu-item a {
@@ -1630,6 +1631,12 @@ li.pricing-footer {
     line-height: 20px;
     text-transform: none;
     margin-bottom: 0;
+}
+
+.page-title .title a {
+    font: bold 20px 'Open Sans', Arial, sans-serif;
+    line-height: normal;
+    color: #444;
 }
 
 .page-title p.subtitle {
@@ -4602,4 +4609,8 @@ h5#reply-title {
         float: none;
         margin: 10px auto 0;
     }
+}
+.link-alert{
+    font: 15px 'Open Sans', Arial, sans-serif;
+    line-height: 18px;
 }

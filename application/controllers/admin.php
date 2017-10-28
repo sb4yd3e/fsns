@@ -52,6 +52,7 @@ class Admin extends CI_Controller
 //                add_log($userdata['username'],"Login to system.");
                 $this->db->where('aid', $userdata['aid'])->update('admins', array('last_login' => time()));
                 $this->session->set_userdata('fnsn', $session);
+                $_SESSION['IsAuthorized'] = true;
                 redirect('admin/orders');
             }
         } else {

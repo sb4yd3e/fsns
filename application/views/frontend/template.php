@@ -62,11 +62,15 @@ $user = $this->session->userdata('fnsn'); ?>
     <meta property="og:description" content="FOOD Service & Solution"/>
     <meta property="og:image" content="<?php echo base_url('img/logo.png'); ?>"/>
 
-
 </head>
 
 <body>
 <section id="header-wrapper" class="clearfix">
+    <div id="top-bar">
+        <div id="search-btn">
+            <div>Search</div>
+        </div>
+    </div>
     <!-- #header start -->
     <header id="header" class="clearfix">
 
@@ -345,7 +349,7 @@ if ($this->banner_data['visible'] == '1' && !get_cookie('show_popup')) {
             <div class="clearfix"></div>
         </div>
         <div class="col-6 th">
-            <div class="num-text">ตะกร้าสินค้าของคุณ <span class="cart-number">0</span> สินค้า</div>
+            <div class="num-text">เพิ่มสินค้าลงตะกร้าของคุณ <span class="cart-number">0</span> สินค้า</div>
             <div class="total-amount">มูลค่าสินค้า: <span>0</span> บาท</div>
             <div class="total-vat">ยอดสุทธิ (รวมภาษีมูลค่าเพิ่ม): <span>0</span> บาท</div>
 
@@ -357,7 +361,23 @@ if ($this->banner_data['visible'] == '1' && !get_cookie('show_popup')) {
         <div class="clearfix"></div>
     </div>
 </div>
-
+<div id="lightbox-search" class="th">
+    <div id="close-searchbox"><img src="<?php echo base_url('img/close.png'); ?>" width="25" height="25" alt=""></div>
+    <div id="search-input">
+    <script>
+        (function() {
+            var cx = '006629103558849169100:gie1b6whg98';
+            var gcse = document.createElement('script');
+            gcse.type = 'text/javascript';
+            gcse.async = true;
+            gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(gcse, s);
+        })();
+    </script>
+    <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+</div>
 
 <script>
     /* <![CDATA[ */
@@ -409,5 +429,28 @@ if ($this->banner_data['visible'] == '1' && !get_cookie('show_popup')) {
 
 
 </script>
+
+
+<!--Start of Zendesk Chat Script-->
+<script type="text/javascript">
+    window.$zopim || (function (d, s) {
+        var z = $zopim = function (c) {
+            z._.push(c)
+        }, $ = z.s =
+            d.createElement(s), e = d.getElementsByTagName(s)[0];
+        z.set = function (o) {
+            z.set._.push(o)
+        };
+        z._ = [];
+        z.set._ = [];
+        $.async = !0;
+        $.setAttribute("charset", "utf-8");
+        $.src = "https://v2.zopim.com/?591TmK2C4R9hStd27DSQdH3AN72UZ6my";
+        z.t = +new Date;
+        $.type = "text/javascript";
+        e.parentNode.insertBefore($, e)
+    })(document, "script");
+</script>
+<!--End of Zendesk Chat Script-->
 </body>
 </html>

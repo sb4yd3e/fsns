@@ -59,6 +59,7 @@ $route['logout'] = 'member/logout';
 $route['verify-email/(:any)'] = 'member/verify_email/$1';
 $route['forgot-password'] = 'member/forgot_password';
 $route['reset-password/(:any)'] = 'member/reset_password/$1';
+$route['re-send-email/(:any)'] = 'member/resendemail/$1';
 //orders
 $route['my-orders'] = 'orders/my_orders';
 $route['shopping-carts'] = 'orders/carts';
@@ -104,5 +105,7 @@ $route['news/(:num)/(:any)'] = 'frontend/news/$1';
 
 // Services //
 $route['services/(:any)'] = 'frontend/services/$1';
+
+$route['search'] = 'frontend/search';
 
 $route['translate_uri_dashes'] = FALSE;
